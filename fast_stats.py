@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import xml.etree.cElementTree as etree
-#from lxml import etree
-
 import sys
 from collections import defaultdict
 from operator import itemgetter
 import Gnuplot
 from genshi.template import MarkupTemplate as template
-
+import xml.etree.cElementTree as etree
 
 ### configuration
 html_path = "statistiche.html"
-
 
 ### data
 
@@ -37,20 +33,10 @@ to_check = {
     ],
 }
 
-amenities = defaultdict(lambda: defaultdict(int))
-highways = defaultdict(lambda: defaultdict(int))
-buildings = defaultdict(lambda: defaultdict(int))
-
 ### helpers
 
 def mysort(d):
     return sorted(d.items(), key=itemgetter(1), reverse=True)
-
-def tagsort(d):
-    tmp = defaultdict(list)
-    for k in d:
-        tmp[k] = mysort(d[k])
-    return tmp
 
 def myenum(d):
     enum = {}
@@ -87,10 +73,6 @@ try:
                 if child.tag == "tag":
                     key = child.attrib["k"]
                     val = tuple(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
-#                    print ";" in child.attrib["v"]
-#                    print repr(val)
-#                    print repr(sorted(tuple(child.attrib["v"].split(";"))))
-#                    print repr(child.attrib["v"])
                     if key in to_check:
                         if val in to_check[key] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
                             tags[key][val][elem.attrib["user"]] += 1
@@ -109,12 +91,6 @@ except:
 
     if event == "end":
         root.clear()
-
-#print mysort(sheer_nodes)
-#print mysort(sheer_ways)
-#print mysort(sheer_rels)
-#print "highways:", tagsort(highways)
-#print "amenities:", tagsort(amenities)
 
 #g = Gnuplot.Gnuplot(debug=1)
 #g.title("A simple example")
@@ -139,5 +115,3 @@ stream = tmpl.generate(
 f = open(html_path, "w")
 f.write(stream.render("xhtml"))
 f.close()
-
-#g.hardcopy(filename="foo.png", terminal="png")
