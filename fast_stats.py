@@ -51,7 +51,7 @@ def myenum(d):
 
 def key_wildcard(key, ret=None):
     if not ret:
-        ret = []
+        ret = [key]
     if ":" in key:
         partial = key.split(':')[:-1]
         ret.append(':'.join(partial + ['*']))
@@ -87,19 +87,13 @@ try:
                 if child.tag == "tag":
                     key = child.attrib["k"]
                     val = tuple(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
-                    if key in to_check:
-                        if val in to_check[key] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
-                            tags[key][val][elem.attrib["user"]] += 1
-                        if "*" in to_check[key]:
-                            tags[key]["*"][elem.attrib["user"]] += 1
-
-                    # Support namespaced tags
                     for test in key_wildcard(key):
                         if test in to_check:
                             if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
                                 tags[test][val][elem.attrib["user"]] += 1
                             if "*" in to_check[test]:
                                 tags[test]["*"][elem.attrib["user"]] += 1
+                            break;
 
             except KeyError as error:
                 if "user" in error.args:
