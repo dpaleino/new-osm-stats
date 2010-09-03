@@ -23,6 +23,7 @@ sheer_rels = defaultdict(int)
 
 tags = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
 to_check = {
+    "addr:housenumber": [ "*" ],
     "amenity": [
         "drinking_water",
     ],
@@ -30,6 +31,7 @@ to_check = {
         "bus_stop",
     ],
     "building": [
+        "*",
         "yes",
         "church",
     ],
@@ -92,6 +94,8 @@ try:
                     if key in to_check:
                         if val in to_check[key] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
                             tags[key][val][elem.attrib["user"]] += 1
+                        if "*" in to_check[key]:
+                            tags[key]["*"][elem.attrib["user"]] += 1
             except KeyError as error:
                 if "user" in error.args:
                     # This is an object from one of the old "anonymous" users, skip it.
