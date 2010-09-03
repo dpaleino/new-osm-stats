@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      lang="it">
+<head>
+<title>Statistiche OSM Italia ${date}</title>
+<script src="js/jquery.min.js"></script>
+<script>
+<!--
+    $(document).ready(function() {
+        $('.linked').each(function(index) {
+                        if ($(this).hasClass("primitive")) {
+                            $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#"+$(this).attr("name")+"\">"+$(this).attr("name")+"</a></li>");
+                        } else {
+                            $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showtags('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+                        }
+                     });
+                });
+
+    function showtags(tag) {
+        var i = 0;
+        $("ul#tagshow").replaceWith('<ul id="tagshow"></ul>');
+        $("div[name='"+tag+"']").children("div").children("a").each(function(index) {
+            i += 1;
+            $("ul#tagshow").append("<li style=\"display:inline; margin:5px;\"><a href=\"#"+$(this).attr("name")+"\">"+$(this).attr("name")+"</a></li>");
+            if ((i % 5) == 0) {
+                $("ul#tagshow").append("<br />");
+            }
+        });
+    }
+//-->
+</script>
+</head>
+<body>
+<div align="center">
+<h1>Statistiche OpenStreetMap Italia ${date}</h1>
+<ul id="links" style="display: inline;"></ul>
+<ul id="tagshow"></ul>
+<h2>Numero di primitive</h2>
+<div py:def="feature(name, data)" name="${name}" class="linked primitive">
+<a name="${name}"><h3>${name}</h3></a>
+<table>
+<tr>
+  <th>Posizione</th>
+  <th>Utente</th>
+  <th>Totale</th>
+</tr>
+<py:for each="count, pair in data">
+<tr>
+  <td>${count + 1}</td>
+  <td>${pair[0]}</td>
+  <td>${pair[1]}</td>
+</tr>
+</py:for>
+</table>
+</div>
+<div py:def="key(key, value, data)" class="feature">
+<py:choose test="type(value)">
+  <py:when test="tuple">
+    <py:with vars="value=';'.join(value)">
+      <a name="${key}=${value}"><h4>${key}=${value}</h4></a>
+    </py:with>
+  </py:when>
+  <py:otherwise>
+    <a name="${key}=${value}"><h4>${key}=${value}</h4></a>
+  </py:otherwise>
+</py:choose>
+<table>
+<tr>
+  <th>Posizione</th>
+  <th>Utente</th>
+  <th>Totale</th>
+</tr>
+<py:for each="count, pair in data">
+<tr>
+  <td>${count + 1}</td>
+  <td>${pair[0]}</td>
+  <td>${pair[1]}</td>
+</tr>
+</py:for>
+</table>
+</div>
+${feature('Nodi', nodes)}
+${feature('Ways', ways)}
+${feature('Relazioni', relations)}
+<h2>Statistiche per Tag</h2>
+<py:for each="tag in sorted(tags.keys())">
+  <div name="${tag}" class="linked">
+  <a name="${tag}"><h3>${tag}</h3></a>
+  <py:for each="val in sorted(tags[tag].keys())">
+  ${key(tag, val, tags[tag][val])}
+  </py:for>
+  </div>
+</py:for>
+</div>
+</body>
+</html>
