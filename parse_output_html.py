@@ -3,7 +3,7 @@
 from lxml import etree
 import sys
 from collections import defaultdict
-from simplejson import JSONEncoder
+import cjson
 from datetime import datetime as dt
 
 nodes={}
@@ -27,11 +27,10 @@ for node in doc.xpath('/body/div/div/div[@class="feature"]'):
     for row in node[2].xpath('tbody/tr'):
         tags[key][val][row[1].text] = int(row[2].text)
 
-json = JSONEncoder()
-s  = json.encode(timestamp)
-s += json.encode(nodes)
-s += json.encode(ways)
-s += json.encode(rels)
-s += json.encode(tags)
+s  = cjson.encode(timestamp)
+s += cjson.encode(nodes)
+s += cjson.encode(ways)
+s += cjson.encode(rels)
+s += cjson.encode(tags)
 
 print s

@@ -8,7 +8,7 @@ import Gnuplot
 from genshi.template import MarkupTemplate as template
 import xml.etree.cElementTree as etree
 from datetime import datetime as dt
-from simplejson import JSONEncoder
+import cjson
 
 ### configuration
 html_path = "statistiche.html"
@@ -118,12 +118,11 @@ enum = {}
 for key in tags:
     enum[key] = myenum(tags[key])
 
-json = JSONEncoder()
-s  = json.encode(timestamp)
-s += json.encode(sheer_nodes)
-s += json.encode(sheer_ways)
-s += json.encode(sheer_rels)
-s += json.encode(tags)
+s  = cjson.encode(timestamp)
+s += cjson.encode(sheer_nodes)
+s += cjson.encode(sheer_ways)
+s += cjson.encode(sheer_rels)
+s += cjson.encode(tags)
 f = open("json/%s.json" % timestamp.split('T')[0], 'w')
 f.write(s)
 f.close()
