@@ -7,9 +7,12 @@ from operator import itemgetter
 import Gnuplot
 from genshi.template import MarkupTemplate as template
 import xml.etree.cElementTree as etree
+from datetime import datetime as dt
+from simplejson import JSONEncoder
 
 ### configuration
 html_path = "statistiche.html"
+timestamp = dt.strftime(dt.today(), "%Y%m%dT%H:%S%Z")
 
 ### data
 
@@ -115,9 +118,19 @@ enum = {}
 for key in tags:
     enum[key] = myenum(tags[key])
 
+json = JSONEncoder()
+s  = json.encode(timestamp)
+s += json.encode(sheer_nodes)
+s += json.encode(sheer_ways)
+s += json.encode(sheer_rels)
+s += json.encode(tags)
+f = open("json/%s.json" % timestamp.split('T')[0], 'w')
+f.write(s)
+f.close()
+
 tmpl = template(open("views/statistiche.tmpl"))
 stream = tmpl.generate(
-                       date="#DATE#",
+                       date=timestamp,
                        nodes=enumerate(mysort(sheer_nodes)),
                        ways=enumerate(mysort(sheer_ways)),
                        relations=enumerate(mysort(sheer_rels)),
