@@ -57,10 +57,10 @@
 <a name="top"><h1>Statistiche OpenStreetMap Italia ${date}</h1></a>
 <ul id="links" style="display: inline;"></ul>
 <ul id="tagshow"></ul>
-<h2>Numero di primitive</h2>
+<!--<h2>Numero di primitive</h2>-->
 <div py:def="feature(name, data)" name="${name}" class="linked primitive">
-<a name="${name}"><h3>${name} <small><a href="#top">&uarr;</a></small></h3></a>
-<table>
+<a name="${name}"></a><h3>${name} <small><a href="#top">&uarr;</a></small></h3>
+<table style="display:inline;">
 <tr>
   <th>Posizione</th>
   <th>Utente</th>
@@ -79,11 +79,11 @@
 <py:choose test="type(value)">
   <py:when test="tuple">
     <py:with vars="value=';'.join(value)">
-      <a name="${key}=${value}"><h4>${key}=${value} <small><a href="#top">&uarr;</a></small></h4></a>
+      <a name="${key}=${value}"></a><h4>${key}=${value} <small><a href="#top">&uarr;</a></small></h4>
     </py:with>
   </py:when>
   <py:otherwise>
-    <a name="${key}=${value}"><h4>${key}=${value} <small><a href="#top">&uarr;</a></small></h4></a>
+    <a name="${key}=${value}"></a><h4>${key}=${value} <small><a href="#top">&uarr;</a></small></h4>
   </py:otherwise>
 </py:choose>
 <table>
@@ -104,10 +104,10 @@
 ${feature('Nodi', nodes)}
 ${feature('Ways', ways)}
 ${feature('Relazioni', relations)}
-<h2>Statistiche per Tag</h2>
+<!--<h2>Statistiche per Tag</h2>-->
 <py:for each="tag in sorted(tags.keys())">
   <div name="${tag}" class="linked">
-  <a name="${tag}"><h3>${tag} <small><a href="#top">&uarr;</a></small></h3></a>
+  <a name="${tag}"></a><h3>${tag} <small><a href="#top">&uarr;</a></small></h3>
   <py:for each="val in sorted(tags[tag].keys())">
   ${key(tag, val, tags[tag][val])}
   </py:for>
