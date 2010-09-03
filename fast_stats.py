@@ -31,6 +31,11 @@ to_check = {
         "yes",
         "church",
     ],
+    "parking:lane:*": [
+        "*",
+        "no_parking",
+        "no_stopping",
+    ],
 }
 
 ### helpers
@@ -43,6 +48,15 @@ def myenum(d):
     for key in d:
         enum[key] = enumerate(mysort(d[key]))
     return enum
+
+def key_wildcard(key, ret=None):
+    if not ret:
+        ret = []
+    if ":" in key:
+        partial = key.split(':')[:-1]
+        ret.append(':'.join(partial + ['*']))
+        key_wildcard(':'.join(partial), ret)
+    return ret
 
 ### code
 
@@ -78,6 +92,15 @@ try:
                             tags[key][val][elem.attrib["user"]] += 1
                         if "*" in to_check[key]:
                             tags[key]["*"][elem.attrib["user"]] += 1
+
+                    # Support namespaced tags
+                    for test in key_wildcard(key):
+                        if test in to_check:
+                            if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
+                                tags[test][val][elem.attrib["user"]] += 1
+                            if "*" in to_check[test]:
+                                tags[test]["*"][elem.attrib["user"]] += 1
+
             except KeyError as error:
                 if "user" in error.args:
                     # This is an object from one of the old "anonymous" users, skip it.
