@@ -66,45 +66,40 @@ context = iter(context)
 
 event, root = context.next()
 
-try:
-    for event, elem in context:
+for event, elem in context:
+    try:
+        if elem.tag == "node":
+            sheer_nodes[elem.attrib["user"]] += 1
+        if elem.tag == "way":
+            sheer_ways[elem.attrib["user"]] += 1
+        if elem.tag == "relation":
+            sheer_rels[elem.attrib["user"]] += 1
+    except KeyError as error:
+        if "user" in error.args:
+            # This is an object from one of the old "anonymous" users, skip it.
+            pass
+        else:
+            raise error
+
+    for child in elem.getchildren():
         try:
-            if elem.tag == "node":
-                sheer_nodes[elem.attrib["user"]] += 1
-            if elem.tag == "way":
-                sheer_ways[elem.attrib["user"]] += 1
-            if elem.tag == "relation":
-                sheer_rels[elem.attrib["user"]] += 1
+            if child.tag == "tag":
+                key = child.attrib["k"]
+                val = tuple(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
+                for test in key_wildcard(key):
+                    if test in to_check:
+                        if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
+                            tags[test][val][elem.attrib["user"]] += 1
+                        if "*" in to_check[test]:
+                            tags[test]["*"][elem.attrib["user"]] += 1
+                        break;
+
         except KeyError as error:
             if "user" in error.args:
                 # This is an object from one of the old "anonymous" users, skip it.
                 pass
             else:
                 raise error
-
-        for child in elem.getchildren():
-            try:
-                if child.tag == "tag":
-                    key = child.attrib["k"]
-                    val = tuple(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
-                    for test in key_wildcard(key):
-                        if test in to_check:
-                            if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
-                                tags[test][val][elem.attrib["user"]] += 1
-                            if "*" in to_check[test]:
-                                tags[test]["*"][elem.attrib["user"]] += 1
-                            break;
-
-            except KeyError as error:
-                if "user" in error.args:
-                    # This is an object from one of the old "anonymous" users, skip it.
-                    pass
-                else:
-                    raise error
-
-except:
-    print repr(elem.tag), repr(elem.attrib)
-    sys.exit(1)
 
     if event == "end":
         root.clear()
