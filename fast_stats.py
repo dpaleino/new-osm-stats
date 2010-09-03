@@ -22,6 +22,7 @@ sheer_ways = defaultdict(int)
 sheer_rels = defaultdict(int)
 amenities = defaultdict(lambda: defaultdict(int))
 highways = defaultdict(lambda: defaultdict(int))
+buildings = defaultdict(lambda: defaultdict(int))
 
 ### helpers
 
@@ -77,6 +78,8 @@ try:
                         amenities[val][elem.attrib["user"]] += 1
                     elif key == "highway":
                         highways[val][elem.attrib["user"]] += 1
+                    elif key == "building":
+                        buildings[val][elem.attrib["user"]] += 1
             except KeyError as error:
                 if "user" in error.args:
                     # This is an object from one of the old "anonymous" users, skip it.
@@ -107,6 +110,7 @@ except:
 enum = {}
 enum["amenity"] = myenum(amenities)
 enum["highway"] = myenum(highways)
+enum["building"] = myenum(buildings)
 
 tmpl = template(open("views/statistiche.tmpl"))
 stream = tmpl.generate(
