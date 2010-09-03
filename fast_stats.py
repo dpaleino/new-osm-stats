@@ -20,6 +20,21 @@ html_path = "statistiche.html"
 sheer_nodes = defaultdict(int)
 sheer_ways = defaultdict(int)
 sheer_rels = defaultdict(int)
+
+tags = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+to_check = {
+    "amenity": [
+        "drinking_water",
+    ],
+    "highway": [
+        "bus_stop",
+    ],
+    "building": [
+        "yes",
+        "church",
+    ],
+}
+
 amenities = defaultdict(lambda: defaultdict(int))
 highways = defaultdict(lambda: defaultdict(int))
 buildings = defaultdict(lambda: defaultdict(int))
@@ -74,12 +89,9 @@ try:
 #                    print repr(val)
 #                    print repr(sorted(tuple(child.attrib["v"].split(";"))))
 #                    print repr(child.attrib["v"])
-                    if key == "amenity":
-                        amenities[val][elem.attrib["user"]] += 1
-                    elif key == "highway":
-                        highways[val][elem.attrib["user"]] += 1
-                    elif key == "building":
-                        buildings[val][elem.attrib["user"]] += 1
+                    if key in to_check:
+                        if val in to_check[key] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
+                            tags[key][val][elem.attrib["user"]] += 1
             except KeyError as error:
                 if "user" in error.args:
                     # This is an object from one of the old "anonymous" users, skip it.
@@ -108,9 +120,8 @@ except:
 #g.plot([[0,1.1], [1,5.8], [2,3.3], [3,4.2]])
 
 enum = {}
-enum["amenity"] = myenum(amenities)
-enum["highway"] = myenum(highways)
-enum["building"] = myenum(buildings)
+for key in tags:
+    enum[key] = myenum(tags[key])
 
 tmpl = template(open("views/statistiche.tmpl"))
 stream = tmpl.generate(
