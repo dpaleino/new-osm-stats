@@ -18,13 +18,16 @@
 
     function showtags(tag) {
         var i = 0;
-        $("ul#tagshow").replaceWith('<ul id="tagshow"></ul>');
-        $("div[name='"+tag+"']").children("div").children("a").each(function(index) {
-            i += 1;
-            $("ul#tagshow").append("<li style=\"display:inline; margin:5px;\"><a href=\"#"+$(this).attr("name")+"\">"+$(this).attr("name")+"</a></li>");
-            if ((i % 5) == 0) {
-                $("ul#tagshow").append("<br />");
-            }
+        $("ul#tagshow").fadeOut('slow', function() {
+            $("ul#tagshow").replaceWith('<ul id="tagshow"></ul>');
+            $("div[name='"+tag+"']").children("div").children("a").each(function(index) {
+                i += 1;
+                $("ul#tagshow").append("<li style=\"display:inline; margin:5px;\"><a href=\"#"+$(this).attr("name")+"\">"+$(this).attr("name")+"</a></li>");
+                if ((i % 5) == 0) {
+                    $("ul#tagshow").append("<br />");
+                }
+            });
+            $("ul#tagshow").fadeIn('slow');
         });
     }
 //-->
