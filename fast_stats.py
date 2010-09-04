@@ -100,13 +100,9 @@ enum = {}
 for key in tags:
     enum[key] = myenum(tags[key])
 
-s  = cjson.encode(timestamp)
-s += cjson.encode(sheer_nodes)
-s += cjson.encode(sheer_ways)
-s += cjson.encode(sheer_rels)
-s += cjson.encode(tags)
+save = [timestamp, sheer_nodes, sheer_ways, sheer_rels, tags]
 f = open("json/%s.json" % timestamp.split('T')[0], 'w')
-f.write(s)
+f.write(cjson.encode(save))
 f.close()
 
 tmpl = template(open("views/statistiche.tmpl"))

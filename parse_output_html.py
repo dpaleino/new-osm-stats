@@ -27,10 +27,6 @@ for node in doc.xpath('/body/div/div/div[@class="feature"]'):
     for row in node[2].xpath('tbody/tr'):
         tags[key][val][row[1].text] = int(row[2].text)
 
-s  = cjson.encode(timestamp)
-s += cjson.encode(nodes)
-s += cjson.encode(ways)
-s += cjson.encode(rels)
-s += cjson.encode(tags)
+save = [timestamp, nodes, ways, rels, tags]
 
-print s
+print cjson.encode(save)
