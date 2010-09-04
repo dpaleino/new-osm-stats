@@ -3,7 +3,6 @@
 
 import sys
 from collections import defaultdict
-import Gnuplot
 from genshi.template import MarkupTemplate as template
 import xml.etree.cElementTree as etree
 from datetime import datetime as dt
@@ -87,13 +86,6 @@ for event, elem in context:
 
     if event == "end":
         root.clear()
-
-#g = Gnuplot.Gnuplot(debug=1)
-#g.title("A simple example")
-#g("set style data linespoints")
-#g("set output 'foo.png'")
-#g("set terminal png")
-#g.plot([[0,1.1], [1,5.8], [2,3.3], [3,4.2]])
 
 enum = {}
 for key in tags:
