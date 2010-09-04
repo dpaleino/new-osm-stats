@@ -50,6 +50,10 @@ context = iter(context)
 event, root = context.next()
 
 for event, elem in context:
+    if event == "end":
+        root.clear()
+        continue
+
     try:
         if elem.tag == "node":
             sheer_nodes[elem.attrib["user"]] += 1
@@ -83,9 +87,6 @@ for event, elem in context:
                 pass
             else:
                 raise error
-
-    if event == "end":
-        root.clear()
 
 enum = {}
 for key in tags:
