@@ -3,7 +3,6 @@
 
 import sys
 from collections import defaultdict
-from operator import itemgetter
 import Gnuplot
 from genshi.template import MarkupTemplate as template
 import xml.etree.cElementTree as etree

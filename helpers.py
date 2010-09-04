@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from operator import itemgetter
+
 def mysort(d):
     return sorted(d.items(), key=itemgetter(1), reverse=True)
 
