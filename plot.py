@@ -20,8 +20,8 @@ class Graph():
         self.g = Gnuplot.Gnuplot(debug=1)
         self.g.title(self.title)
         self.g("set style data linespoints")
-        self.g("set output '%s.svg'" % self.file)
-        self.g("set terminal svg")
+        self.g("set output '%s'" % self.file)
+        self.g("set terminal svg font 'sans-serif'")
         self.g("set xdata time")
         self.g("set timefmt '%Y%m%d'")
         self.g("set format x '%m/%y'")
@@ -31,7 +31,6 @@ class Graph():
         self.tmp.append((user, tmpfile))
 
         xcoords = map(lambda x: x.split('T')[0], xcoords)
-        print xcoords, ycoords
 
         f = open(tmpfile, 'w')
         for x, y in zip(xcoords, ycoords):
@@ -48,35 +47,42 @@ class Graph():
         for user, tmpfile in self.tmp:
             os.unlink(tmpfile)
 
-search_tags = ["highway=bus_stop", "addr:housenumber=*"]
-search_users = ["David Paleino", "trimoto", "Gianfra"] #, "tosky"]
-
 def graph_tag_users(tags, users):
     counts, xcoords, ycoords = parse_json()
     files = []
+
+    if type(tags) != list:
+        tags = [tags]
+    if type(users) != list:
+        users = [users]
+
     for tag in tags:
         filename = tempfile.mkstemp()[1]
         files.append(filename)
-        graph = Graph(filename)
-        for user in zip(*ycoords[tag]):
-            graph.add_line(zip(*user)[0][0], xcoords, zip(*user)[1])
+        graph = Graph(filename, tag)
+
+        for user in users:
+            user_y = [ ycoords[tag][x][user] for x in sorted(ycoords[tag].keys()) ]
+            graph.add_line(user, xcoords, user_y)
+
         graph.plot()
     return files
 
 def parse_json():
     xcoords = []
     counts = []
-    ycoords = defaultdict(list)
+    ycoords = defaultdict(dict)
 
     for i in sorted(glob('json/italy_*.json')):
         load = cjson.decode(open(i).readline())
         timestamp = load[0]
+        timestamp = timestamp.split('T')[0]
         nodes = load[1]
         ways = load[2]
         rels = load[3]
         tags = load[4]
 
-        xcoords.append(timestamp.split('T')[0])
+        xcoords.append(timestamp)
 
         l = [nodes, ways, rels]
         counts.append([])
@@ -87,23 +93,21 @@ def parse_json():
 
             counts[-1].append(tmpcount)
 
-        for tag in search_tags:
-            key, val = tag.split('=', 1)
-            ydate = []
-            for user in search_users:
-                try:
-                    count = tags[key][val][user]
-                except KeyError:
-                    count = 0
-                ydate.append((user, count))
-            ycoords[tag].append(ydate)
+        for key in tags:
+            for val in tags[key]:
+                date = defaultdict(int)
+                for user in tags[key][val]:
+                    date[user] = tags[key][val][user]
+                ycoords["%s=%s" % (key,val)][timestamp] = date
+
         del l
+
     return (counts, xcoords, ycoords)
 
 if __name__ == "__main__":
     counts, xcoords, ycoords = parse_json()
     titles = ['Nodes', 'Ways', 'Relations']
     for t in titles:
-        graph = Graph(os.path.join(graphs_path, t), t)
+        graph = Graph(os.path.join(graphs_path, "%s.svg" % t), t)
         graph.add_line(t, xcoords, zip(*counts)[titles.index(t)])
         graph.plot()
