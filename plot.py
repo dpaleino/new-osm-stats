@@ -53,11 +53,15 @@ search_users = ["David Paleino", "trimoto", "Gianfra"] #, "tosky"]
 
 def graph_tag_users(tags, users):
     counts, xcoords, ycoords = parse_json()
+    files = []
     for tag in tags:
-        graph = Graph(tag)
+        filename = tempfile.mkstemp()[1]
+        files.append(filename)
+        graph = Graph(filename)
         for user in zip(*ycoords[tag]):
             graph.add_line(zip(*user)[0][0], xcoords, zip(*user)[1])
         graph.plot()
+    return files
 
 def parse_json():
     xcoords = []
