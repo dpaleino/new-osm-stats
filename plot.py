@@ -68,10 +68,15 @@ def graph_tag_users(tags, users):
         graph.plot()
     return files
 
-def parse_json():
+def parse_json(full=False):
     xcoords = []
     counts = []
     ycoords = defaultdict(dict)
+
+    if full:
+        d_nodes = {}
+        d_ways = {}
+        d_rels = {}
 
     for i in sorted(glob('json/italy_*.json')):
         load = cjson.decode(open(i).readline())
@@ -81,6 +86,11 @@ def parse_json():
         ways = load[2]
         rels = load[3]
         tags = load[4]
+
+        if full:
+            d_nodes[timestamp] = nodes
+            d_ways[timestamp] = ways
+            d_rels[timestamp] = rels
 
         xcoords.append(timestamp)
 
@@ -102,7 +112,10 @@ def parse_json():
 
         del l
 
-    return (counts, xcoords, ycoords)
+    if full:
+        return (d_nodes, d_ways, d_rels, xcoords, ycoords)
+    else:
+        return (counts, xcoords, ycoords)
 
 if __name__ == "__main__":
     counts, xcoords, ycoords = parse_json()

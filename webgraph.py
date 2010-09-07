@@ -21,8 +21,28 @@ def get_tags():
     counts, xcoords, ycoords = parse_json()
     return {"r":sorted(ycoords.keys())}
 
+@route('/get/tags/:user')
+def get_tags_for(user):
+    counts, xcoords, ycoords = parse_json()
+    tags = set()
+    for tag in ycoords:
+        for date in ycoords[tag]:
+            if ycoords[tag][date].has_key(user):
+                tags.add(tag)
+                break
+    return {"r":sorted(list(tags))}
+
+@route('/get/users')
+def get_users():
+    nodes, ways, rels, xcoords, ycoords = parse_json(full=True)
+    users = set()
+    for l in [nodes, ways, rels]:
+        for date in l.keys():
+            users.update(l[date].keys())
+    return {"r":sorted(list(users))}
+
 @route('/get/users/:tag')
-def get_users(tag):
+def get_users_for(tag):
     counts, xcoords, ycoords = parse_json()
     users = set()
     for date in ycoords[tag].values():
@@ -43,4 +63,4 @@ def send_js(f):
 if __name__ == "__main__":
     bottle.debug(True)
     bottle.default_app().autojson = True
-    run(host='192.168.1.33', port=8080, reloader=False)
+    run(host='192.168.1.33', port=8080, reloader=True)
