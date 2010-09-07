@@ -25,6 +25,8 @@ to_check = {
     "addr:housenumber": [ "*" ],
     "amenity": [
         "drinking_water",
+        "post_box",
+        "telephone",
     ],
     "highway": [
         "bus_stop",
