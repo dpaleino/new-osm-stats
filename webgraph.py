@@ -13,6 +13,7 @@ def index():
     tmpl = template(open("views/webgraph.tmpl"))
     out = tmpl.generate(
         tags=get_tags()["r"],
+        users=get_users()["r"],
     )
     return out.render('xhtml')
 
@@ -36,9 +37,10 @@ def get_tags_for(user):
 def get_users():
     nodes, ways, rels, xcoords, ycoords = parse_json(full=True)
     users = set()
-    for l in [nodes, ways, rels]:
-        for date in l.keys():
-            users.update(l[date].keys())
+    for tag in ycoords.keys():
+        for date in ycoords[tag]:
+            users.update(ycoords[tag][date].keys())
+
     return {"r":sorted(list(users))}
 
 @route('/get/users/:tag')

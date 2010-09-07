@@ -13,14 +13,38 @@
         $('#form').submit(function(x) {
             x.preventDefault();
             //alert($(this).serialize());
-            //$('div#graph').html('<img src="/graph?'+$(this).serialize()+'" />');
+            //$('div#graph').html('<img src="/graph?'+$(this).serialize()+'" /'+'>');
             $('div#graph').html('<iframe src="/graph?'+$(this).serialize()+'" width="640" height="480"></iframe>');
             $('div#graph').fadeIn('slow');
         });
 
-        $('select[name=tag]').change(function() {
+        $('select#user2').change(function() {
             $('div#graph').fadeOut('slow');
-            var value = $('select[name=tag] option:selected').val();
+            var value = $(this).val();
+            $.getJSON('/get/tags/'+value, null, function(j) {
+                var opts = '<'+'option value="" selected="selected">';
+                opts += '-'+'-'+'- Select tag -'+'-'+'-';
+                opts += '</'+'option>';
+                var tags = j.r;
+
+                for (var i=0; i < tags.length; i++) {
+                    opts += '<option value="'+tags[i]+'">'+tags[i]+'</option>';
+                }
+
+                $('select[name=searchtag]').html(opts);
+                            alert(opts);
+            });
+        });
+
+        $('select#tag2').change(function() {
+            var value = $(this).val();
+            $('select#tag1').val(value);
+            $('select#tag1').change();
+        });
+
+        $('select#tag1').change(function() {
+            $('div#graph').fadeOut('slow');
+            var value = $(this).val();
             $.getJSON('/get/users/'+value, null, function(j) {
                 var opts = '';
                 var names = j.r;
@@ -29,7 +53,7 @@
                     opts += '<option value="'+names[i]+'">'+names[i]+'</option>';
                 }
                 
-                $('select[name=user]').html(opts);
+                $('select#user1').html(opts);
             });
         });
     });
@@ -41,17 +65,39 @@
 <div align="center">
   <h1>Dynamic graph generator</h1>
   <form id="form" action="/graph" method="get">
-    <label for="search_tags">Tags:</label><br />
-    <select name="tag">
-      <option selected="selected">--- Select tag ---</option>
-      <py:for each="tag in tags">
-        <option value="${tag}">${tag}</option>
-      </py:for>
-    </select>
-    <br />
-    <label for="user">Users:</label><br />
-    <select name="user" multiple="multiple" size="5">
-    </select>
+    <table>
+      <tr>
+      <td>
+      <label for="tag">Tags:</label><br />
+      <select name="tag" id="tag1">
+        <option value="" selected="selected">--- Select tag ---</option>
+        <py:for each="tag in tags">
+          <option value="${tag}">${tag}</option>
+        </py:for>
+      </select>
+      <br />
+      <label for="user">Users:</label><br />
+      <select name="user" id="user1" multiple="multiple" size="5">
+      </select>
+      </td>
+      <td>
+      <label>Users:<br />
+      <select name="user" id="user2">
+        <option value="" selected="selected">--- Select user ---</option>
+        <py:for each="user in users">
+          <option value="${user}">${user}</option>
+        </py:for>
+      </select>
+      </label>
+      <br />
+      <label>Tags:<br />
+      <select name="searchtag" id="tag2">
+      <option value="" selected="selected">--- Select tag ---</option>
+      </select>
+      </label>
+      </td>
+      </tr>
+    </table>
     <br />
     <input type="Submit" value="Graph!" />
   </form>

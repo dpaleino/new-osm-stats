@@ -56,6 +56,9 @@ def graph_tag_users(tags, users):
     if type(users) != list:
         users = [users]
 
+    tags = filter(None, tags)
+    users = filter(None, users)
+
     for tag in tags:
         filename = tempfile.mkstemp()[1]
         files.append(filename)
