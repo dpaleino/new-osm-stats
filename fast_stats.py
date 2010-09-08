@@ -74,7 +74,7 @@ for event, elem in context:
         try:
             if child.tag == "tag":
                 key = child.attrib["k"]
-                val = tuple(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
+                val = ";".join(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
                 for test in key_wildcard(key):
                     if test in to_check:
                         if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):

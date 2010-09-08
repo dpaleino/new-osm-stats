@@ -96,14 +96,7 @@
 </div>
 <div py:def="key(key, value, data)" class="feature">
 <py:choose test="type(value)">
-  <py:when test="tuple">
-    <py:with vars="value=';'.join(value)">
-      <a name="${key}=${value}"></a><h4>${key}=${value}</h4>
-    </py:with>
-  </py:when>
-  <py:otherwise>
-    <a name="${key}=${value}"></a><h4>${key}=${value}</h4>
-  </py:otherwise>
+  <a name="${key}=${value}"></a><h4>${key}=${value}</h4>
 </py:choose>
 <table class="tablesorter">
 <thead>
