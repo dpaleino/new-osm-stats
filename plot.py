@@ -92,7 +92,6 @@ def parse_json(full=False):
     for i in sorted(glob('json/italy_*.json')):
         load = cjson.decode(open(i).readline())
         timestamp = load[0]
-        timestamp = timestamp.split('T')[0]
         nodes = load[1]
         ways = load[2]
         rels = load[3]

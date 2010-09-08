@@ -12,7 +12,7 @@ from helpers import *
 
 ### configuration
 html_path = "statistiche.html"
-timestamp = dt.strftime(dt.today(), "%Y%m%dT%H:%S%Z")
+timestamp = dt.strftime(dt.today(), "%Y%m%d")
 
 ### data
 
@@ -95,20 +95,20 @@ for key in tags:
     enum[key] = myenum(tags[key])
 
 primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
-primitives_positions[timestamp.split('T')[0]] = defaultdict(list)
-tags_positions[timestamp.split('T')[0]] = defaultdict(lambda: defaultdict(list))
+primitives_positions[timestamp] = defaultdict(list)
+tags_positions[timestamp] = defaultdict(lambda: defaultdict(list))
 
 for p in [('Nodi', sheer_nodes), ('Ways', sheer_ways), ('Relazioni', sheer_rels)]:
     for user in enumerate(mysort(p[1])):
-        primitives_positions[timestamp.split('T')[0]][p[0]].append(user[1][0])
+        primitives_positions[timestamp][p[0]].append(user[1][0])
 
 for tag in enum:
     for val in enum[tag]:
         for user in enum[tag][val]:
-            tags_positions[timestamp.split('T')[0]][tag][val].append(user[1][0])
+            tags_positions[timestamp][tag][val].append(user[1][0])
 
 save = [timestamp, sheer_nodes, sheer_ways, sheer_rels, tags]
-f = open("json/%s.json" % timestamp.split('T')[0], 'w')
+f = open("json/%s.json" % timestamp, 'w')
 f.write(cjson.encode(save))
 f.close()
 
