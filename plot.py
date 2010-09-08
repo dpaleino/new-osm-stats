@@ -7,8 +7,10 @@ import Gnuplot
 import tempfile
 import os
 from collections import defaultdict
+import hashlib
 
 graphs_path = 'graphs/'
+graphs_cache = os.path.join(graphs_path, 'cached')
 
 class Graph():
     def __init__(self, filename, title=None):
@@ -56,12 +58,18 @@ def graph_tag_users(tags, users):
     if type(users) != list:
         users = [users]
 
-    tags = filter(None, tags)
-    users = filter(None, users)
+    tags = sorted(filter(None, tags))
+    users = sorted(filter(None, users))
 
     for tag in tags:
-        filename = tempfile.mkstemp()[1]
+        filename = hashlib.md5(repr([tag, users, ycoords[tag].keys()])).hexdigest()
+        filename = os.path.join(graphs_cache, filename)
         files.append(filename)
+
+        if filename in glob(os.path.join(graphs_cache, '*')):
+            # we'll return the cached one
+            continue
+
         graph = Graph(filename, tag)
 
         for user in users:

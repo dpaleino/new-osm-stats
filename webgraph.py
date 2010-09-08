@@ -4,6 +4,7 @@
 import bottle
 from bottle import *
 from plot import graph_tag_users, parse_json
+from plot import graphs_path, graphs_cache
 from genshi.template import MarkupTemplate as template
 import os
 
@@ -56,7 +57,7 @@ def graph():
     bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
     counts, xcoords, ycoords = parse_json()
     filename = graph_tag_users(request.GET["tag"], request.GET["user"])[0]
-    return static_file(os.path.basename(filename), "/tmp/", mimetype="image/svg+xml; charset=UTF-8")
+    return static_file(os.path.basename(filename), graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
 
 @route('/js/:f')
 def send_js(f):
