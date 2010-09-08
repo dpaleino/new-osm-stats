@@ -26,7 +26,10 @@ def positions_changed(positions):
     ret = defaultdict(dict)
     dates = sorted(positions.keys())
     last = dates[-1:][0]
-    secondlast = dates[-2:-1][0]
+    try:
+        secondlast = dates[-2:-1][0]
+    except IndexError:
+        secondlast = last
     for key in positions[last]:
         if key in ['Nodi', 'Ways', 'Relazioni']:
             for user in positions[last][key]:

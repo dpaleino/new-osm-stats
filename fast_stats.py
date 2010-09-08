@@ -94,7 +94,12 @@ enum = {}
 for key in tags:
     enum[key] = myenum(tags[key])
 
-primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
+try:
+    primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
+except IOError:
+    primitives_positions = dict()
+    tags_positions = dict()
+
 primitives_positions[timestamp] = defaultdict(list)
 tags_positions[timestamp] = defaultdict(lambda: defaultdict(list))
 
