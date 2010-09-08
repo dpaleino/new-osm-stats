@@ -66,7 +66,7 @@
 <table class="tablesorter">
 <thead>
 <tr>
-  <th>Posizione</th>
+  <th colspan="2">Posizione</th>
   <th>Utente</th>
   <th>Totale</th>
 </tr>
@@ -75,6 +75,17 @@
 <py:for each="count, pair in data">
 <tr>
   <td>${count + 1}</td>
+  <py:choose test="">
+    <py:when test="pos_primitives[name][pair[0]] &lt; 0">
+      <td><img src="img/down.png" /> ${abs(pos_primitives[name][pair[0]])}</td>
+    </py:when>
+    <py:when test="pos_primitives[name][pair[0]] &gt; 0">
+      <td><img src="img/up.png" /> ${pos_primitives[name][pair[0]]}</td>
+    </py:when>
+    <py:when test="pos_primitives[name][pair[0]] == 0">
+      <td><img src="img/stable.png" /></td>
+    </py:when>
+  </py:choose>
   <td>${pair[0]}</td>
   <td>${pair[1]}</td>
 </tr>

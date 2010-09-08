@@ -8,7 +8,7 @@ import xml.etree.cElementTree as etree
 from datetime import datetime as dt
 import cjson
 
-from helpers import mysort, myenum, key_wildcard
+from helpers import *
 
 ### configuration
 html_path = "statistiche.html"
@@ -94,9 +94,26 @@ enum = {}
 for key in tags:
     enum[key] = myenum(tags[key])
 
+primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
+primitives_positions[timestamp.split('T')[0]] = defaultdict(list)
+tags_positions[timestamp.split('T')[0]] = defaultdict(lambda: defaultdict(list))
+
+for p in [('Nodi', sheer_nodes), ('Ways', sheer_ways), ('Relazioni', sheer_rels)]:
+    for user in enumerate(mysort(p[1])):
+        primitives_positions[timestamp.split('T')[0]][p[0]].append(user[1][0])
+
+for tag in enum:
+    for val in enum[tag]:
+        for user in enum[tag][val]:
+            tags_positions[timestamp.split('T')[0]][tag][val].append(user[1][0])
+
 save = [timestamp, sheer_nodes, sheer_ways, sheer_rels, tags]
 f = open("json/%s.json" % timestamp.split('T')[0], 'w')
 f.write(cjson.encode(save))
+f.close()
+
+f = open('json/positions.json', 'w')
+f.write(cjson.encode([primitives_positions, tags_positions]))
 f.close()
 
 tmpl = template(open("views/statistiche.tmpl"))
@@ -106,6 +123,8 @@ stream = tmpl.generate(
                        ways=enumerate(mysort(sheer_ways)),
                        relations=enumerate(mysort(sheer_rels)),
                        tags=enum,
+                       pos_primitives=positions_changed(primitives_positions),
+                       pos_tags=positions_changed(tags_positions),
          )
 
 f = open(html_path, "w")
