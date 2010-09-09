@@ -19,23 +19,85 @@ jsons_path = "json/"
 to_check = {
     "addr:housenumber": [ "*" ],
     "amenity": [
+        "bank",
+        "bar",
+        "bench",
+        "clock",
+        "college",
         "drinking_water",
+        "fast_food",
+        "fuel",
+        "hospital",
+        "parking",
+        "pharmacy",
+        "place_of_worship",
         "post_box",
+        "post_office",
+        "pub",
+        "restaurant",
+        "school",
+        "shelter",
         "telephone",
+        "university",
+        "waste_basket"
     ],
-    "highway": [
-        "bus_stop",
-    ],
+    "barrier" : [ "*" ],
+    "bridge" : [ "*" ],
     "building": [
         "*",
-        "yes",
         "church",
+        "yes",
     ],
+    "ele" : [ "*" ],
+    "est_width": [ "*" ],
+    "height" : [ "*" ],
+    "highway": [
+        "bus_stop",
+        "crossing",
+        "motorway_junction",
+        "speed_camera",
+        "stop",
+        "street_lamp",
+        "traffic_lights",
+    ],
+    "historic" : [ "*" ],
+    "leisure": [
+        "park",
+        "pitch",
+        "playground",
+    ],
+    "lit": [ "*" ],
+    "mtb:scale:*": [ "*" ],
+    "natural": [
+        "tree",
+    ],
+    "note": [ "*" ],
+    "office": [ "*" ],
     "parking:lane:*": [
         "*",
         "no_parking",
         "no_stopping",
     ],
+    "power": [
+        "generator",
+        "tower"
+    ],
+    "sac_scale": [ "*" ],
+    "shop": [ "*" ],
+    "surface" : [ "*" ],
+    "tactile_paving": [ "*" ],
+    "tracktype" : [ "*" ],
+    "traffic_calming" : [ "*" ],
+    "tunnel" : [ "*" ],
+    "type": [
+        "restriction",
+    ],
+    "waterway" : [
+        "river",
+        "*",
+    ],
+    "wheelchair": [ "*" ],
+    "width" : [ "*" ]
 }
 
 ### code
