@@ -16,11 +16,6 @@ timestamp = dt.strftime(dt.today(), "%Y%m%d")
 
 ### data
 
-sheer_nodes = defaultdict(int)
-sheer_ways = defaultdict(int)
-sheer_rels = defaultdict(int)
-
-tags = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
 to_check = {
     "addr:housenumber": [ "*" ],
     "amenity": [
@@ -45,44 +40,31 @@ to_check = {
 
 ### code
 
-source = open(sys.argv[1])
-context = etree.iterparse(source, events=("start", "end"))
-context = iter(context)
+def parse(filename):
+    nodes = defaultdict(int)
+    ways = defaultdict(int)
+    rels = defaultdict(int)
 
-event, root = context.next()
+    tags = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
 
-for event, elem in context:
-    if event == "end":
-        root.clear()
-        continue
+    source = open(sys.argv[1])
+    context = etree.iterparse(source, events=("start", "end"))
+    context = iter(context)
 
-    try:
-        if elem.tag == "node":
-            sheer_nodes[elem.attrib["user"]] += 1
-        if elem.tag == "way":
-            sheer_ways[elem.attrib["user"]] += 1
-        if elem.tag == "relation":
-            sheer_rels[elem.attrib["user"]] += 1
-    except KeyError as error:
-        if "user" in error.args:
-            # This is an object from one of the old "anonymous" users, skip it.
-            pass
-        else:
-            raise error
+    event, root = context.next()
 
-    for child in elem.getchildren():
+    for event, elem in context:
+        if event == "end":
+            root.clear()
+            continue
+
         try:
-            if child.tag == "tag":
-                key = child.attrib["k"]
-                val = ";".join(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
-                for test in key_wildcard(key):
-                    if test in to_check:
-                        if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
-                            tags[test][val][elem.attrib["user"]] += 1
-                        if "*" in to_check[test]:
-                            tags[test]["*"][elem.attrib["user"]] += 1
-                        break;
-
+            if elem.tag == "node":
+                nodes[elem.attrib["user"]] += 1
+            if elem.tag == "way":
+                ways[elem.attrib["user"]] += 1
+            if elem.tag == "relation":
+                rels[elem.attrib["user"]] += 1
         except KeyError as error:
             if "user" in error.args:
                 # This is an object from one of the old "anonymous" users, skip it.
@@ -90,51 +72,92 @@ for event, elem in context:
             else:
                 raise error
 
-enum = {}
-enum2 = {}
+        for child in elem.getchildren():
+            try:
+                if child.tag == "tag":
+                    key = child.attrib["k"]
+                    val = ";".join(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
+                    for test in key_wildcard(key):
+                        if test in to_check:
+                            if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
+                                tags[test][val][elem.attrib["user"]] += 1
+                            if "*" in to_check[test]:
+                                tags[test]["*"][elem.attrib["user"]] += 1
+                            break;
 
-for key in tags:
-    enum[key] = myenum(tags[key])
-    enum2[key] = myenum(tags[key])
+            except KeyError as error:
+                if "user" in error.args:
+                    # This is an object from one of the old "anonymous" users, skip it.
+                    pass
+                else:
+                    raise error
 
-try:
-    primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
-except IOError:
-    primitives_positions = dict()
-    tags_positions = dict()
+    return [nodes, ways, rels, tags]
 
-primitives_positions[timestamp] = defaultdict(list)
-tags_positions[timestamp] = defaultdict(lambda: defaultdict(list))
+def enumerate_tags(tags):
+    enum = {}
+    enum2 = {}
 
-for p in [('Nodi', sheer_nodes), ('Ways', sheer_ways), ('Relazioni', sheer_rels)]:
-    for user in enumerate(mysort(p[1])):
-        primitives_positions[timestamp][p[0]].append(user[1][0])
+    for key in tags:
+        enum[key] = myenum(tags[key])
+        enum2[key] = myenum(tags[key])
 
-for tag in enum:
-    for val in enum[tag]:
-        for user in enum[tag][val]:
-            tags_positions[timestamp][tag][val].append(user[1][0])
+    return [enum, enum2]
 
-save = [timestamp, sheer_nodes, sheer_ways, sheer_rels, tags]
-f = open("json/%s.json" % timestamp, 'w')
-f.write(cjson.encode(save))
-f.close()
+def calculate_positions(nodes, ways, rels, enum):
+    try:
+        primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
+    except (IOError, cjson.DecodeError):
+        primitives_positions = dict()
+        tags_positions = dict()
 
-f = open('json/positions.json', 'w')
-f.write(cjson.encode([primitives_positions, tags_positions]))
-f.close()
+    primitives_positions[timestamp] = defaultdict(list)
+    tags_positions[timestamp] = defaultdict(lambda: defaultdict(list))
 
-tmpl = template(open("views/statistiche.tmpl"))
-stream = tmpl.generate(
+    for p in [('Nodi', nodes), ('Ways', ways), ('Relazioni', rels)]:
+        for user in enumerate(mysort(p[1])):
+            primitives_positions[timestamp][p[0]].append(user[1][0])
+
+    for tag in enum:
+        for val in enum[tag]:
+            for user in enum[tag][val]:
+                tags_positions[timestamp][tag][val].append(user[1][0])
+
+    return [primitives_positions, tags_positions]
+
+def save_jsons(l, pos):
+#    save = [timestamp, sheer_nodes, sheer_ways, sheer_rels, tags]
+    f = open("json/%s.json" % timestamp, 'w')
+    f.write(cjson.encode(l))
+    f.close()
+
+    f = open('json/positions.json', 'w')
+    f.write(cjson.encode(pos))
+    f.close()
+
+def render_template(nodes, ways, rels, tags, positions):
+    tmpl = template(open("views/statistiche.tmpl"))
+    stream = tmpl.generate(
                        date=timestamp,
-                       nodes=enumerate(mysort(sheer_nodes)),
-                       ways=enumerate(mysort(sheer_ways)),
-                       relations=enumerate(mysort(sheer_rels)),
-                       tags=enum2,
-                       pos_primitives=positions_changed(primitives_positions),
-                       pos_tags=positions_changed(tags_positions),
-         )
+                       nodes=enumerate(mysort(nodes)),
+                       ways=enumerate(mysort(ways)),
+                       relations=enumerate(mysort(rels)),
+                       tags=tags,
+                       pos_primitives=positions_changed(positions[0]),
+                       pos_tags=positions_changed(positions[1]),
+    )
 
-f = open(html_path, "w")
-f.write(stream.render("xhtml"))
-f.close()
+    f = open(html_path, "w")
+    f.write(stream.render("xhtml"))
+    f.close()
+
+def main():
+    nodes, ways, rels, tags = parse(sys.argv[1])
+    enum, enum2 = enumerate_tags(tags)
+    positions = calculate_positions(nodes, ways, rels, enum)
+    save_jsons([timestamp, nodes, ways, rels, tags], positions)
+    render_template(nodes, ways, rels, enum2, positions)
+
+if __name__ == '__main__':
+    main()
+
