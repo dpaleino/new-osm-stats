@@ -85,7 +85,7 @@
 <tbody>
 <py:for each="count, pair in data">
 <tr>
-  <td>${count + 1}</td>
+  <td>${int(count) + 1}</td>
   <py:choose test="">
     <py:when test="pos_primitives[name][pair[0]] &lt; 0">
       <td><img src="img/down.png" /> ${abs(pos_primitives[name][pair[0]])}</td>
