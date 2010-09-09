@@ -51,6 +51,7 @@ to_check = {
     "ele" : [ "*" ],
     "est_width": [ "*" ],
     "height" : [ "*" ],
+    "hgv" : [ "*" ],
     "highway": [
         "bus_stop",
         "crossing",
