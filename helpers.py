@@ -39,9 +39,9 @@ def positions_changed(positions):
         else:
             for val in positions[last][key]:
                 tmp = defaultdict(dict)
-                for user in  positions[last][key][val]:
+                for user in positions[last][key][val]:
                     pos_old = positions[secondlast][key][val].index(user)
                     pos_new = positions[last][key][val].index(user)
-                    tmp[val][user] = int(pos_old - pos_new)
-                ret[key] = tmp
+                    tmp[user] = int(pos_old - pos_new)
+                ret[key][val] = tmp
     return ret

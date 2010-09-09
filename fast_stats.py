@@ -91,8 +91,11 @@ for event, elem in context:
                 raise error
 
 enum = {}
+enum2 = {}
+
 for key in tags:
     enum[key] = myenum(tags[key])
+    enum2[key] = myenum(tags[key])
 
 try:
     primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
@@ -127,7 +130,7 @@ stream = tmpl.generate(
                        nodes=enumerate(mysort(sheer_nodes)),
                        ways=enumerate(mysort(sheer_ways)),
                        relations=enumerate(mysort(sheer_rels)),
-                       tags=enum,
+                       tags=enum2,
                        pos_primitives=positions_changed(primitives_positions),
                        pos_tags=positions_changed(tags_positions),
          )
