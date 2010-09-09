@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 from collections import defaultdict
 from genshi.template import MarkupTemplate as template
 import xml.etree.cElementTree as etree
 from datetime import datetime as dt
 import cjson
+import os
 
 from helpers import *
 
 ### configuration
-html_path = "statistiche.html"
-timestamp = dt.strftime(dt.today(), "%Y%m%d")
+html_path = "html/"
+jsons_path = "json/"
 
 ### data
 
@@ -47,7 +47,7 @@ def parse(filename):
 
     tags = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
 
-    source = open(sys.argv[1])
+    source = open(filename)
     context = etree.iterparse(source, events=("start", "end"))
     context = iter(context)
 
@@ -104,41 +104,40 @@ def enumerate_tags(tags):
 
     return [enum, enum2]
 
-def calculate_positions(nodes, ways, rels, enum):
+def calculate_positions(date, nodes, ways, rels, enum):
     try:
         primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
     except (IOError, cjson.DecodeError):
         primitives_positions = dict()
         tags_positions = dict()
 
-    primitives_positions[timestamp] = defaultdict(list)
-    tags_positions[timestamp] = defaultdict(lambda: defaultdict(list))
+    primitives_positions[date] = defaultdict(list)
+    tags_positions[date] = defaultdict(lambda: defaultdict(list))
 
     for p in [('Nodi', nodes), ('Ways', ways), ('Relazioni', rels)]:
         for user in enumerate(mysort(p[1])):
-            primitives_positions[timestamp][p[0]].append(user[1][0])
+            primitives_positions[date][p[0]].append(user[1][0])
 
     for tag in enum:
         for val in enum[tag]:
             for user in enum[tag][val]:
-                tags_positions[timestamp][tag][val].append(user[1][0])
+                tags_positions[date][tag][val].append(user[1][0])
 
     return [primitives_positions, tags_positions]
 
-def save_jsons(l, pos):
-#    save = [timestamp, sheer_nodes, sheer_ways, sheer_rels, tags]
-    f = open("json/%s.json" % timestamp, 'w')
+def save_jsons(prefix, l, pos):
+    f = open(os.path.join(jsons_path, "%s_%s.json" % (prefix, l[0])), 'w')
     f.write(cjson.encode(l))
     f.close()
 
-    f = open('json/positions.json', 'w')
+    f = open(os.path.join(jsons_path, '%s_positions.json' % prefix), 'w')
     f.write(cjson.encode(pos))
     f.close()
 
-def render_template(nodes, ways, rels, tags, positions):
+def render_template(prefix, date, nodes, ways, rels, tags, positions):
     tmpl = template(open("views/statistiche.tmpl"))
     stream = tmpl.generate(
-                       date=timestamp,
+                       date=date,
                        nodes=enumerate(mysort(nodes)),
                        ways=enumerate(mysort(ways)),
                        relations=enumerate(mysort(rels)),
@@ -147,17 +146,42 @@ def render_template(nodes, ways, rels, tags, positions):
                        pos_tags=positions_changed(positions[1]),
     )
 
-    f = open(html_path, "w")
+    f = open(os.path.join(html_path, '%s_stats.html' % prefix), "w")
     f.write(stream.render("xhtml"))
     f.close()
 
-def main():
-    nodes, ways, rels, tags = parse(sys.argv[1])
+def main(prefix, date, filename):
+    nodes, ways, rels, tags = parse(filename)
     enum, enum2 = enumerate_tags(tags)
-    positions = calculate_positions(nodes, ways, rels, enum)
-    save_jsons([timestamp, nodes, ways, rels, tags], positions)
-    render_template(nodes, ways, rels, enum2, positions)
+    positions = calculate_positions(date, nodes, ways, rels, enum)
+    save_jsons(prefix, [date, nodes, ways, rels, tags], positions)
+    render_template(prefix, date, nodes, ways, rels, enum2, positions)
 
 if __name__ == '__main__':
-    main()
+    from optparse import OptionParser
+    import sys
+
+    parser = OptionParser(usage="Usage: %prog [options] dump.osm", version="%prog 0.1")
+    parser.add_option("-d", "--date", dest="date", default=None,
+        help="set the date, should be in the format YYYYMMDD. If none given, \
+it will be inferred from the input filename, which should then be given in the \
+form of name.bz2.YYYYMMDD*.")
+    parser.add_option("-p", "--prefix", dest="prefix", default="italy",
+        help="set the prefix for output files")
+
+    options, args = parser.parse_args()
+
+    if not args:
+        parser.error('need an OSM dump to work on.')
+    else:
+        filename = args[0]
+
+    if not options.date:
+        # infer the date from the filename
+        try:
+            options.date = int(filename.split('bz2.')[1][:8])
+        except (IndexError, ValueError):
+            parser.error('wrong filename, expected name.bz2.YYYYMMDD* to infer date.')
+
+    main(options.prefix, options.date, filename)
 
