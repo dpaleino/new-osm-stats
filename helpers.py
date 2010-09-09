@@ -16,11 +16,13 @@ def myenum(d):
 def key_wildcard(key, ret=None):
     if not ret:
         ret = [key]
+    if key[-2:] != ':*':
+        ret.append(key+':*')
     if ":" in key:
         partial = key.split(':')[:-1]
         ret.append(':'.join(partial + ['*']))
         key_wildcard(':'.join(partial), ret)
-    return ret
+    return set(ret)
 
 def positions_changed(positions):
     ret = defaultdict(dict)
