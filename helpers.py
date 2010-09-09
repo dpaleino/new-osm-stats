@@ -35,8 +35,12 @@ def positions_changed(positions):
     for key in positions[last]:
         if key in ['Nodi', 'Ways', 'Relazioni']:
             for user in positions[last][key]:
-                pos_old = positions[secondlast][key].index(user)
                 pos_new = positions[last][key].index(user)
+                try:
+                    pos_old = positions[secondlast][key].index(user)
+                except ValueError:
+                    # a new user joined us. Yay! \o/
+                    pos_old = pos_new
                 ret[key][user] = int(pos_old - pos_new)
         else:
             for val in positions[last][key]:
@@ -45,8 +49,9 @@ def positions_changed(positions):
                     pos_new = positions[last][key][val].index(user)
                     try:
                         pos_old = positions[secondlast][key][val].index(user)
-                    except KeyError:
-                        # maybe some new tag was added since the last run
+                    except (KeyError, ValueError):
+                        # maybe some new tag was added since the last run, or
+                        # a new user joined the clan!
                         pos_old = pos_new
                     tmp[user] = int(pos_old - pos_new)
                 ret[key][val] = tmp

@@ -166,9 +166,9 @@ def enumerate_tags(tags):
 
     return [enum, enum2]
 
-def calculate_positions(date, nodes, ways, rels, enum):
+def calculate_positions(prefix, date, nodes, ways, rels, enum):
     try:
-        primitives_positions, tags_positions = cjson.decode(open('json/positions.json').readline())
+        primitives_positions, tags_positions = cjson.decode(open('json/%s_positions.json' % prefix).readline())
     except (IOError, cjson.DecodeError):
         primitives_positions = dict()
         tags_positions = dict()
@@ -215,7 +215,7 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
 def main(prefix, date, filename):
     nodes, ways, rels, tags = parse(filename)
     enum, enum2 = enumerate_tags(tags)
-    positions = calculate_positions(date, nodes, ways, rels, enum)
+    positions = calculate_positions(prefix, date, nodes, ways, rels, enum)
     save_jsons(prefix, [date, nodes, ways, rels, tags], positions)
     render_template(prefix, date, nodes, ways, rels, enum2, positions)
 
