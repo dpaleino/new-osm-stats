@@ -12,18 +12,25 @@
         $('.primitive').hide();
         $('.feature').hide();
         $('.linked').hide();
+        var i = 0;
+        $('.primitive').each(function(index) {
+            $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showprimitive('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+        });
+        $("ul#links").append("<br /"+">");
+        $("ul#links").append("<br /"+">");
         $('.linked').each(function(index) {
-            if ($(this).hasClass("primitive")) {
-                $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showprimitive('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
-            } else {
-                $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showtaglist('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+            i += 1;
+            $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showtaglist('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+            if ((i % 5) == 0) {
+                $("ul#links").append("<br /"+">");
             }
         });
         $('table').tablesorter();
     });
 
     function showprimitive(name) {
-        $('.linked').fadeOut('slow', function() {
+        $('.primitive').fadeOut('slow', function() {
+            $('.linked').fadeOut('slow');
             $('#tagshow').fadeOut('slow');
             $('div[name="'+name+'"]').fadeIn('slow');
         });
@@ -32,6 +39,7 @@
     function showtaglist(tag) {
         var i = 0;
         $('.linked').fadeOut('slow');
+        $('.primitive').fadeOut('slow');
         $("ul#tagshow").fadeOut('slow', function() {
             $("ul#tagshow").replaceWith('<ul id="tagshow"></ul>');
             $("div[name='"+tag+"']").children("div").children("a").each(function(index) {
@@ -47,6 +55,7 @@
 
     function showtag(tag) {
         $('.linked').hide();
+        $('.primitive').hide();
         $('.feature').hide();
         $('a[name="'+tag+'"]').parents('.linked').fadeIn('slow', function() {
             $('a[name="'+tag+'"]').parent('.feature').show();
@@ -60,8 +69,9 @@
 <div align="center">
 <h1>Statistiche OpenStreetMap Italia ${date}</h1>
 <ul id="links" style="display: inline;"></ul>
+<br />
 <ul id="tagshow"></ul>
-<div py:def="feature(name, data)" name="${name}" class="linked primitive">
+<div py:def="feature(name, data)" name="${name}" class="primitive">
 <a name="${name}"></a><h3>${name}</h3>
 <table class="tablesorter">
 <thead>
