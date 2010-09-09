@@ -42,8 +42,12 @@ def positions_changed(positions):
             for val in positions[last][key]:
                 tmp = defaultdict(dict)
                 for user in positions[last][key][val]:
-                    pos_old = positions[secondlast][key][val].index(user)
                     pos_new = positions[last][key][val].index(user)
+                    try:
+                        pos_old = positions[secondlast][key][val].index(user)
+                    except KeyError:
+                        # maybe some new tag was added since the last run
+                        pos_old = pos_new
                     tmp[user] = int(pos_old - pos_new)
                 ret[key][val] = tmp
     return ret
