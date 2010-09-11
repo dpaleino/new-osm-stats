@@ -68,6 +68,7 @@ to_check = {
         "playground",
     ],
     "lit": [ "*" ],
+    "maxspeed": [ "*" ],
     "mtb:scale:*": [ "*" ],
     "natural": [
         "tree",
@@ -92,6 +93,7 @@ to_check = {
     "tunnel" : [ "*" ],
     "type": [
         "restriction",
+        "street",
     ],
     "waterway" : [
         "river",
