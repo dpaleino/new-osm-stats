@@ -227,7 +227,8 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
                        ways=enumerate(mysort(ways)),
                        relations=enumerate(mysort(rels)),
                        prefix=prefix,
-                       tags=tags.keys(),
+                       tags=sorted(tags.keys()),
+                       files=[sanitize(x) for x in sorted(tags.keys())],
                        pos=positions_changed(positions[0]),
     )
 
@@ -236,7 +237,7 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
     f.close()
 
     pos = positions_changed(positions[1])
-    for key in tags:
+    for key in sorted(tags.keys()):
         log.debug("Rendering pages for %s=*", key)
         stream = template(open('views/key.tmpl')).generate(
             date=date,
@@ -244,7 +245,7 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
             vals=tags[key],
             pos=pos[key],
         )
-        f = open(os.path.join(html_path, '%s_%s.html' % (prefix, key)), 'w')
+        f = open(os.path.join(html_path, '%s_%s.html' % (prefix, sanitize(key))), 'w')
         f.write(stream.render('xhtml'))
         f.close()
 

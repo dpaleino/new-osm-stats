@@ -32,7 +32,9 @@
 <br />
 <ul id="keylinks">
 <py:for each="key in tags">
-    <li style="display:inline; margin:5px;"><a href="${prefix}_${key}.html">${key}</a></li>
+  <py:with vars="index = tags.index(key)">
+    <li style="display:inline; margin:5px;"><a href="${prefix}_${files[index]}.html">${key}</a></li>
+  </py:with>
 </py:for>
 </ul>
 <py:def function='primitive(name, data)'>

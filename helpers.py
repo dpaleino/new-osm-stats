@@ -56,3 +56,9 @@ def positions_changed(positions):
                     tmp[user] = int(pos_old - pos_new)
                 ret[key][val] = tmp
     return ret
+
+def sanitize(name):
+    name = name.replace('*', '')
+    name = name.replace(':', '-')
+    name = name.replace('/', '-')
+    return name
