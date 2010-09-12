@@ -3,7 +3,7 @@
       lang="it">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Statistiche OSM Italia ${date}</title>
+<title>Statistiche OSM Italia ${date} - Key:${key}</title>
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.tablesorter.min.js"></script>
 <script>
@@ -12,7 +12,11 @@
         $('.feature').hide();
         var i = 0;
         $('.feature').each(function(index) {
+            i += 1;
             $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+            if ((i % 5) == 0) {
+                $("ul#links").append("<br /"+">");
+            }
         });
         $('table').tablesorter();
     });
@@ -28,16 +32,12 @@
 <body>
 <div align="center">
 <h1>Statistiche OpenStreetMap Italia ${date}</h1>
+<h2>Key:${key}</h2>
 <ul id="links" style="display: inline;"></ul>
 <br />
-<ul id="keylinks">
-<py:for each="key in tags">
-    <li style="display:inline; margin:5px;"><a href="${prefix}_${key}.html">${key}</a></li>
-</py:for>
-</ul>
-<py:def function='primitive(name, data)'>
-<div name="${name}" class="feature">
-<a name="${name}"></a><h3>${name}</h3>
+<py:def function="showval(value, data)">
+<div name="${key}=${value}" class="feature">
+<a name="${key}=${value}"></a><h4>${key}=${value}</h4>
 <table class="tablesorter">
 <thead>
 <tr>
@@ -50,15 +50,15 @@
 <tbody>
 <py:for each="count, pair in data">
 <tr>
-  <td>${int(count) + 1}</td>
+  <td>${count + 1}</td>
   <py:choose test="">
-    <py:when test="pos[name][pair[0]] &lt; 0">
-      <td><img src="img/down.png" /> ${abs(pos[name][pair[0]])}</td>
+    <py:when test="pos[value][pair[0]] &lt; 0">
+      <td><img src="img/down.png" /> ${abs(pos[value][pair[0]])}</td>
     </py:when>
-    <py:when test="pos[name][pair[0]] &gt; 0">
-      <td><img src="img/up.png" /> ${pos[name][pair[0]]}</td>
+    <py:when test="pos[value][pair[0]] &gt; 0">
+      <td><img src="img/up.png" /> ${pos[value][pair[0]]}</td>
     </py:when>
-    <py:when test="pos[name][pair[0]] == 0">
+    <py:when test="pos[value][pair[0]] == 0">
       <td><img src="img/stable.png" /></td>
     </py:when>
   </py:choose>
@@ -70,9 +70,9 @@
 </table>
 </div>
 </py:def>
-${primitive('Nodi', nodes)}
-${primitive('Ways', ways)}
-${primitive('Relazioni', relations)}
+<py:for each="val in sorted(vals.keys())">
+${showval(val, vals[val])}
+</py:for>
 </div>
 </body>
 </html>

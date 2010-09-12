@@ -218,20 +218,33 @@ def save_jsons(prefix, l, pos):
 
 def render_template(prefix, date, nodes, ways, rels, tags, positions):
     log.info("Rendering HTML")
+
     tmpl = template(open("views/statistiche.tmpl"))
     stream = tmpl.generate(
                        date=date,
                        nodes=enumerate(mysort(nodes)),
                        ways=enumerate(mysort(ways)),
                        relations=enumerate(mysort(rels)),
-                       tags=tags,
-                       pos_primitives=positions_changed(positions[0]),
-                       pos_tags=positions_changed(positions[1]),
+                       prefix=prefix,
+                       tags=tags.keys(),
+                       pos=positions_changed(positions[0]),
     )
 
     f = open(os.path.join(html_path, '%s_stats.html' % prefix), "w")
     f.write(stream.render("xhtml"))
     f.close()
+
+    pos = positions_changed(positions[1])
+    for key in tags:
+        stream = template(open('views/key.tmpl')).generate(
+            date=date,
+            key=key,
+            vals=tags[key],
+            pos=pos[key],
+        )
+        f = open(os.path.join(html_path, '%s_%s.html' % (prefix, key)), 'w')
+        f.write(stream.render('xhtml'))
+        f.close()
 
 def main(prefix, date, filename):
     nodes, ways, rels, tags = parse(filename)
