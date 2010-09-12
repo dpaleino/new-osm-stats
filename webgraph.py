@@ -8,14 +8,19 @@ from plot import graphs_path, graphs_cache
 from genshi.template import MarkupTemplate as template
 import os
 
+from helpers import *
+
 os.chdir(os.path.dirname(__file__))
 
 @route('/:filename')
 @route('/')
 def index(filename=None):
     bottle.TEMPLATES.clear()
+    prefix = "italy"
+    if request.GET.get('prefix'):
+        prefix = str(sanitize(request.GET['prefix']))
     if not filename:
-        filename = "mazara_stats.html"
+        filename = "%s_stats.html" % prefix
     return open(os.path.join('html', filename))
 
 @route('/graphs')
