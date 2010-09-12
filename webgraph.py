@@ -8,8 +8,18 @@ from plot import graphs_path, graphs_cache
 from genshi.template import MarkupTemplate as template
 import os
 
+os.chdir(os.path.dirname(__file__))
+
+@route('/:filename')
 @route('/')
-def index():
+def index(filename=None):
+    bottle.TEMPLATES.clear()
+    if not filename:
+        filename = "mazara_stats.html"
+    return open(os.path.join('html', filename))
+
+@route('/graphs')
+def graphs():
     bottle.TEMPLATES.clear()
     tmpl = template(open("views/webgraph.tmpl"))
     out = tmpl.generate(
@@ -63,7 +73,8 @@ def graph():
 def send_js(f):
     return static_file(f, "js/", mimetype="text/javascript")
 
-if __name__ == "__main__":
-    bottle.debug(True)
-    bottle.default_app().autojson = True
-    run(host='192.168.1.33', port=8080, reloader=True)
+bottle.debug(True)
+bottle.default_app().autojson = True
+run(host='192.168.1.33', port=8080, reloader=True)
+
+application = bottle.default_app()
