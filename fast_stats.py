@@ -239,6 +239,7 @@ def main(prefix, date, filename):
     positions = calculate_positions(prefix, date, nodes, ways, rels, enum)
     save_jsons(prefix, [date, nodes, ways, rels, tags], positions)
     render_template(prefix, date, nodes, ways, rels, enum2, positions)
+    log.info("Program ended.")
 
 if __name__ == '__main__':
     from optparse import OptionParser
