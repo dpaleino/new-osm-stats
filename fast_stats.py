@@ -244,7 +244,7 @@ form of name.bz2.YYYYMMDD*.")
     if not options.date:
         # infer the date from the filename
         try:
-            options.date = int(filename.split('bz2.')[1][:8])
+            options.date = str(int(filename.split('bz2.')[1][:8]))
         except (IndexError, ValueError):
             parser.error('wrong filename, expected name.bz2.YYYYMMDD* to infer date.')
 
