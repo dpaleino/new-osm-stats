@@ -241,6 +241,7 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
         log.debug("Rendering pages for %s=*", key)
         stream = template(open('views/key.tmpl')).generate(
             date=date,
+            prefix=prefix,
             key=key,
             vals=tags[key],
             pos=pos[key],

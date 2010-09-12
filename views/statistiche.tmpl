@@ -10,7 +10,6 @@
 <!--
     $(document).ready(function() {
         $('.feature').hide();
-        var i = 0;
         $('.feature').each(function(index) {
             $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
         });
@@ -28,12 +27,14 @@
 <body>
 <div align="center">
 <h1>Statistiche OpenStreetMap Italia ${date}</h1>
-<ul id="links" style="display: inline;"></ul>
-<br />
-<ul id="keylinks">
+<ul id="links" style="padding: 0px"></ul>
+<ul id="keylinks" style="padding: 0px">
 <py:for each="key in tags">
   <py:with vars="index = tags.index(key)">
     <li style="display:inline; margin:5px;"><a href="${prefix}_${files[index]}.html">${key}</a></li>
+    <py:choose test="((index + 1) % 5)">
+      <py:when test="0"><br /></py:when>
+    </py:choose>
   </py:with>
 </py:for>
 </ul>
