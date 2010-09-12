@@ -7,12 +7,22 @@ import xml.etree.cElementTree as etree
 from datetime import datetime as dt
 import cjson
 import os
+import logging
 
 from helpers import *
 
 ### configuration
 html_path = "html/"
 jsons_path = "json/"
+
+### logging
+log = logging.getLogger('stats')
+log.setLevel(logging.INFO)
+logh = logging.StreamHandler()
+logh.setLevel(logging.INFO)
+logfmt = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logh.setFormatter(logfmt)
+log.addHandler(logh)
 
 ### data
 
@@ -106,6 +116,7 @@ to_check = {
 ### code
 
 def parse(filename):
+    log.info("Started parsing %s." % filename)
     nodes = defaultdict(int)
     ways = defaultdict(int)
     rels = defaultdict(int)
@@ -157,19 +168,24 @@ def parse(filename):
                 else:
                     raise error
 
+    log.info("Finished parsing %s." % filename)
     return [nodes, ways, rels, tags]
 
 def enumerate_tags(tags):
+    log.info("Started sorting users.")
     enum = {}
     enum2 = {}
 
     for key in tags:
+        log.debug("Sorting users for key %s" % key)
         enum[key] = myenum(tags[key])
         enum2[key] = myenum(tags[key])
 
+    log.info("Finished sorting users.")
     return [enum, enum2]
 
 def calculate_positions(prefix, date, nodes, ways, rels, enum):
+    log.info("Started calculating positions.")
     try:
         primitives_positions, tags_positions = cjson.decode(open('json/%s_positions.json' % prefix).readline())
     except (IOError, cjson.DecodeError):
@@ -179,18 +195,22 @@ def calculate_positions(prefix, date, nodes, ways, rels, enum):
     primitives_positions[date] = defaultdict(list)
     tags_positions[date] = defaultdict(lambda: defaultdict(list))
 
+    log.debug("Calculating positions for primitives (nodes, ways, relations).")
     for p in [('Nodi', nodes), ('Ways', ways), ('Relazioni', rels)]:
         for user in enumerate(mysort(p[1])):
             primitives_positions[date][p[0]].append(user[1][0])
 
     for tag in enum:
+        log.debug("Calculating positions for key %s." % tag)
         for val in enum[tag]:
             for user in enum[tag][val]:
                 tags_positions[date][tag][val].append(user[1][0])
 
+    log.info("Finished calculating positions.")
     return [primitives_positions, tags_positions]
 
 def save_jsons(prefix, l, pos):
+    log.info("Saving to JSON...")
     f = open(os.path.join(jsons_path, "%s_%s.json" % (prefix, l[0])), 'w')
     f.write(cjson.encode(l))
     f.close()
@@ -199,7 +219,10 @@ def save_jsons(prefix, l, pos):
     f.write(cjson.encode(pos))
     f.close()
 
+    log.info("Data saved.")
+
 def render_template(prefix, date, nodes, ways, rels, tags, positions):
+    log.info("Outputting HTML...")
     tmpl = template(open("views/statistiche.tmpl"))
     stream = tmpl.generate(
                        date=date,
@@ -214,6 +237,8 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
     f = open(os.path.join(html_path, '%s_stats.html' % prefix), "w")
     f.write(stream.render("xhtml"))
     f.close()
+
+    log.info("HTML pages rendered.")
 
 def main(prefix, date, filename):
     nodes, ways, rels, tags = parse(filename)
@@ -233,6 +258,10 @@ it will be inferred from the input filename, which should then be given in the \
 form of name.bz2.YYYYMMDD*.")
     parser.add_option("-p", "--prefix", dest="prefix", default="italy",
         help="set the prefix for output files")
+    parser.add_option("-q", "--quiet", dest="verbose", action="store_const",
+        const=-1, default=0, help="don't output anything to the console.")
+    parser.add_option("-v", "--verbose", dest="verbose", action="store_const",
+        const=1, help="be verbose on what's being done.")
 
     options, args = parser.parse_args()
 
@@ -247,6 +276,13 @@ form of name.bz2.YYYYMMDD*.")
             options.date = str(int(filename.split('bz2.')[1][:8]))
         except (IndexError, ValueError):
             parser.error('wrong filename, expected name.bz2.YYYYMMDD* to infer date.')
+
+    if options.verbose == -1:
+        log.setLevel(logging.NOTSET)
+        logh.setLevel(logging.NOTSET)
+    elif options.verbose == 1:
+        log.setLevel(logging.DEBUG)
+        logh.setLevel(logging.DEBUG)
 
     main(options.prefix, options.date, filename)
 
