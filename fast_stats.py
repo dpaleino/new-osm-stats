@@ -219,6 +219,7 @@ def save_jsons(prefix, l, pos):
 def render_template(prefix, date, nodes, ways, rels, tags, positions):
     log.info("Rendering HTML")
 
+    log.debug("Rendering primitives pages")
     tmpl = template(open("views/statistiche.tmpl"))
     stream = tmpl.generate(
                        date=date,
@@ -236,6 +237,7 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
 
     pos = positions_changed(positions[1])
     for key in tags:
+        log.debug("Rendering pages for %s=*", key)
         stream = template(open('views/key.tmpl')).generate(
             date=date,
             key=key,
