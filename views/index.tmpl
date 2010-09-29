@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      lang="it">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+<title>Statistiche OSM Italia ${date}</title>
+<style type="text/css">
+@font-face {
+    font-family: 'Fertigo';
+    src: url('fonts/fertigo.otf');
+}
+input {
+    display: inline;
+    margin: 50px;
+    outline: none;
+    transition: all 0.25s ease-in-out;
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25s ease-in-out;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border: 1px solid rgba(255,255,255, 0.2);
+}
+input:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 255, 1);
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 255, 1);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 255, 1);
+    border: 1px solid rgba(0,0,255, 0.8);
+    margin-bottom: -0.1em;
+}
+.fertigo {
+    font-family: 'Fertigo';
+    font-size: 2.2em;
+}
+div#what {
+    width: 70%;
+}
+</style>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+<!--
+    $(document).ready(function() {
+        $('input').mouseenter(function() {
+            $('div#what').fadeOut('slow');
+            $('div#what').text($(this).attr('title'));
+            $('div#what').fadeIn();
+        });
+    });
+//-->
+</script>
+</head>
+<body>
+<div align="center">
+  <h1 class="fertigo">Statistiche OSM ${date}</h1>
+  <br />
+  <br />
+  <input type="image" title="Statistics" src="img/user.png"/>
+  <input type="image" title="Charts" src="img/chart.png" />
+  <input type="image" title="Source code" src="img/source.png" />
+  <input type="image" title="Credits" src="img/help.png" />
+  <br>
+  <div id="what" class="fertigo"></div>
+</div>
+</body>
+</html>
