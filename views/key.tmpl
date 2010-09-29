@@ -33,7 +33,14 @@
 <div align="center">
 <h1>Statistiche OpenStreetMap Italia ${date}</h1>
 <h2>Key:${key}</h2>
-<small><a href="${prefix}_stats.html">Go back</a></small>
+<py:choose test="split">
+  <py:when test="None">
+    <small><a href="${prefix}_${key}.html">Go back</a></small>
+  </py:when>
+  <py:otherwise>
+    <small><a href="${prefix}_stats.html">Go back</a></small>
+  </py:otherwise>
+</py:choose>
 <ul id="links" style="padding: 0px;"></ul>
 <br />
 <py:def function="showval(value, data)">
@@ -67,6 +74,11 @@
   <td>${pair[1]}</td>
 </tr>
 </py:for>
+<py:if test="split">
+  <tr>
+    <td colspan='4'><a href='${prefix}_${key}_full.html'>&hellip;</a></td>
+  </tr>
+</py:if>
 </tbody>
 </table>
 </div>
