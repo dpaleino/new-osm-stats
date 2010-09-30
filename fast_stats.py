@@ -75,6 +75,24 @@ to_check = {
         "stop",
         "street_lamp",
         "traffic_lights",
+        ('streets', (
+            'road',
+            'service',
+            'pedestrian',
+            'living_street',
+            'residential',
+            'unclassified',
+            'tertiary',
+            'secondary_link',
+            'secondary',
+            'primary_link',
+            'primary',
+            'trunk_link',
+            'trunk',
+            'motorway_link',
+            'motorway',
+            'bus_guideway',
+        )),
     ],
     "historic" : [ "*" ],
     "leisure": [
@@ -160,6 +178,13 @@ def parse(filename):
                     val = ";".join(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
                     for test in key_wildcard(key):
                         if test in to_check:
+                            # first, check for categories-count
+                            for v in to_check[test]:
+                                if type(v) == tuple:
+                                    if val in v[1] or (type(val) == tuple and (val[0] in v[1] or val[1] in v[1])):
+                                        new_v = '%s|%s' % (v[0], ';'.join(v[1]))
+                                        tags[test][new_v][elem.attrib['user']] += 1
+
                             if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
                                 tags[test][val][elem.attrib["user"]] += 1
                             if "*" in to_check[test]:

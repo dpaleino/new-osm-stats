@@ -13,7 +13,12 @@
         var i = 0;
         $('.feature').each(function(index) {
             i += 1;
-            $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+            header = $(this).children('a').first();
+            if (header.hasClass('category')) {
+                $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\"><i><b>"+header.attr("name")+"</b></i></a></li>");
+            } else {
+                $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+            }
             if ((i % 5) == 0) {
                 $("ul#links").append("<br /"+">");
             }
@@ -44,8 +49,17 @@
 <ul id="links" style="padding: 0px;"></ul>
 <br />
 <py:def function="showval(value, data)">
-<div name="${key}=${value}" class="feature">
-<a name="${key}=${value}"></a><h4>${key}=${value}</h4>
+<py:with vars='category = value.split("|")[0]'>
+<div name="${key}=${category}" class="feature">
+<py:choose test='category'>
+  <py:when test='value'>
+    <a name="${key}=${value}"></a><h4>${key}=${value}</h4>
+  </py:when>
+  <py:otherwise>
+    <a name="${category}" class='category'></a><h4><i>${category}</i></h4>
+    <h5>This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
+  </py:otherwise>
+</py:choose>
 <table class="tablesorter">
 <thead>
 <tr>
@@ -82,6 +96,7 @@
 </tbody>
 </table>
 </div>
+</py:with>
 </py:def>
 <py:for each="val in sorted(vals.keys())">
 ${showval(val, vals[val])}
