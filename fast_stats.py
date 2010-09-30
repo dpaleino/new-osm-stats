@@ -66,8 +66,12 @@ to_check = {
     "highway": [
         "bus_stop",
         "crossing",
+        'cycleway',
+        'footway',
         "motorway_junction",
+        'path',
         "speed_camera",
+        'steps',
         "stop",
         "street_lamp",
         "traffic_lights",
