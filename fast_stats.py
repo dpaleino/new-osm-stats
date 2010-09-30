@@ -181,11 +181,11 @@ def parse(filename):
                             # first, check for categories-count
                             for v in to_check[test]:
                                 if type(v) == tuple:
-                                    if val in v[1] or (type(val) == tuple and (val[0] in v[1] or val[1] in v[1])):
+                                    if val in v[1] or (type(val) == tuple and check_tuple(val, v[1])):
                                         new_v = '%s|%s' % (v[0], ';'.join(v[1]))
                                         tags[test][new_v][elem.attrib['user']] += 1
 
-                            if val in to_check[test] or (type(val) == tuple and (val[0] in to_check or val[1] in to_check)):
+                            if val in to_check[test] or (type(val) == tuple and check_tuple(val, to_check)):
                                 tags[test][val][elem.attrib["user"]] += 1
                             if "*" in to_check[test]:
                                 tags[test]["*"][elem.attrib["user"]] += 1

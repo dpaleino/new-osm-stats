@@ -31,6 +31,12 @@ def key_wildcard(key, ret=None):
         key_wildcard(':'.join(partial), ret)
     return set(ret)
 
+def check_tuple(t, values):
+    for v in t:
+        if v in values:
+            return true
+    return false
+
 def get_last_dates(positions):
     dates = sorted(positions.keys())
     last = dates[-1:][0]
