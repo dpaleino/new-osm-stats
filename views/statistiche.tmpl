@@ -11,7 +11,7 @@
     $(document).ready(function() {
         $('.feature').hide();
         $('.feature').each(function(index) {
-            $("ul#links").append("<li style=\"display:inline; margin:5px;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
+            $("ul#links").append("<li style=\"display:inline; margin:5px; text-decoration: none;\"><a href=\"#\" onclick=\"javascript:showfeature('"+$(this).attr("name")+"');\">"+$(this).attr("name")+"</a></li>");
         });
         $('table').tablesorter();
     });
@@ -31,7 +31,7 @@
 <ul id="keylinks" style="padding: 0px">
 <py:for each="key in tags">
   <py:with vars="index = tags.index(key)">
-    <li style="display:inline; margin:5px;"><a href="${prefix}_${files[index]}.html">${key}</a></li>
+    <li style="display:inline; margin:5px; text-decoration: none;"><a href="${prefix}_${files[index]}.html">${key}</a></li>
     <py:choose test="((index + 1) % 5)">
       <py:when test="0"><br /></py:when>
     </py:choose>
