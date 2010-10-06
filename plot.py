@@ -78,6 +78,35 @@ def graph_tag_users(prefix, tags, users):
         graph.plot()
     return files
 
+def graph_totals(prefix, tags):
+    counts, xcoords, ycoords = parse_json(prefix)
+    files = []
+
+    if type(tags) != list:
+        tags = [tags]
+    tags = sorted(filter(None, tags))
+
+    for tag in tags:
+        filename = hashlib.md5(repr([tag, ycoords[tag].keys()])).hexdigest()
+        filename = os.path.join(graphs_cache, filename)
+        files.append(filename)
+
+        if filename in glob(os.path.join(graphs_cache, '*')):
+            # we'll return the cached one
+            continue
+
+        graph = Graph(filename, tag)
+        yvalues = []
+        for key in ycoords[tag]:
+            val = 0
+            for user in ycoords[tag][key]:
+                val += ycoords[tag][key][user]
+            yvalues.append(val)
+        graph.add_line(tag, ycoords[tag].keys(), yvalues)
+        graph.plot()
+
+    return files
+
 def parse_json(prefix, full=False):
     xcoords = []
     counts = []

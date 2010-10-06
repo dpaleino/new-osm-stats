@@ -3,8 +3,7 @@
 
 import bottle
 from bottle import *
-from plot import graph_tag_users, parse_json
-from plot import graphs_path, graphs_cache
+from plot import *
 from genshi.template import MarkupTemplate as template
 import os
 
@@ -113,8 +112,8 @@ def get_users_for(tag, prefix=None):
         users.update(date.keys())
     return {"r":sorted(list(users))}
 
-@get('/graph')
-def graph(prefix=None):
+@get('/graph-tag-user')
+def graph_tag_user(prefix=None):
     if not prefix:
         prefix = get_prefix(request)
 
@@ -122,6 +121,16 @@ def graph(prefix=None):
     counts, xcoords, ycoords = parse_json(prefix)
     filename = graph_tag_users(prefix, request.GET["tag"], request.GET.getall("user"))[0]
     return static_file(os.path.basename(filename), graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
+
+@get('/graph-tag')
+def graph_tag(prefix=None):
+    if not prefix:
+        prefix = get_prefix(request)
+
+    bottle.response.set_content_type('image/svg+xml; charset=UTF-8')
+    counts, xcoords, ycoords = parse_json(prefix)
+    filename = graph_totals(prefix, request.GET.getall('tag'))[0]
+    return static_file(os.path.basename(filename), graphs_cache, mimetype='image/svg+xml; charset=UTF-8')
 
 bottle.debug(True)
 bottle.default_app().autojson = True
