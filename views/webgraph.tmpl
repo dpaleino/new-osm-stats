@@ -18,6 +18,12 @@
             $('div#graph').fadeIn('slow');
         });
 
+        $('#form2').submit(function(x) {
+            x.preventDefault();
+            $('div#graph').html('<iframe src="/graph-tag?'+$(this).serialize()+'" width="640" height="480"></iframe>');
+            $('div#graph').fadeIn('slow');
+        });
+
         $('select#user2').change(function() {
             $('div#graph').fadeOut('slow');
             var value = $(this).val();
@@ -101,6 +107,16 @@
     <input type="Submit" value="Graph!" />
   </form>
   <br />
+  <form id="form2" action="/graph-tag" method="get">
+    <select name="tag" id="tag3" multiple="multiple" size="5">
+      <option value="" selected="selected">--- Select tag ---</option>
+      <py:for each="tag in tags">
+        <option value="${tag}">${tag}</option>
+      </py:for>
+    </select>
+    <br />
+    <input type="Submit" value="Graph!" />
+  </form>
   <br />
   <div id="graph">
   </div>

@@ -129,7 +129,7 @@ def graph_tag(prefix=None):
 
     bottle.response.set_content_type('image/svg+xml; charset=UTF-8')
     counts, xcoords, ycoords = parse_json(prefix)
-    filename = graph_totals(prefix, request.GET.getall('tag'))[0]
+    filename = graph_totals(prefix, request.GET.getall('tag'))
     return static_file(os.path.basename(filename), graphs_cache, mimetype='image/svg+xml; charset=UTF-8')
 
 bottle.debug(True)
