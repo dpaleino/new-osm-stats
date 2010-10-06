@@ -62,6 +62,7 @@ table.tablesorter thead tr .header {
 	background-repeat: no-repeat;
 	background-position: center right;
 	border: 1px solid #98bf21;
+	padding-right: 20px;
 	cursor: pointer;
 }
 
