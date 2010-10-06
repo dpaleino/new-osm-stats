@@ -40,10 +40,10 @@
 <h2>Key:${key}</h2>
 <py:choose test="split">
   <py:when test="None">
-    <small><a href="${prefix}_${key}.html">Go back</a></small>
+    <small><a href="/stats/${key}/?prefix=${prefix}">Go back</a></small>
   </py:when>
   <py:otherwise>
-    <small><a href="${prefix}_stats.html">Go back</a></small>
+    <small><a href="/stats/?prefix=${prefix}">Go back</a></small>
   </py:otherwise>
 </py:choose>
 <ul id="links" style="padding: 0px;"></ul>

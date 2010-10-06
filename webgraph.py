@@ -13,6 +13,8 @@ from helpers import *
 
 os.chdir(os.path.dirname(__file__))
 
+default_prefix = 'italy'
+
 @route('/')
 def index():
     bottle.TEMPLATES.clear()
@@ -32,13 +34,25 @@ def send_font(f):
     return static_file(f, 'fonts')
 
 @route('/stats/')
-@route('/stats/:filename')
-def stats(filename=None):
-    prefix = "italy"
+def stats():
     if request.GET.get('prefix'):
         prefix = str(sanitize(request.GET['prefix']))
-    if not filename:
-        filename = "%s_stats.html" % prefix
+    else:
+        prefix = default_prefix
+    filename = "%s_stats.html" % prefix
+    return open(os.path.join(html_path, filename))
+
+@route('/stats/:key/')
+@route('/stats/:key')
+def show_key(key):
+    if request.GET.get('prefix'):
+        prefix = str(sanitize(request.GET['prefix']))
+    else:
+        prefix = default_prefix
+    if request.GET.get('full'):
+        filename = '%s_%s_full.html' % (prefix, sanitize(key))
+    else:
+        filename = '%s_%s.html' % (prefix, sanitize(key))
     return open(os.path.join(html_path, filename))
 
 @route('/graphs')

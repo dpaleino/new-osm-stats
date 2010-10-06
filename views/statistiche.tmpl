@@ -31,7 +31,7 @@
 <ul id="keylinks" style="padding: 0px">
 <py:for each="key in tags">
   <py:with vars="index = tags.index(key)">
-    <li style="display:inline; margin:5px; text-decoration: none;"><a href="${prefix}_${files[index]}.html">${key}</a></li>
+    <li style="display:inline; margin:5px; text-decoration: none;"><a href="/stats/${key}/?prefix=${prefix}">${key}</a></li>
     <py:choose test="((index + 1) % 5)">
       <py:when test="0"><br /></py:when>
     </py:choose>
