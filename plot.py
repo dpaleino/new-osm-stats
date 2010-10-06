@@ -42,7 +42,12 @@ class Graph():
     def plot(self):
         l = []
         for user, tmpfile in self.tmp:
-            l.append("'%s' using 1:2 title '%s'" % (tmpfile, user))
+            # support "categories"
+            if '|' in user and ';' in user.split('|')[1]:
+                label = user.split('|')[0]
+            else:
+                label = user
+            l.append("'%s' using 1:2 title '%s'" % (tmpfile, label))
         self.g("plot " + ', '.join(l))
         self.g.close()
         for user, tmpfile in self.tmp:

@@ -34,7 +34,13 @@
                 var tags = j.r;
 
                 for (var i=0; i < tags.length; i++) {
-                    opts += '<option value="'+tags[i]+'">'+tags[i]+'</option>';
+                    if (tags[i].indexOf('|') != -1) {
+                      opts += '<option value="'+tags[i]+'" style="background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;">';
+                      opts += tags[i].split('|')[0]+'</option>';
+                    }
+                    else {
+                      opts += '<option value="'+tags[i]+'">'+tags[i]+'</option>';
+                    }
                 }
 
                 $('select[name=searchtag]').html(opts);
@@ -77,7 +83,14 @@
       <select name="tag" id="tag1">
         <option value="" selected="selected">--- Select tag ---</option>
         <py:for each="tag in tags">
-          <option value="${tag}">${tag}</option>
+          <py:choose test="">
+            <py:when test="'|' in tag">
+              <option value="${tag}" style="background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;">${tag.split('|')[0]}</option>
+            </py:when>
+            <py:otherwise>
+              <option value="${tag}">${tag}</option>
+            </py:otherwise>
+          </py:choose>
         </py:for>
       </select>
       <br />
@@ -111,7 +124,14 @@
     <select name="tag" id="tag3" multiple="multiple" size="5">
       <option value="" selected="selected">--- Select tag ---</option>
       <py:for each="tag in tags">
-        <option value="${tag}">${tag}</option>
+        <py:choose test="">
+          <py:when test="'|' in tag">
+            <option value="${tag}" style="background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;">${tag.split('|')[0]}</option>
+          </py:when>
+          <py:otherwise>
+            <option value="${tag}">${tag}</option>
+          </py:otherwise>
+        </py:choose>
       </py:for>
     </select>
     <br />
