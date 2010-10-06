@@ -4,8 +4,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
 <title>Statistiche OSM Italia ${date} - Key:${key}</title>
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.tablesorter.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.tablesorter.min.js"></script>
 <script>
 <!--
     $(document).ready(function() {
@@ -75,13 +75,13 @@
   <td>${count + 1}</td>
   <py:choose test="">
     <py:when test="pos[value][pair[0]] &lt; 0">
-      <td><img src="img/down.png" /> ${abs(pos[value][pair[0]])}</td>
+      <td><img src="/img/down.png" /> ${abs(pos[value][pair[0]])}</td>
     </py:when>
     <py:when test="pos[value][pair[0]] &gt; 0">
-      <td><img src="img/up.png" /> ${pos[value][pair[0]]}</td>
+      <td><img src="/img/up.png" /> ${pos[value][pair[0]]}</td>
     </py:when>
     <py:when test="pos[value][pair[0]] == 0">
-      <td><img src="img/stable.png" /></td>
+      <td><img src="/img/stable.png" /></td>
     </py:when>
   </py:choose>
   <td><a href="http://www.openstreetmap.org/user/${pair[0]}" style="text-decoration:none;">${pair[0]}</a></td>
