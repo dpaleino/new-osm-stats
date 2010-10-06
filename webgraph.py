@@ -21,15 +21,15 @@ def index():
 # included files
 @route('/js/:f')
 def send_js(f):
-    return static_file(f, os.path.join(html_path, 'js'), mimetype="text/javascript")
+    return static_file(f, 'js', mimetype="text/javascript")
 
 @route('/img/:f')
 def send_img(f):
-    return static_file(f, os.path.join(html_path, 'img'))
+    return static_file(f, 'img')
 
 @route('/fonts/:f')
 def send_font(f):
-    return static_file(f, os.path.join(html_path, 'fonts'))
+    return static_file(f, 'fonts')
 
 @route('/stats/:filename')
 def stats(filename=None):
