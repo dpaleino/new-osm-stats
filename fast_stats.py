@@ -10,11 +10,7 @@ import os
 import logging
 
 from helpers import *
-
-### configuration
-html_path = "html/"
-jsons_path = "json/"
-maxsplit = 100
+from config import *
 
 ### logging
 log = logging.getLogger('stats')

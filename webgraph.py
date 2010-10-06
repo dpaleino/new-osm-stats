@@ -6,14 +6,12 @@ from bottle import *
 from plot import graph_tag_users, parse_json
 from plot import graphs_path, graphs_cache
 from genshi.template import MarkupTemplate as template
-from fast_stats import html_path
 import os
 
 from helpers import *
+from config import *
 
 os.chdir(os.path.dirname(__file__))
-
-default_prefix = 'italy'
 
 @route('/')
 def index():

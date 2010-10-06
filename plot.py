@@ -9,8 +9,7 @@ import os
 from collections import defaultdict
 import hashlib
 
-graphs_path = 'graphs/'
-graphs_cache = os.path.join(graphs_path, 'cached')
+from config import *
 
 class Graph():
     def __init__(self, filename, title=None):
