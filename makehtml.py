@@ -4,15 +4,17 @@
 import fast_stats as stats
 import cjson
 import os
+from config import *
 
 def main(prefix, date):
-    json = open(os.path.join(stats.jsons_path, '%s_%s.json' % (prefix, date)))
-    pos = open(os.path.join(stats.jsons_path, '%s_positions.json' % prefix))
+    json = open(os.path.join(json_path, '%s_%s.json' % (prefix, date)))
+    pos = open(os.path.join(json_path, '%s_positions.json' % prefix))
 
     timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
     positions = cjson.decode(pos.readline())
 
-    stats.render_template(prefix, date, nodes, ways, rels, stats.enumerate_tags(tags)[0], positions)
+    enum, enum2 = stats.enumerate_tags(tags)
+    stats.render_template(prefix, date, nodes, ways, rels, enum, enum2, positions)
 
 
 if __name__ == '__main__':
