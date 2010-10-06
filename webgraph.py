@@ -35,22 +35,19 @@ def send_font(f):
 def send_style(f):
     return static_file(f, 'style', mimetype='text/css')
 
+###
+# Stats
+###
 @route('/stats/')
 def stats():
-    if request.GET.get('prefix'):
-        prefix = str(sanitize(request.GET['prefix']))
-    else:
-        prefix = default_prefix
+    prefix = get_prefix(request)
     filename = "%s_stats.html" % prefix
     return open(os.path.join(html_path, filename))
 
 @route('/stats/:key/')
 @route('/stats/:key')
 def show_key(key):
-    if request.GET.get('prefix'):
-        prefix = str(sanitize(request.GET['prefix']))
-    else:
-        prefix = default_prefix
+    prefix = get_prefix(request)
     if request.GET.get('full'):
         filename = '%s_%s_full.html' % (prefix, sanitize(key))
     else:

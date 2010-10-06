@@ -5,6 +5,8 @@ from operator import itemgetter
 from collections import defaultdict
 from copy import deepcopy
 
+import config
+
 def mysort(d, split=None):
     if not split:
         return sorted(d.items(), key=itemgetter(1), reverse=True)
@@ -101,3 +103,9 @@ def sanitize(name):
     name = name.replace(':', '-')
     name = name.replace('/', '-')
     return name
+
+def get_prefix(request):
+    if request.GET.get('prefix'):
+        return str(sanitize(request.GET['prefix']))
+    else:
+        return config.default_prefix
