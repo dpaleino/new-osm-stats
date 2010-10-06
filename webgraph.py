@@ -134,6 +134,6 @@ def graph_tag(prefix=None):
 
 bottle.debug(True)
 bottle.default_app().autojson = True
-run(host='192.168.1.33', port=8080, reloader=True)
+run(host=host_ip_addr, port=8080, reloader=True)
 
 application = bottle.default_app()

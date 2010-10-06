@@ -11,3 +11,5 @@ graphs_path = 'graphs'
 graphs_cache = os.path.join(graphs_path, 'cached')
 
 default_prefix = 'italy'
+
+host_ip_addr = '192.168.1.33'
