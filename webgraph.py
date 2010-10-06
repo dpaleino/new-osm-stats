@@ -12,10 +12,13 @@ from helpers import *
 
 os.chdir(os.path.dirname(__file__))
 
-@route('/:filename')
 @route('/')
-def index(filename=None):
+def index():
     bottle.TEMPLATES.clear()
+    return open(os.path.join('html', 'index.html'))
+
+@route('/stats/:filename')
+def stats(filename=None):
     prefix = "italy"
     if request.GET.get('prefix'):
         prefix = str(sanitize(request.GET['prefix']))

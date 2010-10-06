@@ -249,6 +249,13 @@ def save_jsons(prefix, l, pos):
 def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positions):
     log.info("Rendering HTML")
 
+    log.debug('Rendering index page (%s)' % date)
+    tmpl = template(open('views/index.tmpl'))
+    stream = tmpl.generate(date=date)
+    f = open(os.path.join(html_path, 'index.html'), 'w')
+    f.write(stream.render('xhtml'))
+    f.close()
+
     log.debug("Rendering primitives pages (%s)" % date)
 
     for t in [(None, fulltags), (maxsplit, splittags)]:
