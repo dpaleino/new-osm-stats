@@ -234,11 +234,11 @@ def calculate_positions(prefix, date, nodes, ways, rels, tags):
 
 def save_jsons(prefix, l, pos):
     log.info("Saving to JSON")
-    f = open(os.path.join(jsons_path, "%s_%s.json" % (prefix, l[0])), 'w')
+    f = open(os.path.join(json_path, "%s_%s.json" % (prefix, l[0])), 'w')
     f.write(cjson.encode(l))
     f.close()
 
-    f = open(os.path.join(jsons_path, '%s_positions.json' % prefix), 'w')
+    f = open(os.path.join(json_path, '%s_positions.json' % prefix), 'w')
     f.write(cjson.encode(pos))
     f.close()
 
@@ -305,7 +305,7 @@ def main(prefix, date, filename):
     secondlast, last = get_last_dates(positions[0])
 
     log.debug('Loading data for %s' % last)
-    json = open(os.path.join(jsons_path, '%s_%s.json' % (prefix, last)))
+    json = open(os.path.join(json_path, '%s_%s.json' % (prefix, last)))
     timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
 
     enum, enum2 = enumerate_tags(tags)
