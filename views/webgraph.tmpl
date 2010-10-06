@@ -5,6 +5,95 @@
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
 <title>Generatore grafici statistiche OSM</title>
 <script src="/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
+<style>
+    div#sidebar {
+        width: 30%;
+        float: left;
+    }
+    option.tagtag{
+        background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;
+    }
+    div#graph {
+        margin-left: 1em;
+    }
+    div#graph iframe {
+        border: none;
+    }
+
+</style>
+</head>
+<body>
+<div id="content">
+<div id="sidebar">
+  <h1>Dynamic graph generator</h1>
+  <form id="form" action="/graph-tag-user" method="get">
+    <table>
+      <tr>
+      <td>
+      <label for="tag">Tags:</label><br />
+      <select name="tag" id="tag1">
+        <option value="" selected="selected">--- Select tag ---</option>
+        <py:for each="tag in tags">
+          <py:choose test="">
+            <py:when test="'|' in tag">
+              <option value="${tag}" class="tagtag">${tag.split('|')[0]}</option>
+            </py:when>
+            <py:otherwise>
+              <option value="${tag}">${tag}</option>
+            </py:otherwise>
+          </py:choose>
+        </py:for>
+      </select>
+      <br />
+      <label for="user">Users:</label><br />
+      <select name="user" id="user1" multiple="multiple" size="5">
+      </select>
+      </td>
+      <td>
+      <label>Users:<br />
+      <select name="user" id="user2">
+        <option value="" selected="selected">--- Select user ---</option>
+        <py:for each="user in users">
+          <option value="${user}">${user}</option>
+        </py:for>
+      </select>
+      </label>
+      <br />
+      <label>Tags:<br />
+      <select name="searchtag" id="tag2">
+      <option value="" selected="selected">--- Select tag ---</option>
+      </select>
+      </label>
+      </td>
+      </tr>
+    </table>
+    <br />
+    <input type="Submit" value="Graph!" />
+  </form>
+  <br />
+  <form id="form2" action="/graph-tag" method="get">
+    <select name="tag" id="tag3" multiple="multiple" size="5">
+      <option value="" selected="selected">--- Select tag ---</option>
+      <py:for each="tag in tags">
+        <py:choose test="">
+          <py:when test="'|' in tag">
+            <option value="${tag}" class="tagtag">${tag.split('|')[0]}</option>
+          </py:when>
+          <py:otherwise>
+            <option value="${tag}">${tag}</option>
+          </py:otherwise>
+        </py:choose>
+      </py:for>
+    </select>
+    <br />
+    <input type="Submit" value="Graph!" />
+  </form>
+  <br />
+</div>
+  <div id="graph">
+  </div>
+</div>
 <script>
 <!--
     var query = "";
@@ -63,83 +152,13 @@
                 for (var i=0; i < names.length; i++) {
                     opts += '<option value="'+names[i]+'">'+names[i]+'</option>';
                 }
-                
+
                 $('select#user1').html(opts);
             });
         });
     });
 //-->
 </script>
-<link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
-</head>
-<body>
-<div align="center">
-  <h1>Dynamic graph generator</h1>
-  <form id="form" action="/graph-tag-user" method="get">
-    <table>
-      <tr>
-      <td>
-      <label for="tag">Tags:</label><br />
-      <select name="tag" id="tag1">
-        <option value="" selected="selected">--- Select tag ---</option>
-        <py:for each="tag in tags">
-          <py:choose test="">
-            <py:when test="'|' in tag">
-              <option value="${tag}" style="background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;">${tag.split('|')[0]}</option>
-            </py:when>
-            <py:otherwise>
-              <option value="${tag}">${tag}</option>
-            </py:otherwise>
-          </py:choose>
-        </py:for>
-      </select>
-      <br />
-      <label for="user">Users:</label><br />
-      <select name="user" id="user1" multiple="multiple" size="5">
-      </select>
-      </td>
-      <td>
-      <label>Users:<br />
-      <select name="user" id="user2">
-        <option value="" selected="selected">--- Select user ---</option>
-        <py:for each="user in users">
-          <option value="${user}">${user}</option>
-        </py:for>
-      </select>
-      </label>
-      <br />
-      <label>Tags:<br />
-      <select name="searchtag" id="tag2">
-      <option value="" selected="selected">--- Select tag ---</option>
-      </select>
-      </label>
-      </td>
-      </tr>
-    </table>
-    <br />
-    <input type="Submit" value="Graph!" />
-  </form>
-  <br />
-  <form id="form2" action="/graph-tag" method="get">
-    <select name="tag" id="tag3" multiple="multiple" size="5">
-      <option value="" selected="selected">--- Select tag ---</option>
-      <py:for each="tag in tags">
-        <py:choose test="">
-          <py:when test="'|' in tag">
-            <option value="${tag}" style="background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;">${tag.split('|')[0]}</option>
-          </py:when>
-          <py:otherwise>
-            <option value="${tag}">${tag}</option>
-          </py:otherwise>
-        </py:choose>
-      </py:for>
-    </select>
-    <br />
-    <input type="Submit" value="Graph!" />
-  </form>
-  <br />
-  <div id="graph">
-  </div>
-</div>
+
 </body>
 </html>
