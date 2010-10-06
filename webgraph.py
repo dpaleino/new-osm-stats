@@ -6,6 +6,7 @@ from bottle import *
 from plot import graph_tag_users, parse_json
 from plot import graphs_path, graphs_cache
 from genshi.template import MarkupTemplate as template
+from fast_stats import html_path
 import os
 
 from helpers import *
@@ -15,7 +16,20 @@ os.chdir(os.path.dirname(__file__))
 @route('/')
 def index():
     bottle.TEMPLATES.clear()
-    return open(os.path.join('html', 'index.html'))
+    return open(os.path.join(html_path, 'index.html'))
+
+# included files
+@route('/js/:f')
+def send_js(f):
+    return static_file(f, os.path.join(html_path, 'js'), mimetype="text/javascript")
+
+@route('/img/:f')
+def send_img(f):
+    return static_file(f, os.path.join(html_path, 'img'))
+
+@route('/fonts/:f')
+def send_font(f):
+    return static_file(f, os.path.join(html_path, 'fonts'))
 
 @route('/stats/:filename')
 def stats(filename=None):
@@ -24,7 +38,7 @@ def stats(filename=None):
         prefix = str(sanitize(request.GET['prefix']))
     if not filename:
         filename = "%s_stats.html" % prefix
-    return open(os.path.join('html', filename))
+    return open(os.path.join(html_path, filename))
 
 @route('/graphs')
 def graphs():
@@ -76,10 +90,6 @@ def graph():
     counts, xcoords, ycoords = parse_json()
     filename = graph_tag_users(request.GET["tag"], request.GET["user"])[0]
     return static_file(os.path.basename(filename), graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
-
-@route('/js/:f')
-def send_js(f):
-    return static_file(f, "js/", mimetype="text/javascript")
 
 bottle.debug(True)
 bottle.default_app().autojson = True

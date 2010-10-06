@@ -9,7 +9,7 @@
     font-family: 'Fertigo';
     src: url('/fonts/fertigo.otf');
 }
-input {
+img {
     display: inline;
     margin: 50px;
     outline: none;
@@ -21,7 +21,7 @@ input {
     -moz-border-radius: 3px;
     border: 1px solid rgba(255,255,255, 0.2);
 }
-input:hover {
+img:hover {
     box-shadow: 0 0 4px rgba(0, 0, 255, 1);
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 255, 1);
     -moz-box-shadow: 0 0 4px rgba(0, 0, 255, 1);
@@ -40,7 +40,7 @@ div#what {
 <script type="text/javascript">
 <!--
     $(document).ready(function() {
-        $('input').mouseenter(function() {
+        $('img').mouseenter(function() {
             $('div#what').fadeOut('slow');
             $('div#what').text($(this).attr('title'));
             $('div#what').fadeIn();
@@ -54,10 +54,10 @@ div#what {
   <h1 class="fertigo">Statistiche OSM ${date}</h1>
   <br />
   <br />
-  <input type="image" title="Statistics" src="/img/user.png"/>
-  <input type="image" title="Charts" src="/img/chart.png" />
-  <input type="image" title="Source code" src="/img/source.png" />
-  <input type="image" title="Credits" src="/img/help.png" />
+  <a href='/stats/'><img title='Statistics' src='/img/user.png' /></a>
+  <a href='/graphs/'><img title='Charts' src='/img/chart.png' /></a>
+  <a href='/source'><img title='Source code' src='/img/source.png' /></a>
+  <a href='/credits'><img title='Credits' src='/img/help.png' /></a>
   <br />
   <div id="what" class="fertigo"></div>
 </div>
