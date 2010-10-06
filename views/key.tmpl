@@ -30,6 +30,10 @@
         $('.feature').hide('slow');
         $('.feature[name="'+name+'"]').fadeIn('slow');
     }
+
+    function load_graph(tag) {
+        $('div[name="graph_'+tag+'"]').replaceWith('<iframe src="/graph-tag?tag='+escape(tag)+'" width="640" height="480" frameborder="0"></iframe>');
+    }
 //-->
 </script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
@@ -60,6 +64,7 @@
     <h5>This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
   </py:otherwise>
 </py:choose>
+<div name='graph_${key}=${value}'><small><a href='#' onclick='javascript:load_graph("${key}=${value}");'>Load graph</a></small></div>
 <table class="tablesorter">
 <thead>
 <tr>
