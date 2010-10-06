@@ -33,6 +33,10 @@ def send_img(f):
 def send_font(f):
     return static_file(f, 'fonts')
 
+@route('/style/:f')
+def send_style(f):
+    return static_file(f, 'style', mimetype='text/css')
+
 @route('/stats/')
 def stats():
     if request.GET.get('prefix'):
