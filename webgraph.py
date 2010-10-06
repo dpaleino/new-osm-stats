@@ -54,6 +54,10 @@ def show_key(key):
         filename = '%s_%s.html' % (prefix, sanitize(key))
     return open(os.path.join(html_path, filename))
 
+###
+# Graphs
+###
+@route('/graphs/')
 @route('/graphs')
 def graphs():
     bottle.TEMPLATES.clear()
