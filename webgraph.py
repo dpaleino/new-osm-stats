@@ -31,6 +31,7 @@ def send_img(f):
 def send_font(f):
     return static_file(f, 'fonts')
 
+@route('/stats/')
 @route('/stats/:filename')
 def stats(filename=None):
     prefix = "italy"
