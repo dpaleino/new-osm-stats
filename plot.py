@@ -48,8 +48,8 @@ class Graph():
         for user, tmpfile in self.tmp:
             os.unlink(tmpfile)
 
-def graph_tag_users(tags, users):
-    counts, xcoords, ycoords = parse_json()
+def graph_tag_users(prefix, tags, users):
+    counts, xcoords, ycoords = parse_json(prefix)
     files = []
 
     if type(tags) != list:
@@ -78,7 +78,7 @@ def graph_tag_users(tags, users):
         graph.plot()
     return files
 
-def parse_json(full=False):
+def parse_json(prefix, full=False):
     xcoords = []
     counts = []
     ycoords = defaultdict(dict)
@@ -88,7 +88,10 @@ def parse_json(full=False):
         d_ways = {}
         d_rels = {}
 
-    for i in sorted(glob('json/italy_*.json')):
+    for i in sorted(glob(os.path.join(json_path, prefix) + '_*.json')):
+        if 'positions' in i:
+            continue
+
         load = cjson.decode(open(i).readline())
         timestamp = load[0]
         nodes = load[1]

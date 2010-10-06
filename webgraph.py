@@ -63,19 +63,24 @@ def graphs():
     bottle.TEMPLATES.clear()
     tmpl = template(open("views/webgraph.tmpl"))
     out = tmpl.generate(
-        tags=get_tags()["r"],
-        users=get_users()["r"],
+        tags=get_tags(prefix=get_prefix(request))["r"],
+        users=get_users(prefix=get_prefix(request))["r"],
     )
     return out.render('xhtml')
 
 @route('/get/tags')
-def get_tags():
-    counts, xcoords, ycoords = parse_json()
+def get_tags(prefix=None):
+    if not prefix:
+        prefix = get_prefix(request)
+    counts, xcoords, ycoords = parse_json(prefix)
     return {"r":sorted(ycoords.keys())}
 
 @route('/get/tags/:user')
-def get_tags_for(user):
-    counts, xcoords, ycoords = parse_json()
+def get_tags_for(user, prefix=None):
+    if not prefix:
+        prefix = get_prefix(request)
+
+    counts, xcoords, ycoords = parse_json(prefix)
     tags = set()
     for tag in ycoords:
         for date in ycoords[tag]:
@@ -85,8 +90,11 @@ def get_tags_for(user):
     return {"r":sorted(list(tags))}
 
 @route('/get/users')
-def get_users():
-    nodes, ways, rels, xcoords, ycoords = parse_json(full=True)
+def get_users(prefix=None):
+    if not prefix:
+        prefix = get_prefix(request)
+
+    nodes, ways, rels, xcoords, ycoords = parse_json(prefix, full=True)
     users = set()
     for tag in ycoords.keys():
         for date in ycoords[tag]:
@@ -95,18 +103,24 @@ def get_users():
     return {"r":sorted(list(users))}
 
 @route('/get/users/:tag')
-def get_users_for(tag):
-    counts, xcoords, ycoords = parse_json()
+def get_users_for(tag, prefix=None):
+    if not prefix:
+        prefix = get_prefix(request)
+
+    counts, xcoords, ycoords = parse_json(prefix)
     users = set()
     for date in ycoords[tag].values():
         users.update(date.keys())
     return {"r":sorted(list(users))}
 
 @get('/graph')
-def graph():
+def graph(prefix=None):
+    if not prefix:
+        prefix = get_prefix(request)
+
     bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
-    counts, xcoords, ycoords = parse_json()
-    filename = graph_tag_users(request.GET["tag"], request.GET["user"])[0]
+    counts, xcoords, ycoords = parse_json(prefix)
+    filename = graph_tag_users(prefix, request.GET["tag"], request.GET.getall("user"))[0]
     return static_file(os.path.basename(filename), graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
 
 bottle.debug(True)
