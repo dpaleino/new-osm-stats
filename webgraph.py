@@ -12,6 +12,7 @@ import bottle
 from bottle import *
 from plot import *
 from genshi.template import MarkupTemplate as template
+import cjson
 
 from helpers import *
 from config import *
@@ -75,8 +76,8 @@ def graphs():
 def get_tags(prefix=None):
     if not prefix:
         prefix = get_prefix(request)
-    counts, xcoords, ycoords = parse_json(prefix)
-    return {"r":sorted(ycoords.keys())}
+    tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix, last)).readline())
+    return {"r":sorted(tags)}
 
 @route('/get/tags/:user')
 def get_tags_for(user, prefix=None):
@@ -97,13 +98,8 @@ def get_users(prefix=None):
     if not prefix:
         prefix = get_prefix(request)
 
-    nodes, ways, rels, xcoords, ycoords = parse_json(prefix, full=True)
-    users = set()
-    for tag in ycoords.keys():
-        for date in ycoords[tag]:
-            users.update(ycoords[tag][date].keys())
-
-    return {"r":sorted(list(users))}
+    tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix, last)).readline())
+    return {"r":sorted(users)}
 
 @route('/get/users/:tag')
 def get_users_for(tag, prefix=None):

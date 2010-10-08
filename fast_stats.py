@@ -242,6 +242,21 @@ def save_jsons(prefix, l, pos):
     f.write(cjson.encode(pos))
     f.close()
 
+    # save tags and users lists
+    log.info('Saving tags and users lists')
+    tags = []
+    users = set()
+    for key in l[4]:
+        for val in l[4][key].keys():
+            tags.append('%s=%s' % (key, val))
+            users.update(l[4][key][val].keys())
+
+    users = list(users)
+    print repr(tags), repr(users)
+    f = open(os.path.join(json_path, '%s_tags_users.json' % prefix), 'w')
+    f.write(cjson.encode([tags, users]))
+    f.close()
+
 def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positions):
     log.info("Rendering HTML")
 
