@@ -128,7 +128,7 @@ def parse_json(prefix, full=False):
         d_rels = {}
 
     for i in sorted(glob(os.path.join(json_path, prefix) + '_*.json')):
-        if 'positions' or 'tags_users' in i:
+        if 'positions' in i or 'tags_users' in i:
             continue
 
         load = cjson.decode(open(i).readline())
