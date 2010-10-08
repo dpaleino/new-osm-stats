@@ -76,7 +76,7 @@ def graphs():
 def get_tags(prefix=None):
     if not prefix:
         prefix = get_prefix(request)
-    tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix, last)).readline())
+    tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
     return {"r":sorted(tags)}
 
 @route('/get/tags/:user')
@@ -98,7 +98,7 @@ def get_users(prefix=None):
     if not prefix:
         prefix = get_prefix(request)
 
-    tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix, last)).readline())
+    tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
     return {"r":sorted(users)}
 
 @route('/get/users/:tag')
