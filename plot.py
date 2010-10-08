@@ -8,6 +8,7 @@ import tempfile
 import os
 from collections import defaultdict
 import hashlib
+from operator import itemgetter
 
 from config import *
 
@@ -35,9 +36,14 @@ class Graph():
         xcoords = map(lambda x: x.split('T')[0], xcoords)
 
         f = open(tmpfile, 'w')
-        for x, y in zip(xcoords, ycoords):
+        couples = zip(xcoords, ycoords)
+        i = 0 # number of parsings
+        every = len(couples) / 5 # (we only want 5 labels)
+        for x, y in sorted(zip(xcoords, ycoords), key=itemgetter(1)):
             f.write('%(x)s %(y)s\n' % locals())
-            self.g("set label '%(y)s' at '%(x)s',%(y)s" % locals())
+            i += 1
+            if (i % every) == 0:
+                self.g("set label '%(y)s' at '%(x)s',%(y)s" % locals())
         f.close()
 
     def plot(self):
