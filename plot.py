@@ -26,6 +26,7 @@ class Graph():
         self.g("set xdata time")
         self.g("set timefmt '%Y%m%d'")
         self.g("set format x '%m/%y'")
+        self.g("set key left top")
 
     def add_line(self, user, xcoords, ycoords):
         tmpfile = tempfile.mkstemp()[1]
