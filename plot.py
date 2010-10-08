@@ -39,7 +39,7 @@ class Graph():
         couples = zip(xcoords, ycoords)
         i = 0 # number of parsings
         every = len(couples) / 5 # (we only want 5 labels)
-        for x, y in sorted(zip(xcoords, ycoords), key=itemgetter(1)):
+        for x, y in sorted(zip(xcoords, ycoords), key=itemgetter(0)):
             f.write('%(x)s %(y)s\n' % locals())
             i += 1
             if (i % every) == 0:
