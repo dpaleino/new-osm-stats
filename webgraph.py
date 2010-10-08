@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+import sys
+
+mydir = os.path.dirname(__file__)
+os.chdir(mydir)
+sys.path.append(mydir)
+
 import bottle
 from bottle import *
 from plot import *
 from genshi.template import MarkupTemplate as template
-import os
 
 from helpers import *
 from config import *
-
-os.chdir(os.path.dirname(__file__))
 
 @route('/')
 def index():
@@ -133,7 +137,7 @@ def graph_tag(prefix=None):
     return static_file(os.path.basename(filename), graphs_cache, mimetype='image/svg+xml; charset=UTF-8')
 
 bottle.debug(True)
-bottle.default_app().autojson = True
-run(host=host_ip_addr, port=8080, reloader=True)
+#bottle.default_app().autojson = True
+#run(host=host_ip_addr, port=8080, reloader=True)
 
 application = bottle.default_app()
