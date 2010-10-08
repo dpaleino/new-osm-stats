@@ -127,7 +127,7 @@
 
                 for (var i=0; i < tags.length; i++) {
                     if (tags[i].indexOf('|') != -1) {
-                      opts += '<option value="'+tags[i]+'" style="background-color: #cc0000; font-weight: bold; font-size: 12px; color: white;">';
+                      opts += '<option value="'+tags[i]+'" class="tagtag">';
                       opts += tags[i].split('|')[0]+'</option>';
                     }
                     else {
