@@ -70,6 +70,13 @@
   <td>${pair[1]}</td>
 </tr>
 </py:for>
+<py:if test="split">
+<tfoot>
+  <tr>
+    <td colspan='4'><a href='/stats/?prefix=${prefix}&amp;full=yes'>&hellip;</a></td>
+  </tr>
+</tfoot>
+</py:if>
 </tbody>
 </table>
 </div>

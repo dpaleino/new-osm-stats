@@ -42,10 +42,14 @@ def send_style(f):
 ###
 # Stats
 ###
+@route('/stats')
 @route('/stats/')
 def stats():
     prefix = get_prefix(request)
-    filename = "%s_stats.html" % prefix
+    if request.GET.get('full'):
+        filename = '%s_stats_full.html' % prefix
+    else:
+        filename = "%s_stats.html" % prefix
     return open(os.path.join(html_path, filename))
 
 @route('/stats/:key/')

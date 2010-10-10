@@ -280,6 +280,7 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
                        tags=sorted(fulltags.keys()),
                        files=[sanitize(x) for x in sorted(fulltags.keys())],
                        pos=positions_changed(positions[0]),
+                       split=t[0],
         )
 
         if not t[0]:
