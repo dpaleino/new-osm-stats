@@ -137,6 +137,14 @@ def graph_tag(prefix=None):
     filename = graph_totals(prefix, request.GET.getall('tag'))
     return static_file(os.path.basename(filename), graphs_cache, mimetype='image/svg+xml; charset=UTF-8')
 
+##
+# Source
+##
+@route('/source')
+@route('/source/')
+def go_to_source():
+    redirect('http://bugs.hanskalabs.net/projects/osm-stats/repository')
+
 bottle.debug(True)
 #bottle.default_app().autojson = True
 #run(host=host_ip_addr, port=8080, reloader=True)
