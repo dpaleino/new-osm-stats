@@ -22,6 +22,13 @@ def index():
     bottle.TEMPLATES.clear()
     return open(os.path.join(html_path, 'index.html'))
 
+def workinprogress(reason=''):
+    tmpl = template(open("views/workinprogress.tmpl"))
+    out = tmpl.generate(
+        reason=reason
+    )
+    return out.render('xhtml')
+
 # included files
 @route('/js/:f')
 def send_js(f):
@@ -68,7 +75,7 @@ def show_key(key):
 @route('/graphs/')
 @route('/graphs')
 def graphs():
-    abort(500, 'Temporary disabled due to performance issues')
+    return workinprogress('Temporary disabled due to performance issues')
     bottle.TEMPLATES.clear()
     tmpl = template(open("views/webgraph.tmpl"))
     out = tmpl.generate(
@@ -86,7 +93,7 @@ def get_tags(prefix=None):
 
 @route('/get/tags/:user')
 def get_tags_for(user, prefix=None):
-    abort(500, 'Temporary disabled due to performance issues')
+    return workinprogress('Temporary disabled due to performance issues')
     if not prefix:
         prefix = get_prefix(request)
 
@@ -109,7 +116,7 @@ def get_users(prefix=None):
 
 @route('/get/users/:tag')
 def get_users_for(tag, prefix=None):
-    abort(500, 'Temporary disabled due to performance issues')
+    return workinprogress('Temporary disabled due to performance issues')
     if not prefix:
         prefix = get_prefix(request)
 
@@ -121,7 +128,7 @@ def get_users_for(tag, prefix=None):
 
 @get('/graph-tag-user')
 def graph_tag_user(prefix=None):
-    abort(500, 'Temporary disabled due to performance issues')
+    return workinprogress('Temporary disabled due to performance issues')
     if not prefix:
         prefix = get_prefix(request)
 
@@ -132,7 +139,7 @@ def graph_tag_user(prefix=None):
 
 @get('/graph-tag')
 def graph_tag(prefix=None):
-    abort(500, 'Temporary disabled due to performance issues')
+    return workinprogress('Temporary disabled due to performance issues')
     if not prefix:
         prefix = get_prefix(request)
 
