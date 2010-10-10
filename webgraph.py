@@ -153,6 +153,16 @@ def go_to_source():
 def go_to_bugs():
     redirect('http://bugs.hanskalabs.net/projects/osm-stats/issues')
 
+##
+# Credits
+##
+@route('/credits')
+@route('/credits/')
+def credits():
+    tmpl = template(open("views/credits.tmpl"))
+    out = tmpl.generate()
+    return out.render('xhtml')
+
 
 bottle.debug(True)
 #bottle.default_app().autojson = True
