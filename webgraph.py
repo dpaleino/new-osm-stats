@@ -145,6 +145,15 @@ def graph_tag(prefix=None):
 def go_to_source():
     redirect('http://bugs.hanskalabs.net/projects/osm-stats/repository')
 
+##
+# Bugs
+##
+@route('/bugs')
+@route('/bugs/')
+def go_to_bugs():
+    redirect('http://bugs.hanskalabs.net/projects/osm-stats/issues')
+
+
 bottle.debug(True)
 #bottle.default_app().autojson = True
 #run(host=host_ip_addr, port=8080, reloader=True)
