@@ -267,9 +267,9 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
     f.write(stream.render('xhtml'))
     f.close()
 
-    log.debug("Rendering primitives pages (%s)" % date)
-
     for t in [(None, fulltags), (maxsplit, splittags)]:
+        log.debug("Rendering primitives pages (%s)" % date)
+
         tmpl = template(open("views/statistiche.tmpl"))
         stream = tmpl.generate(
                        date=date,
