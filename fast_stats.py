@@ -157,7 +157,6 @@ def save_jsons(prefix, l, pos):
             users.update(l[4][key][val].keys())
 
     users = list(users)
-    print repr(tags), repr(users)
     f = open(os.path.join(json_path, '%s_tags_users.json' % prefix), 'w')
     f.write(cjson.encode([tags, users]))
     f.close()
