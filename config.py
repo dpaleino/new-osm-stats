@@ -19,6 +19,7 @@ import os
 
 html_path = 'html'
 json_path = 'json'
+profiles_path = os.path.join(json_path, 'profiles')
 templates_path = 'views'
 maxsplit = 100
 

@@ -123,21 +123,47 @@ def calculate_positions(prefix, date, nodes, ways, rels, tags):
 
     primitives_positions[date] = defaultdict(list)
     tags_positions[date] = defaultdict(lambda: defaultdict(list))
+    primitives_profiles = defaultdict(lambda: defaultdict(tuple))
+    tags_profiles = defaultdict(lambda: defaultdict(lambda: defaultdict(tuple)))
 
     log.debug("Calculating positions for primitives (nodes, ways, relations)")
     for p in [('Nodi', nodes), ('Ways', ways), ('Relazioni', rels)]:
         for user in enumerate(mysort(p[1])):
             primitives_positions[date][p[0]].append(user[1][0])
+            # profiles[<user>]['Nodi'] = (<position>, <number>)
+            primitives_profiles[user[1][0]][p[0]] = (user[0] + 1, user[1][1])
 
     for tag in tags:
         log.debug("Calculating positions for key %s" % tag)
         for val in tags[tag]:
+            i = 0
             for user in mysort(tags[tag][val]):
+                i += 1
                 tags_positions[date][tag][val].append(user[0])
+                # profiles[<user>][<key>][<val>] = (<position>, <number>)
+                tags_profiles[user[0]][tag][val] = (i, user[1])
 
-    return [primitives_positions, tags_positions]
+    # add positions changed to the profiles
+    tmp = positions_changed(primitives_positions)
+    for what in tmp:
+        # i is 'Ways', 'Nodi', 'Relazioni'
+        for user in tmp[what]:
+            pos, count = primitives_profiles[user][what]
+            # profiles[<user>]['Nodi'] = (<position>, <pos_changed>, <number>)
+            primitives_profiles[user][what] = (pos, tmp[what][user], count)
 
-def save_jsons(prefix, l, pos):
+    tmp = positions_changed(tags_positions)
+    for key in tmp:
+        for val in tmp[key]:
+            for user in tmp[key][val]:
+                pos, count = tags_profiles[user][key][val]
+                # profiles[<user>][key][val] = (<position>, <pos_changed>, <number>)
+                tags_profiles[user][key][val] = (pos, tmp[key][val][user], count)
+
+
+    return ([primitives_positions, tags_positions], [primitives_profiles, tags_profiles])
+
+def save_jsons(prefix, l, pos, profiles):
     log.info("Saving to JSON")
     f = open(os.path.join(json_path, "%s_%s.json" % (prefix, l[0])), 'w')
     f.write(cjson.encode(l))
@@ -160,6 +186,15 @@ def save_jsons(prefix, l, pos):
     f = open(os.path.join(json_path, '%s_tags_users.json' % prefix), 'w')
     f.write(cjson.encode([tags, users]))
     f.close()
+
+    # save profile data
+    users = set()
+    for l in [x.keys() for x in profiles]:
+        users.update(l)
+    for user in users:
+        f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, sanitize(user).replace(' ', '_'))), 'w')
+        f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
+        f.close()
 
 def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positions):
     log.info("Rendering HTML")
@@ -219,8 +254,8 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
 
 def main(prefix, date, filename):
     nodes, ways, rels, tags = parse(filename)
-    positions = calculate_positions(prefix, date, nodes, ways, rels, tags)
-    save_jsons(prefix, [date, nodes, ways, rels, tags], positions)
+    positions, profiles = calculate_positions(prefix, date, nodes, ways, rels, tags)
+    save_jsons(prefix, [date, nodes, ways, rels, tags], positions, profiles)
 
     # render the last date, we don't support rendering intermediate dates (yet,
     # see commented code in helpers.py:positions_changed()

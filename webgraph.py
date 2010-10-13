@@ -84,6 +84,37 @@ def show_key(key):
         filename = '%s_%s.html' % (prefix, sanitize(key))
     return open(os.path.join(html_path, filename))
 
+@route('/user/:user/')
+@route('/user/:user')
+def show_user(user):
+    from urllib2 import unquote, urlopen, quote
+    prefix = get_prefix(request)
+    try:
+        userfile = sanitize(unquote(user)).replace(' ', '_')
+        print userfile
+        f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, userfile)))
+        primitives, tags = cjson.decode(f.readline())
+        f.close()
+    except IOError:
+        abort(404, 'User profile not found')
+    else:
+        imgurl = 'http://www.openstreetmap.org/user/%s' % quote(user)
+        print imgurl
+        for line in urlopen(imgurl):
+            if 'user_image' in line:
+                # <img alt="Primopiano" class="user_image" src="/user/image/71261/primopiano.jpg?1271701916" style="float: right" />
+                imgurl = 'http://www.openstreetmap.org' + line.split('src="')[1].split('"')[0]
+                break;
+
+        tmpl = template(open(os.path.join(templates_path, 'user.tmpl')))
+        out = tmpl.generate(
+            imgurl=imgurl,
+            user=user,
+            primitives=primitives,
+            tags=tags,
+        )
+        return out.render('xhtml')
+
 ###
 # Graphs
 ###
@@ -192,6 +223,6 @@ def credits():
 
 bottle.debug(True)
 #bottle.default_app().autojson = True
-#run(host=host_ip_addr, port=8080, reloader=True)
+run(host=host_ip_addr, port=8080, reloader=True)
 
 application = bottle.default_app()

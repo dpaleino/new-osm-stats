@@ -1,0 +1,142 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      lang="it">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+<title>Statistiche OSM Italia - Utente ${user}</title>
+<script src="/js/jquery.min.js"></script>
+<script>
+<!--
+    $(document).ready(function() {
+        $('.feature').hide();
+    });
+
+    function showfeature(name) {
+        $('.feature').hide('slow');
+        $('.feature[name="'+name+'"]').fadeIn('slow');
+    }
+//-->
+</script>
+<link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
+</head>
+<body>
+<div align="center">
+<h1>Statistiche OpenStreetMap Italia</h1>
+<h2>Profilo utente: ${user}</h2>
+<img src="${imgurl}" /><br /><br />
+<small><a href='javascript:history.go(-1);'>Go back</a></small>
+<ul id="links" style="padding: 0px">
+<py:for each="name in ['Nodi', 'Ways', 'Relazioni']">
+<py:choose test="">
+  <!--! check whether the user has it -->
+  <py:when test="name in primitives">
+    <li style="display:inline; margin:5px; text-decoration:none;"><a href='#' onclick='showfeature("${name}");'>${name}</a></li>
+  </py:when>
+</py:choose>
+</py:for>
+</ul>
+<ul id="keylinks" style="padding: 0px">
+<py:for each="key in sorted(tags.keys())">
+  <py:with vars="index = sorted(tags.keys()).index(key)">
+    <li style="display:inline; margin:5px; text-decoration: none;"><a href='#' onclick='showfeature("${key}");'>${key}</a></li>
+    <py:choose test="((index + 1) % 5)">
+      <py:when test="0"><br /></py:when>
+    </py:choose>
+  </py:with>
+</py:for>
+</ul>
+<py:def function='primitive(name, vals)'>
+<div name="${name}" class="feature">
+<a name="${name}"></a><h4>${name}</h4>
+<table>
+<thead>
+<tr>
+  <th>Posizione</th>
+  <th>&nbsp;</th>
+  <th>Totale</th>
+</tr>
+</thead>
+<tbody>
+<py:with vars="pos, poschanged, total = tuple(vals)">
+<tr>
+  <td>${pos}</td>
+  <py:choose test="">
+    <py:when test="poschanged &lt; 0">
+      <td><img src="/img/down.png" /> ${abs(poschanged)}</td>
+    </py:when>
+    <py:when test="poschanged &gt; 0">
+      <td><img src="/img/up.png" /> ${poschanged}</td>
+    </py:when>
+    <py:when test="poschanged == 0">
+      <td><img src="/img/stable.png" /></td>
+    </py:when>
+  </py:choose>
+  <td>${total}</td>
+</tr>
+</py:with>
+</tbody>
+</table>
+</div>
+</py:def>
+<py:def function="showkey(key, data)">
+<div name="${key}" class="feature">
+<py:for each="value in sorted(data.keys())">
+<py:with vars='category = value.split("|")[0]'>
+<div name="${key}=${category}" class="tag">
+<py:choose test='category'>
+  <py:when test='value'>
+    <a name="${key}=${value}" style="text-decoration:none;" href="http://wiki.openstreetmap.org/wiki/Tag:${key}=${value}"><h4>${key}=${value}</h4></a>
+  </py:when>
+  <py:otherwise>
+    <a name="${category}" class='category'></a><h4><i>${category}</i></h4>
+    <h5>This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
+  </py:otherwise>
+</py:choose>
+<table>
+<thead>
+<tr>
+  <th>Posizione</th>
+  <th>&nbsp;</th>
+  <th>Totale</th>
+</tr>
+</thead>
+<tbody>
+<py:with vars="pos, poschanged, total = tuple(data[value])">
+<tr>
+  <td>${pos}</td>
+  <py:choose test="">
+    <py:when test="poschanged &lt; 0">
+      <td><img src="/img/down.png" /> ${abs(poschanged)}</td>
+    </py:when>
+    <py:when test="poschanged &gt; 0">
+      <td><img src="/img/up.png" /> ${poschanged}</td>
+    </py:when>
+    <py:when test="poschanged == 0">
+      <td><img src="/img/stable.png" /></td>
+    </py:when>
+  </py:choose>
+  <td>${total}</td>
+</tr>
+</py:with>
+</tbody>
+</table>
+</div>
+</py:with>
+</py:for>
+</div>
+</py:def>
+<py:for each="name in ['Nodi', 'Ways', 'Relazioni']">
+<py:choose test="">
+  <!--! check whether the user has it -->
+  <py:when test="name in primitives">
+    ${primitive(name, primitives[name])}
+  </py:when>
+</py:choose>
+</py:for>
+<py:for each="key in sorted(tags.keys())">
+${showkey(key, tags[key])}
+</py:for>
+</div>
+<p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+</body>
+</html>
