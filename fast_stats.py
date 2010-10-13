@@ -171,6 +171,8 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
     f.write(stream.render('xhtml'))
     f.close()
 
+    primpos = positions_changed(positions[0])
+    tagpos = positions_changed(positions[1])
     for t in [(None, fulltags), (maxsplit, splittags)]:
         log.debug("Rendering primitives pages (%s)" % date)
 
@@ -183,7 +185,7 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
                        prefix=prefix,
                        tags=sorted(fulltags.keys()),
                        files=[sanitize(x) for x in sorted(fulltags.keys())],
-                       pos=positions_changed(positions[0]),
+                       pos=primpos,
                        split=t[0],
         )
 
@@ -203,7 +205,7 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
                 prefix=prefix,
                 key=key,
                 vals=t[1][key],
-                pos=positions_changed(positions[1])[key],
+                pos=tagpos[key],
                 split=t[0],
             )
             if not t[0]:
