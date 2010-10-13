@@ -94,6 +94,7 @@ to_check = {
     "shop": [ "*" ],
     "surface" : [ "*" ],
     "tactile_paving": [ "*" ],
+    "tourism": [ "*" ],
     "tracktype" : [ "*" ],
     "traffic_calming" : [ "*" ],
     "tunnel" : [ "*" ],
