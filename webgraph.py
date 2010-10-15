@@ -87,6 +87,8 @@ def show_key(key):
 @route('/user/:user/')
 @route('/user/:user')
 def show_user(user):
+    bottle.TEMPLATES.clear()
+
     from urllib2 import unquote, urlopen, quote
     prefix = get_prefix(request)
     try:
