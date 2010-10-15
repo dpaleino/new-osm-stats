@@ -41,7 +41,7 @@ li:hover {
 }
 
 /* tables */
-table.tablesorter {
+table {
 	font-family:arial;
 	/*background-color: #CDCDCD;*/
 	border:1px solid #98bf21;
@@ -50,15 +50,14 @@ table.tablesorter {
 	text-align: left;
 }
 
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+table thead tr th, table tfoot tr th {
 	background-color: #E6EEEE;
 	border: 1px solid #98BF21;
 	font-size: 8pt;
 	padding: 4px;
 }
 
-table.tablesorter thead tr .header {
-	background-image: url(/img/bg.gif);
+table thead tr .header {
 	background-repeat: no-repeat;
 	background-position: center right;
 	border: 1px solid #98bf21;
@@ -66,7 +65,11 @@ table.tablesorter thead tr .header {
 	cursor: pointer;
 }
 
-table.tablesorter tbody td {
+table.tablesorter thead tr .header{
+	background-image: url(/img/bg.gif);
+}
+
+table tbody td {
 	color: #3D3D3D;
 	padding: 4px;
 	background-color: #FFF;
@@ -74,7 +77,7 @@ table.tablesorter tbody td {
 	border: 1px dotted #98bf21;
 }
 
-table.tablesorter tbody tr.odd td {
+table tbody tr.odd td {
 	background-color:#F0F0F6;
 }
 
