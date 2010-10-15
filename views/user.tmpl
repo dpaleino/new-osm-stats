@@ -59,7 +59,7 @@
 <tbody>
 <py:with vars="pos, poschanged, total = tuple(vals)">
 <tr>
-  <td>${pos}</td>
+  <td align="center">${pos}</td>
   <py:choose test="">
     <py:when test="poschanged &lt; 0">
       <td><img src="/img/down.png" /> ${abs(poschanged)}</td>
@@ -71,7 +71,7 @@
       <td><img src="/img/stable.png" /></td>
     </py:when>
   </py:choose>
-  <td>${total}</td>
+  <td align="right">${total}</td>
 </tr>
 </py:with>
 </tbody>
@@ -103,7 +103,7 @@
 <tbody>
 <py:with vars="pos, poschanged, total = tuple(data[value])">
 <tr>
-  <td>${pos}</td>
+  <td align="center">${pos}</td>
   <py:choose test="">
     <py:when test="poschanged &lt; 0">
       <td><img src="/img/down.png" /> ${abs(poschanged)}</td>
@@ -115,7 +115,7 @@
       <td><img src="/img/stable.png" /></td>
     </py:when>
   </py:choose>
-  <td>${total}</td>
+  <td align="right">${total}</td>
 </tr>
 </py:with>
 </tbody>

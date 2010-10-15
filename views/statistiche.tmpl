@@ -54,7 +54,7 @@
 <tbody>
 <py:for each="count, pair in data">
 <tr>
-  <td>${int(count) + 1}</td>
+  <td align="center">${int(count) + 1}</td>
   <py:choose test="">
     <py:when test="pos[name][pair[0]] &lt; 0">
       <td><img src="/img/down.png" /> ${abs(pos[name][pair[0]])}</td>
@@ -70,7 +70,7 @@
     <a href="http://www.openstreetmap.org/user/${pair[0]}" style="text-decoration:none;">${pair[0]}</a>
     <a href="/user/${pair[0]}/?prefix=${prefix}"><img src='/img/profile.png' /></a>
   </td>
-  <td>${pair[1]}</td>
+  <td align="right">${pair[1]}</td>
 </tr>
 </py:for>
 <py:if test="split">
