@@ -86,6 +86,15 @@ to_check = {
         "no_parking",
         "no_stopping",
     ],
+    "place": [
+        "*",
+        "city",
+        "hamlet",
+        "locality",
+        "suburb",
+        "town",
+        "village",
+    ],
     "power": [
         "generator",
         "tower"
