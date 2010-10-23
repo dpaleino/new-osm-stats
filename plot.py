@@ -36,7 +36,7 @@ class Graph():
 
         self.g = Gnuplot.Gnuplot(debug=1)
         self.g.title(self.title)
-        self.g("set style data linespoints")
+        self.g("set style data lines")
         self.g("set output '%s'" % self.file)
         self.g("set terminal svg font 'sans-serif'")
         self.g("set xdata time")
