@@ -28,8 +28,7 @@ def main(prefix, date):
     timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
     positions = cjson.decode(pos.readline())
 
-    enum, enum2 = stats.enumerate_tags(tags)
-    stats.render_template(prefix, date, nodes, ways, rels, enum, enum2, positions)
+    stats.render_template(prefix, date, nodes, ways, rels, tags, positions)
 
 
 if __name__ == '__main__':

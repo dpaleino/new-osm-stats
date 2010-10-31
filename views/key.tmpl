@@ -77,9 +77,9 @@
 </tr>
 </thead>
 <tbody>
-<py:for each="count, pair in data">
+<py:for each="pair in data">
 <tr>
-  <td align="center">${count + 1}</td>
+  <td align="center">${int(data.index(pair)) + 1}</td>
   <py:choose test="">
     <py:when test="pos[value][pair[0]] &lt; 0">
       <td><img src="/img/down.png" /> ${abs(pos[value][pair[0]])}</td>
@@ -110,9 +110,11 @@
 </div>
 </py:with>
 </py:def>
+
 <py:for each="val in sorted(vals.keys())">
 ${showval(val, vals[val])}
 </py:for>
+<pre>${repr(vals)}</pre>
 </div>
 <p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
 </body>

@@ -101,18 +101,6 @@ def parse(filename):
 
     return [nodes, ways, rels, tags]
 
-def enumerate_tags(tags):
-    log.info("Sorting users")
-    enum = {}
-    enum2 = {}
-
-    for key in tags:
-        log.debug("Sorting users for key %s" % key)
-        enum[key] = myenum(tags[key])
-        enum2[key] = myenum(tags[key], split=maxsplit)
-
-    return [enum, enum2]
-
 def calculate_positions(prefix, date, nodes, ways, rels, tags):
     log.info("Calculating positions")
     try:
@@ -127,7 +115,7 @@ def calculate_positions(prefix, date, nodes, ways, rels, tags):
     tags_profiles = defaultdict(lambda: defaultdict(lambda: defaultdict(tuple)))
 
     log.debug("Calculating positions for primitives (nodes, ways, relations)")
-    for p in [('Nodi', nodes), ('Ways', ways), ('Relazioni', rels)]:
+    for p in [('Nodes', nodes), ('Ways', ways), ('Relations', rels)]:
         for user in enumerate(mysort(p[1])):
             primitives_positions[date][p[0]].append(user[1][0])
             # profiles[<user>]['Nodi'] = (<position>, <number>)
@@ -196,8 +184,17 @@ def save_jsons(prefix, l, pos, profiles):
         f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
         f.close()
 
-def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positions):
+def render_template(prefix, date, nodes, ways, rels, tags, positions):
     log.info("Rendering HTML")
+
+    log.info("Sorting users")
+    sortedtags = defaultdict(dict)
+    splittags = defaultdict(dict)
+    for key in tags:
+        log.debug("Sorting users for key %s" % key)
+        for val in tags[key]:
+            sortedtags[key][val] = mysort(tags[key][val])
+            splittags[key][val] = mysort(tags[key][val], split=maxsplit)
 
     log.debug('Rendering index page (%s)' % date)
     tmpl = template(open('views/index.tmpl'))
@@ -208,49 +205,74 @@ def render_template(prefix, date, nodes, ways, rels, fulltags, splittags, positi
 
     primpos = positions_changed(positions[0])
     tagpos = positions_changed(positions[1])
-    for t in [(None, fulltags), (maxsplit, splittags)]:
-        log.debug("Rendering primitives pages (%s)" % date)
-
-        tmpl = template(open("views/statistiche.tmpl"))
-        stream = tmpl.generate(
-                       date=date,
-                       nodes=enumerate(mysort(nodes, split=t[0])),
-                       ways=enumerate(mysort(ways, split=t[0])),
-                       relations=enumerate(mysort(rels, split=t[0])),
-                       prefix=prefix,
-                       tags=sorted(fulltags.keys()),
-                       files=[sanitize(x) for x in sorted(fulltags.keys())],
-                       pos=primpos,
-                       split=t[0],
-        )
-
+    for t in [(None, sortedtags), (maxsplit, splittags)]:
         if not t[0]:
-            # i.e. if t[0] is None, i.e. we're doing the fulltags
-            f = open(os.path.join(html_path, '%s_stats_full.html' % prefix), "w")
+            # i.e. if t[0] is None, i.e. we're doing the full tags
+            for i in [('Nodes', nodes), ('Ways', ways), ('Relations', rels)]:
+                log.debug("Rendering full-page for %s (%s)" % (i[0].lower(), date))
+                data = dict(
+                    date=date,
+                    name=i[0],
+                    stats=mysort(i[1]),
+                    pos=primpos[i[0]],
+                    prefix=prefix,
+                )
+                tmpl = template(open("views/table.tmpl"))
+                stream = tmpl.generate(**data)
+                f = open(os.path.join(html_path, '%s_%s_full.html' % (prefix, i[0].lower())), "w")
+                f.write(stream.render("xhtml"))
+                f.close()
         else:
+            log.debug("Rendering primitives pages (%s)" % date)
             # we're rendering splittags
-            f = open(os.path.join(html_path, '%s_stats.html' % prefix), "w")
-        f.write(stream.render("xhtml"))
-        f.close()
-
-        for key in sorted(t[1].keys()):
-            log.debug("Rendering pages for %s=* (%s)" % (key, date))
-            stream = template(open('views/key.tmpl')).generate(
+            data = dict(
                 date=date,
+                nodes=mysort(nodes, split=t[0]),
+                ways=mysort(ways, split=t[0]),
+                relations=mysort(rels, split=t[0]),
                 prefix=prefix,
-                key=key,
-                vals=t[1][key],
-                pos=tagpos[key],
+                tags=sorted(tags.keys()),
+                pos=primpos,
                 split=t[0],
             )
-            if not t[0]:
-                # i.e. if t[0] is None, i.e. we're doing the fulltags
-                f = open(os.path.join(html_path, '%s_%s_full.html' % (prefix, sanitize(key))), 'w')
-            else:
-                # we're rendering splittags
-                f = open(os.path.join(html_path, '%s_%s.html' % (prefix, sanitize(key))), 'w')
-            f.write(stream.render('xhtml'))
+            tmpl = template(open("views/statistiche.tmpl"))
+            stream = tmpl.generate(**data)
+            f = open(os.path.join(html_path, '%s_stats.html' % prefix), "w")
+            f.write(stream.render("xhtml"))
             f.close()
+
+
+        for key in sorted(t[1].keys()):
+            if not t[0]:
+                for val in t[1][key]:
+                    log.debug("Rendering full-page for %s=%s (%s)" % (key, val, date))
+                    data = dict(
+                        date=date,
+                        name="%s=%s" % (key, val),
+                        stats=t[1][key][val],
+                        pos=tagpos[key][val],
+                        prefix=prefix,
+                    )
+                    tmpl = template(open('views/table.tmpl'))
+                    stream = tmpl.generate(**data)
+                    f = open(os.path.join(html_path, '%s_%s=%s_full.html' % (prefix, sanitize(key), sanitize(val))), 'w')
+                    f.write(stream.render('xhtml'))
+                    f.close()
+            else:
+                log.debug("Rendering pages for %s=* (%s)" % (key, date))
+                data = dict(
+                    date=date,
+                    prefix=prefix,
+                    key=key,
+                    vals=t[1][key],
+                    pos=tagpos[key],
+                    split=t[0],
+                )
+                tmpl = template(open('views/key.tmpl'))
+                stream = tmpl.generate(**data)
+                f = open(os.path.join(html_path, '%s_%s.html' % (prefix, sanitize(key))), 'w')
+                f.write(stream.render('xhtml'))
+                f.close()
 
 def main(prefix, date, filename):
     nodes, ways, rels, tags = parse(filename)
@@ -265,8 +287,7 @@ def main(prefix, date, filename):
     json = open(os.path.join(json_path, '%s_%s.json' % (prefix, last)))
     timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
 
-    enum, enum2 = enumerate_tags(tags)
-    render_template(prefix, last, nodes, ways, rels, enum, enum2, positions)
+    render_template(prefix, last, nodes, ways, rels, tags, positions)
     log.info("Program ended.")
 
 if __name__ == '__main__':

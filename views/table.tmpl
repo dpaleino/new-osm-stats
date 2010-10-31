@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      lang="it">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+<title>Statistiche OSM Italia ${date}</title>
+<script src="/js/jquery.tablesorter.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
+</head>
+<body>
+<div align="center">
+<h1>Statistiche OpenStreetMap Italia ${date}</h1>
+<small><a href='javascript:history.go(-1);'>Go back</a></small>
+<h3>${name}</h3>
+<table class="tablesorter">
+<thead>
+<tr>
+  <th>Posizione</th>
+  <th>&nbsp;</th>
+  <th>Utente</th>
+  <th>Totale</th>
+</tr>
+</thead>
+
+<tbody>
+<py:for each="pair in stats">
+<tr>
+  <td align="center">${int(stats.index(pair)) + 1}</td>
+  <py:choose test="">
+    <py:when test="pos[pair[0]] &lt; 0">
+      <td><img src="/img/down.png" /> ${abs(pos[pair[0]])}</td>
+    </py:when>
+    <py:when test="pos[pair[0]] &gt; 0">
+      <td><img src="/img/up.png" /> ${pos[pair[0]]}</td>
+    </py:when>
+    <py:when test="pos[pair[0]] == 0">
+      <td><img src="/img/stable.png" /></td>
+    </py:when>
+  </py:choose>
+  <td>
+    <a href="http://www.openstreetmap.org/user/${pair[0]}" style="text-decoration:none;">${pair[0]}</a>
+    <a href="/user/${pair[0]}/?prefix=${prefix}"><img src='/img/profile.png' /></a>
+  </td>
+  <td align="right">${pair[1]}</td>
+</tr>
+</py:for>
+</tbody>
+</table>
+</div>
+<p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+</body>
+</html>

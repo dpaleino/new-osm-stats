@@ -28,15 +28,6 @@ def mysort(d, split=None):
     else:
         return sorted(d.items(), key=itemgetter(1), reverse=True)[:split]
 
-def myenum(d, split=None):
-    enum = {}
-    for key in d:
-        if not split:
-            enum[key] = enumerate(mysort(d[key]))
-        else:
-            enum[key] = enumerate(mysort(d[key], split=split))
-    return enum
-
 def key_wildcard(key, ret=None):
     if not ret:
         ret = [key]
@@ -69,7 +60,7 @@ def positions_changed(positions):
     secondlast, last = get_last_dates(positions)
 
     for key in positions[last]:
-        if key in ['Nodi', 'Ways', 'Relazioni']:
+        if key in ['Nodes', 'Ways', 'Relations']:
             for user in positions[last][key]:
                 pos_new = positions[last][key].index(user)
                 try:

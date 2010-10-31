@@ -52,9 +52,9 @@
 </tr>
 </thead>
 <tbody>
-<py:for each="count, pair in data">
+<py:for each="pair in data">
 <tr>
-  <td align="center">${int(count) + 1}</td>
+  <td align="center">${int(data.index(pair)) + 1}</td>
   <py:choose test="">
     <py:when test="pos[name][pair[0]] &lt; 0">
       <td><img src="/img/down.png" /> ${abs(pos[name][pair[0]])}</td>
@@ -84,9 +84,9 @@
 </table>
 </div>
 </py:def>
-${primitive('Nodi', nodes)}
+${primitive('Nodes', nodes)}
 ${primitive('Ways', ways)}
-${primitive('Relazioni', relations)}
+${primitive('Relations', relations)}
 </div>
 <p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
 </body>
