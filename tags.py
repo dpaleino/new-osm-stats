@@ -6,6 +6,7 @@ to_check = {
         "bank",
         "bar",
         "bench",
+        "cafe",
         "clock",
         "college",
         "drinking_water",
