@@ -209,7 +209,6 @@ def graph_tag(prefix=default_prefix):
 # Source
 ##
 @route('/source')
-@route('/source/')
 def go_to_source():
     redirect('http://bugs.hanskalabs.net/projects/osm-stats/repository')
 
@@ -217,7 +216,6 @@ def go_to_source():
 # Bugs
 ##
 @route('/bugs')
-@route('/bugs/')
 def go_to_bugs():
     redirect('http://bugs.hanskalabs.net/projects/osm-stats/issues')
 
@@ -225,7 +223,6 @@ def go_to_bugs():
 # Credits
 ##
 @route('/credits')
-@route('/credits/')
 def credits():
     tmpl = template(open("views/credits.tmpl"))
     out = tmpl.generate()
