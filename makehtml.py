@@ -94,7 +94,10 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
         for key in sorted(t[1].keys()):
             if not t[0]:
                 for val in t[1][key]:
-                    log.debug("Rendering full-page for %s=%s (%s)" % (key, val, date))
+                    valname = val
+                    if "|" in val:
+                        valname = val.split('|')[0]
+                    log.debug("Rendering full-page for %s=%s (%s)" % (key, valname, date))
                     data = dict(
                         date=date,
                         name="%s=%s" % (key, val),
@@ -104,7 +107,7 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
                     )
                     tmpl = template(open('views/table.tmpl'))
                     stream = tmpl.generate(**data)
-                    f = open(os.path.join(html_path, '%s_%s=%s_full.html' % (prefix, sanitize(key), sanitize(val))), 'w')
+                    f = open(os.path.join(html_path, '%s_%s=%s_full.html' % (prefix, sanitize(key), sanitize(valname))), 'w')
                     f.write(stream.render('xhtml'))
                     f.close()
             else:

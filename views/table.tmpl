@@ -11,7 +11,26 @@
 <div align="center">
 <h1>Statistiche OpenStreetMap Italia ${date}</h1>
 <small><a href='javascript:history.go(-1);'>Go back</a></small>
-<h3>${name}</h3>
+<py:with vars='key = name.split("=")[0]'>
+<py:choose test='key'>
+  <py:when test='name'>
+    <h3>${name}</h3>
+  </py:when>
+  <py:otherwise>
+    <py:with vars='category = name.split("|")[0]'>
+      <py:choose test='category'>
+        <py:when test='name'>
+          <a style="text-decoration:none;" href="http://wiki.openstreetmap.org/wiki/Tag:${key}=${name.split('=')[1]}"><h3>${category}</h3></a>
+        </py:when>
+        <py:otherwise>
+          <h3><i>${category.split('=')[1]}</i></h3>
+          <h4>This category includes: ${', '.join(name.split('=')[1].split('|')[1].split(';'))}</h4>
+        </py:otherwise>
+      </py:choose>
+    </py:with>
+  </py:otherwise>
+</py:choose>
+</py:with>
 <table class="tablesorter">
 <thead>
 <tr>
@@ -21,7 +40,6 @@
   <th>Totale</th>
 </tr>
 </thead>
-
 <tbody>
 <py:for each="pair in stats">
 <tr>

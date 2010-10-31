@@ -84,6 +84,18 @@ def show_key(key):
         filename = '%s_%s.html' % (prefix, sanitize(key))
     return open(os.path.join(html_path, filename))
 
+@route('/stats/full/:key')
+@route('/stats/full/:key/:value')
+def show_full(key, value=None):
+    prefix = get_prefix(request)
+    if not value:
+        if key in ['nodes', 'ways', 'relations']:
+            return open(os.path.join(html_path, "%s_%s_full.html" % (prefix, key)))
+        else:
+            # TODO: show a <ul> of available tags
+            return "You're trying to do what?"
+    return open(os.path.join(html_path, "%s_%s=%s_full.html" % (prefix, sanitize(key), sanitize(value))))
+
 @route('/user/:user/')
 @route('/user/:user')
 def show_user(user):
@@ -106,7 +118,7 @@ def show_user(user):
             if 'user_image' in line:
                 # <img alt="Primopiano" class="user_image" src="/user/image/71261/primopiano.jpg?1271701916" style="float: right" />
                 imgurl = 'http://www.openstreetmap.org' + line.split('src="')[1].split('"')[0]
-                break;
+                break
 
         tmpl = template(open(os.path.join(templates_path, 'user.tmpl')))
         out = tmpl.generate(
