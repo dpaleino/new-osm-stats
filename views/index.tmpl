@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      lang="it">
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+>
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Statistiche OSM Italia ${date}</title>
+<title i18n:msg="date">OpenStreetMap Statistics - ${date}</title>
 <style type="text/css">
 @font-face {
     font-family: 'Fertigo';
@@ -51,7 +52,7 @@ div#what {
 </head>
 <body>
 <div align="center">
-  <h1 class="fertigo">Statistiche OSM ${date}</h1>
+  <h1 class="fertigo" i18n:msg="date">OpenStreetMap Statistics - ${date}</h1>
   <br />
   <br />
   <a href='/stats'><img title='Statistics' src='/img/user.png' /></a>

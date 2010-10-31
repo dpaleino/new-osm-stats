@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      lang="it">
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+>
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Statistiche OSM Italia ${date}</title>
+<title i18n:msg="date">OpenStreetMap Statistics - ${date}</title>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/jquery.tablesorter.min.js"></script>
 <script>
@@ -26,7 +27,7 @@
 </head>
 <body>
 <div align="center">
-<h1>Statistiche OpenStreetMap Italia ${date}</h1>
+<h1 i18n:msg="date">OpenStreetMap Statistics - ${date}</h1>
 <small><a href='/'>Go back</a></small>
 <ul id="links" style="padding: 0px"></ul>
 <ul id="keylinks" style="padding: 0px">
@@ -45,10 +46,10 @@
 <table class="tablesorter">
 <thead>
 <tr>
-  <th>Posizione</th>
+  <th>Position</th>
   <th>&nbsp;</th>
-  <th>Utente</th>
-  <th>Totale</th>
+  <th>User</th>
+  <th>Total</th>
 </tr>
 </thead>
 <tbody>
@@ -88,6 +89,6 @@ ${primitive('Nodes', nodes)}
 ${primitive('Ways', ways)}
 ${primitive('Relations', relations)}
 </div>
-<p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+<p><small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
 </body>
 </html>

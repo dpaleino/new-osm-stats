@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      lang="it">
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+>
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Statistiche OSM Italia</title>
+<title i18n:msg="date">OpenStreetMap Statistics - ${date}</title>
 <style type="text/css">
 @font-face {
     font-family: 'Fertigo';
@@ -29,7 +30,7 @@ img {
 </head>
 <body>
 <div align="center">
-<h1 class="fertigo">Statistiche OSM</h1>
+<h1 class="fertigo">OpenStreetMap Statistics</h1>
 <h2>Credits</h2>
 <table cellpadding="10">
 <tr>
@@ -37,7 +38,7 @@ img {
    <img src="/img/author-dapal.jpg"/>
   </td>
   <td>
-    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/David Paleino/">David Paleino</a></h3>
+    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/David Paleino/" xml:lang="it">David Paleino</a></h3>
     <p><b>Main developer</b></p>
   </td>
 </tr>
@@ -46,10 +47,10 @@ img {
    <img src="/img/author-vezzo.jpg"/>
   </td>
   <td>
-    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/vezzo/">Francesco Vezzoli</a></h3>
+    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/vezzo/" xml:lang="it">Francesco Vezzoli</a></h3>
     <p>
       <b>Beta-tester</b><br />
-      <b>Donatore semi-volontario di CPU</b>
+      <b>Almost-voluntary CPU-time donor</b>
     </p>
   </td>
 </tr>
@@ -58,10 +59,10 @@ img {
    <img src="/img/author-malgar.jpg"/>
   </td>
   <td>
-    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/alessioz/">Alessio Zanol</a></h3>
+    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/alessioz/" xml:lang="it">Alessio Zanol</a></h3>
     <p>
       <b>Beta-tester</b><br />
-      <b>Donatore semi-volontario di CPU</b>
+      <b>Almost-voluntary CPU-time donor</b>
     </p>
   </td>
 </tr>
@@ -70,10 +71,10 @@ img {
    <img src="/img/author-buluca.jpg"/>
   </td>
   <td>
-    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/Luca Brivio/">Luca Brivio</a></h3>
+    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/Luca Brivio/" xml:lang="it">Luca Brivio</a></h3>
     <p>
       <b>Beta-tester</b><br />
-      <b>Supporto morale :)</b>
+      <b>Moral support :)</b>
     </p>
   </td>
 </tr>
@@ -82,9 +83,9 @@ img {
    <img src="/img/author-elwood.jpg"/>
   </td>
   <td>
-    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/elwood/">Antonino Arcudi</a></h3>
+    <h3 class="fertigo"><a href="http://www.openstreetmap.org/user/elwood/" xml:lang="it">Antonino Arcudi</a></h3>
     <p>
-      <b>CSS per /stats/</b>
+      <b>CSS for /stats/</b>
     </p>
   </td>
 </tr>

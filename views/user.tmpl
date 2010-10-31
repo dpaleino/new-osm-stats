@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      lang="it">
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+>
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Statistiche OSM Italia - Utente ${user}</title>
+<title i18n:msg="user">OpenStreetMap Statistics - User ${user}</title>
 <script src="/js/jquery.min.js"></script>
 <script>
 <!--
@@ -21,8 +22,8 @@
 </head>
 <body>
 <div align="center">
-<h1>Statistiche OpenStreetMap Italia</h1>
-<h2>Profilo utente: ${user}</h2>
+<h1>OpenStreetMap Statistics</h1>
+<h2 i18n:msg="user">User profile: ${user}</h2>
 <img src="${imgurl}" /><br /><br />
 <small><a href='javascript:history.go(-1);'>Go back</a></small>
 <ul id="links" style="padding: 0px">
@@ -51,9 +52,9 @@
 <table>
 <thead>
 <tr>
-  <th>Posizione</th>
+  <th>Position</th>
   <th>&nbsp;</th>
-  <th>Totale</th>
+  <th>Total</th>
 </tr>
 </thead>
 <tbody>
@@ -89,15 +90,15 @@
   </py:when>
   <py:otherwise>
     <a name="${category}" class='category'></a><h4><i>${category}</i></h4>
-    <h5>This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
+    <h5 i18n:msg="categories">This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
   </py:otherwise>
 </py:choose>
 <table>
 <thead>
 <tr>
-  <th>Posizione</th>
+  <th>Position</th>
   <th>&nbsp;</th>
-  <th>Totale</th>
+  <th>Total</th>
 </tr>
 </thead>
 <tbody>
@@ -137,6 +138,6 @@
 ${showkey(key, tags[key])}
 </py:for>
 </div>
-<p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+<p><small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
 </body>
 </html>

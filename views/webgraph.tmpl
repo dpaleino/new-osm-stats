@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      lang="it">
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+>
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Generatore grafici statistiche OSM</title>
+<title>OSM statistics graph generator</title>
 <script src="/js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
 <style>
@@ -93,7 +94,7 @@
     <input type="Submit" value="Graph!" />
   </form>
   <br />
-<p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+<p><small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
 </div>
   <div id="graph">
   </div>

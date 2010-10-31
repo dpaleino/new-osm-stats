@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      lang="it">
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+>
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-<title>Statistiche OSM Italia ${date} - Key:${key}</title>
+<title i18n:msg="date,key">OpenStreetMap Statistics ${date} - Key:${key}</title>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/jquery.tablesorter.min.js"></script>
 <script>
@@ -40,8 +41,8 @@
 </head>
 <body>
 <div align="center">
-<h1>Statistiche OpenStreetMap Italia ${date}</h1>
-<h2>Key:${key}</h2>
+<h1 i18n:msg="date">OpenStreetMap Statistics - ${date}</h1>
+<h2 i18n:msg="key">Key:${key}</h2>
 <py:choose test="split">
   <py:when test="None">
     <small><a href="/stats/${prefix}/${key}">Go back</a></small>
@@ -61,7 +62,7 @@
   </py:when>
   <py:otherwise>
     <a name="${category}" class='category'></a><h4><i>${category}</i></h4>
-    <h5>This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
+    <h5 i18n:msg="categories">This category includes: ${', '.join(value.split('|')[1].split(';'))}</h5>
   </py:otherwise>
 </py:choose>
 <!--
@@ -70,10 +71,10 @@
 <table class="tablesorter">
 <thead>
 <tr>
-  <th>Posizione</th>
+  <th>Position</th>
   <th>&nbsp;</th>
-  <th>Utente</th>
-  <th>Totale</th>
+  <th>User</th>
+  <th>Total</th>
 </tr>
 </thead>
 <tbody>
@@ -114,6 +115,6 @@
 ${showval(val, vals[val])}
 </py:for>
 </div>
-<p><small>Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+<p><small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
 </body>
 </html>
