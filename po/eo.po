@@ -1,0 +1,180 @@
+# Translations template for osmstats.
+# Copyright (C) 2010 David Paleino <d.paleino@gmail.com>
+# This file is distributed under the same license as the osmstats project.
+# David Paleino <d.paleino@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: osmstats 0.1\n"
+"Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
+"POT-Creation-Date: 2010-10-31 18:52+0100\n"
+"PO-Revision-Date: 2010-10-31 22:05+0100\n"
+"Last-Translator: David Paleino <dapal@debian.org>\n"
+"Language-Team: Esperanto\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.4\n"
+"Language: eo\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: views/credits.tmpl:7
+#: views/index.tmpl:7
+#: views/index.tmpl:55
+#: views/key.tmpl:44
+#: views/statistiche.tmpl:7
+#: views/statistiche.tmpl:30
+#: views/table.tmpl:7
+#: views/table.tmpl:13
+#, python-format
+msgid "OpenStreetMap Statistics - %(date)s"
+msgstr "Statistikoj de OpenStreetMap - %(date)s"
+
+#: views/credits.tmpl:33
+#: views/user.tmpl:25
+#: views/workinprogress.tmpl:7
+#: views/workinprogress.tmpl:33
+msgid "OpenStreetMap Statistics"
+msgstr "Statistikoj de OpenStreetMap"
+
+#: views/credits.tmpl:34
+#: views/index.tmpl:62
+msgid "Credits"
+msgstr "Agnoskoj"
+
+#: views/credits.tmpl:42
+msgid "Main developer"
+msgstr "Ĉefa kodoskribulo"
+
+#: views/credits.tmpl:52
+#: views/credits.tmpl:64
+#: views/credits.tmpl:76
+msgid "Beta-tester"
+msgstr "Beta-provaĵulo"
+
+#: views/credits.tmpl:53
+#: views/credits.tmpl:65
+msgid "Almost-voluntary CPU-time donor"
+msgstr ""
+
+#: views/credits.tmpl:77
+msgid "Moral support :)"
+msgstr "Morala apogilo :)"
+
+#: views/credits.tmpl:88
+msgid "CSS for /stats/"
+msgstr "CSS por /stats/"
+
+#: views/index.tmpl:58
+msgid "Statistics"
+msgstr "Statistikoj"
+
+#: views/index.tmpl:59
+msgid "Charts"
+msgstr "Grafikaĵoj"
+
+#: views/index.tmpl:60
+msgid "Source code"
+msgstr "Fontkodo"
+
+#: views/index.tmpl:61
+msgid "Report a bug"
+msgstr "Komuniku cimon"
+
+#: views/key.tmpl:7
+#, python-format
+msgid "OpenStreetMap Statistics %(date)s - Key:%(key)s"
+msgstr "Statistikoj de OpenStreetMap %(date)s - Key:%(key)s"
+
+#: views/key.tmpl:45
+#, python-format
+msgid "Key:%(key)s"
+msgstr ""
+
+#: views/key.tmpl:48
+#: views/key.tmpl:51
+#: views/statistiche.tmpl:31
+#: views/table.tmpl:14
+#: views/user.tmpl:28
+msgid "Go back"
+msgstr "Iru reverso"
+
+#: views/key.tmpl:65
+#: views/table.tmpl:28
+#: views/user.tmpl:93
+#, python-format
+msgid "This category includes: %(categories)s"
+msgstr "Tiu ĉi kategorio enhavas: %(categories)s"
+
+#: views/key.tmpl:74
+#: views/statistiche.tmpl:49
+#: views/table.tmpl:38
+#: views/user.tmpl:55
+#: views/user.tmpl:99
+msgid "Position"
+msgstr "Pozicio"
+
+#: views/key.tmpl:76
+#: views/statistiche.tmpl:51
+#: views/table.tmpl:40
+msgid "User"
+msgstr "Uzanto"
+
+#: views/key.tmpl:77
+#: views/statistiche.tmpl:52
+#: views/table.tmpl:41
+#: views/user.tmpl:57
+#: views/user.tmpl:101
+msgid "Total"
+msgstr "Numero"
+
+#: views/key.tmpl:118
+#: views/statistiche.tmpl:92
+#: views/table.tmpl:69
+#: views/user.tmpl:141
+#: views/webgraph.tmpl:97
+msgid "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
+msgstr "Datumoj © [1:OpenStreetMap] kaj kontribuloj, [2:CC-BY-SA]."
+
+#: views/user.tmpl:7
+#, python-format
+msgid "OpenStreetMap Statistics - User %(user)s"
+msgstr "Statistikoj de OpenStreetMap - Uzanto %(user)s"
+
+#: views/user.tmpl:26
+#, python-format
+msgid "User profile: %(user)s"
+msgstr "Profilo de uzanto: %(user)s"
+
+#: views/webgraph.tmpl:7
+msgid "OSM statistics graph generator"
+msgstr ""
+
+#: views/webgraph.tmpl:33
+msgid "Dynamic graph generator"
+msgstr ""
+
+#: views/webgraph.tmpl:38
+#: views/webgraph.tmpl:67
+msgid "Tags:"
+msgstr "Etikedoj:"
+
+#: views/webgraph.tmpl:40
+#: views/webgraph.tmpl:69
+#: views/webgraph.tmpl:81
+msgid "--- Select tag ---"
+msgstr "--- Elektu etikedon ---"
+
+#: views/webgraph.tmpl:53
+#: views/webgraph.tmpl:58
+msgid "Users:"
+msgstr "Uzantoj:"
+
+#: views/webgraph.tmpl:60
+msgid "--- Select user ---"
+msgstr "--- Elektu uzanton ---"
+
+#: views/workinprogress.tmpl:35
+msgid "Work in progress"
+msgstr "Estas laboranto"
+

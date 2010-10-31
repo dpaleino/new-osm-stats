@@ -26,6 +26,9 @@ sys.path.append(mydir)
 import bottle
 from bottle import *
 from plot import *
+from genshi.template import TemplateLoader
+from genshi.filters import Translator
+import gettext
 from genshi.template import MarkupTemplate as template
 import cjson
 from glob import glob
@@ -33,13 +36,19 @@ from glob import glob
 from helpers import *
 from config import *
 
+lang = gettext.translation('messages', 'po', languages=['eo', 'en'], fallback=True)
+lang.install()
+loader = TemplateLoader([html_path, templates_path], callback=lambda x: Translator(lang).setup(x))
+
 @route('/')
 def index():
     bottle.TEMPLATES.clear()
-    return open(os.path.join(html_path, 'index.html'))
+    return loader.load('index.tmpl').generate(
+        date=timestamp,
+    ).render('xhtml')
 
 def workinprogress(reason=''):
-    tmpl = template(open("views/workinprogress.tmpl"))
+    tmpl = loader.load("workinprogress.tmpl")
     out = tmpl.generate(
         reason=reason
     )
@@ -112,14 +121,13 @@ def show_user(prefix, user):
         abort(404, 'User profile not found')
     else:
         imgurl = 'http://www.openstreetmap.org/user/%s' % quote(user)
-        print imgurl
         for line in urlopen(imgurl):
             if 'user_image' in line:
                 # <img alt="Primopiano" class="user_image" src="/user/image/71261/primopiano.jpg?1271701916" style="float: right" />
                 imgurl = 'http://www.openstreetmap.org' + line.split('src="')[1].split('"')[0]
                 break
 
-        tmpl = template(open(os.path.join(templates_path, 'user.tmpl')))
+        tmpl = loader.load('user.tmpl')
         out = tmpl.generate(
             imgurl=imgurl,
             user=user,
@@ -138,7 +146,7 @@ def graphs(prefix=default_prefix):
 
     check_prefix(prefix)
     bottle.TEMPLATES.clear()
-    tmpl = template(open("views/webgraph.tmpl"))
+    tmpl = loader.load("webgraph.tmpl")
     out = tmpl.generate(
         tags=get_tags(prefix=get_prefix(request))["r"],
         users=get_users(prefix=get_prefix(request))["r"],
@@ -223,7 +231,7 @@ def go_to_bugs():
 ##
 @route('/credits')
 def credits():
-    tmpl = template(open("views/credits.tmpl"))
+    tmpl = loader.load("credits.tmpl")
     out = tmpl.generate()
     return out.render('xhtml')
 
