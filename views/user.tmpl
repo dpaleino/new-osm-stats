@@ -26,7 +26,7 @@
 <img src="${imgurl}" /><br /><br />
 <small><a href='javascript:history.go(-1);'>Go back</a></small>
 <ul id="links" style="padding: 0px">
-<py:for each="name in ['Nodi', 'Ways', 'Relazioni']">
+<py:for each="name in ['Nodes', 'Ways', 'Relations']">
 <py:choose test="">
   <!--! check whether the user has it -->
   <py:when test="name in primitives">
@@ -125,7 +125,7 @@
 </py:for>
 </div>
 </py:def>
-<py:for each="name in ['Nodi', 'Ways', 'Relazioni']">
+<py:for each="name in ['Nodes', 'Ways', 'Relations']">
 <py:choose test="">
   <!--! check whether the user has it -->
   <py:when test="name in primitives">

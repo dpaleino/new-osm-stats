@@ -103,7 +103,6 @@ def show_user(prefix, user):
     bottle.TEMPLATES.clear()
 
     from urllib2 import unquote, urlopen, quote
-    prefix = get_prefix(request)
     try:
         userfile = sanitize(unquote(user)).replace(' ', '_')
         f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, userfile)))
