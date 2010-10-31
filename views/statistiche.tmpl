@@ -32,7 +32,7 @@
 <ul id="keylinks" style="padding: 0px">
 <py:for each="key in tags">
   <py:with vars="index = tags.index(key)">
-    <li style="display:inline; margin:5px; text-decoration: none;"><a href="/stats/${key}/?prefix=${prefix}">${key}</a></li>
+    <li style="display:inline; margin:5px; text-decoration: none;"><a href="/stats/${prefix}/${key}">${key}</a></li>
     <py:choose test="((index + 1) % 5)">
       <py:when test="0"><br /></py:when>
     </py:choose>
@@ -68,7 +68,7 @@
   </py:choose>
   <td>
     <a href="http://www.openstreetmap.org/user/${pair[0]}" style="text-decoration:none;">${pair[0]}</a>
-    <a href="/user/${pair[0]}/?prefix=${prefix}"><img src='/img/profile.png' /></a>
+    <a href="/user/${prefix}/${pair[0]}"><img src='/img/profile.png' /></a>
   </td>
   <td align="right">${pair[1]}</td>
 </tr>
@@ -76,7 +76,7 @@
 <py:if test="split">
 <tfoot>
   <tr>
-    <td colspan='4'><a href='/stats/full/${name.lower()}?prefix=${prefix}'>&hellip;</a></td>
+    <td colspan='4'><a href='/stats/full/${prefix}/${name.lower()}'>&hellip;</a></td>
   </tr>
 </tfoot>
 </py:if>

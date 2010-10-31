@@ -28,6 +28,7 @@ from bottle import *
 from plot import *
 from genshi.template import MarkupTemplate as template
 import cjson
+from glob import glob
 
 from helpers import *
 from config import *
@@ -43,6 +44,11 @@ def workinprogress(reason=''):
         reason=reason
     )
     return out.render('xhtml')
+
+def check_prefix(prefix):
+    path = os.path.join(html_path, '%s_*' % prefix)
+    if len(glob(path)) == 0:
+        abort(404, 'No data available for %s' % prefix)
 
 # included files
 @route('/js/:f')
@@ -65,29 +71,23 @@ def send_style(f):
 # Stats
 ###
 @route('/stats')
-@route('/stats/')
-def stats():
-    prefix = get_prefix(request)
-    if request.GET.get('full'):
-        filename = '%s_stats_full.html' % prefix
-    else:
-        filename = "%s_stats.html" % prefix
-    return open(os.path.join(html_path, filename))
+@route('/stats/:prefix')
+def stats(prefix=default_prefix):
+    check_prefix(prefix)
+    return open(os.path.join(html_path, "%s_stats.html" % prefix))
 
-@route('/stats/:key/')
-@route('/stats/:key')
-def show_key(key):
-    prefix = get_prefix(request)
-    if request.GET.get('full'):
-        filename = '%s_%s_full.html' % (prefix, sanitize(key))
-    else:
-        filename = '%s_%s.html' % (prefix, sanitize(key))
-    return open(os.path.join(html_path, filename))
+@route('/stats/:prefix/:key')
+def show_key(prefix, key):
+    check_prefix(prefix)
+    if key == 'full':
+        # TODO: more explicative message
+        return "Nothing here, really."
+    return open(os.path.join(html_path, "%s_%s.html" % (prefix, sanitize(key))))
 
-@route('/stats/full/:key')
-@route('/stats/full/:key/:value')
-def show_full(key, value=None):
-    prefix = get_prefix(request)
+@route('/stats/full/:prefix/:key')
+@route('/stats/full/:prefix/:key/:value')
+def show_full(prefix, key, value=None):
+    check_prefix(prefix)
     if not value:
         if key in ['nodes', 'ways', 'relations']:
             return open(os.path.join(html_path, "%s_%s_full.html" % (prefix, key)))
@@ -96,16 +96,16 @@ def show_full(key, value=None):
             return "You're trying to do what?"
     return open(os.path.join(html_path, "%s_%s=%s_full.html" % (prefix, sanitize(key), sanitize(value))))
 
-@route('/user/:user/')
-@route('/user/:user')
-def show_user(user):
+@route('/user/:prefix/:user')
+def show_user(prefix, user):
+    check_prefix(prefix)
+
     bottle.TEMPLATES.clear()
 
     from urllib2 import unquote, urlopen, quote
     prefix = get_prefix(request)
     try:
         userfile = sanitize(unquote(user)).replace(' ', '_')
-        print userfile
         f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, userfile)))
         primitives, tags = cjson.decode(f.readline())
         f.close()
@@ -132,10 +132,12 @@ def show_user(user):
 ###
 # Graphs
 ###
-@route('/graphs/')
 @route('/graphs')
-def graphs():
+@route('/graphs/:prefix')
+def graphs(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
+
+    check_prefix(prefix)
     bottle.TEMPLATES.clear()
     tmpl = template(open("views/webgraph.tmpl"))
     out = tmpl.generate(
@@ -145,18 +147,17 @@ def graphs():
     return out.render('xhtml')
 
 @route('/get/tags')
-def get_tags(prefix=None):
-    if not prefix:
-        prefix = get_prefix(request)
+@route('/get/tags/:prefix')
+def get_tags(prefix=default_prefix):
+    check_prefix(prefix)
     tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
     return {"r":sorted(tags)}
 
-@route('/get/tags/:user')
-def get_tags_for(user, prefix=None):
+@route('/get/tags/:prefix/:user')
+def get_tags_for(prefix, user):
     return workinprogress('Temporary disabled due to performance issues')
-    if not prefix:
-        prefix = get_prefix(request)
 
+    check_prefix(prefix)
     counts, xcoords, ycoords = parse_json(prefix)
     tags = set()
     for tag in ycoords:
@@ -167,42 +168,38 @@ def get_tags_for(user, prefix=None):
     return {"r":sorted(list(tags))}
 
 @route('/get/users')
-def get_users(prefix=None):
-    if not prefix:
-        prefix = get_prefix(request)
-
+@route('/get/users/:prefix')
+def get_users(prefix=default_prefix):
+    check_prefix(prefix)
     tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
     return {"r":sorted(users)}
 
-@route('/get/users/:tag')
-def get_users_for(tag, prefix=None):
+@route('/get/users/:prefix/:tag')
+def get_users_for(prefix, tag):
     return workinprogress('Temporary disabled due to performance issues')
-    if not prefix:
-        prefix = get_prefix(request)
 
+    check_prefix(prefix)
     counts, xcoords, ycoords = parse_json(prefix)
     users = set()
     for date in ycoords[tag].values():
         users.update(date.keys())
     return {"r":sorted(list(users))}
 
-@get('/graph-tag-user')
-def graph_tag_user(prefix=None):
+@get('/graph-tag-user/:prefix')
+def graph_tag_user(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
-    if not prefix:
-        prefix = get_prefix(request)
 
+    check_prefix(prefix)
     bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
     counts, xcoords, ycoords = parse_json(prefix)
     filename = graph_tag_users(prefix, request.GET["tag"], request.GET.getall("user"))[0]
     return static_file(os.path.basename(filename), graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
 
-@get('/graph-tag')
-def graph_tag(prefix=None):
+@get('/graph-tag/:prefix')
+def graph_tag(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
-    if not prefix:
-        prefix = get_prefix(request)
 
+    check_prefix(prefix)
     bottle.response.set_content_type('image/svg+xml; charset=UTF-8')
     counts, xcoords, ycoords = parse_json(prefix)
     filename = graph_totals(prefix, request.GET.getall('tag'))

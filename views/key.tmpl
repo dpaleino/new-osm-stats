@@ -44,10 +44,10 @@
 <h2>Key:${key}</h2>
 <py:choose test="split">
   <py:when test="None">
-    <small><a href="/stats/${key}/?prefix=${prefix}">Go back</a></small>
+    <small><a href="/stats/${prefix}/${key}">Go back</a></small>
   </py:when>
   <py:otherwise>
-    <small><a href="/stats/?prefix=${prefix}">Go back</a></small>
+    <small><a href="/stats/${prefix}">Go back</a></small>
   </py:otherwise>
 </py:choose>
 <ul id="links" style="padding: 0px;"></ul>
@@ -93,7 +93,7 @@
   </py:choose>
   <td>
     <a href="http://www.openstreetmap.org/user/${pair[0]}" style="text-decoration:none;">${pair[0]}</a>
-    <a href="/user/${pair[0]}/?prefix=${prefix}"><img src='/img/profile.png' /></a>
+    <a href="/user/${prefix}/${pair[0]}"><img src='/img/profile.png' /></a>
   </td>
   <td align="right">${pair[1]}</td>
 </tr>
@@ -101,7 +101,7 @@
 <py:if test="split">
 <tfoot>
   <tr>
-    <td colspan='4'><a href='/stats/full/${key}/${category}?prefix=${prefix}'>&hellip;</a></td>
+    <td colspan='4'><a href='/stats/full/${prefix}/${key}/${category}'>&hellip;</a></td>
   </tr>
 </tfoot>
 </py:if>
