@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 import os
+import logging
 
 html_path = 'html'
 json_path = 'json'
@@ -29,3 +30,12 @@ graphs_cache = os.path.join(graphs_path, 'cached')
 default_prefix = 'italy'
 
 host_ip_addr = ''
+
+### logging
+log = logging.getLogger('stats')
+log.setLevel(logging.INFO)
+logh = logging.StreamHandler()
+logh.setLevel(logging.INFO)
+logfmt = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logh.setFormatter(logfmt)
+log.addHandler(logh)
