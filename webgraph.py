@@ -161,8 +161,8 @@ def graphs(prefix=default_prefix):
     bottle.TEMPLATES.clear()
     tmpl = loader.load("webgraph.tmpl")
     out = tmpl.generate(
-        tags=get_tags(prefix=get_prefix(request))["r"],
-        users=get_users(prefix=get_prefix(request))["r"],
+        tags=get_tags(prefix)["r"],
+        users=get_users(prefix)["r"],
     )
     return out.render('xhtml')
 
