@@ -32,20 +32,19 @@ import gettext
 from genshi.template import MarkupTemplate as template
 import cjson
 from glob import glob
+import cPickle as pickle
 
 from helpers import *
 from config import *
 
 lang = gettext.translation('messages', 'po', languages=['eo', 'en'], fallback=True)
 lang.install()
-loader = TemplateLoader([html_path, templates_path], callback=lambda x: Translator(lang).setup(x))
+loader = TemplateLoader(templates_path, callback=lambda x: Translator(lang).setup(x))
 
 @route('/')
 def index():
     bottle.TEMPLATES.clear()
-    return loader.load('index.tmpl').generate(
-        date=timestamp,
-    ).render('xhtml')
+    return loader.load('index.tmpl').generate().render('xhtml')
 
 def workinprogress(reason=''):
     tmpl = loader.load("workinprogress.tmpl")
@@ -55,9 +54,15 @@ def workinprogress(reason=''):
     return out.render('xhtml')
 
 def check_prefix(prefix):
-    path = os.path.join(html_path, '%s_*' % prefix)
+    path = os.path.join(pickle_path, '%s_*' % prefix)
     if len(glob(path)) == 0:
         abort(404, 'No data available for %s' % prefix)
+
+def data(name):
+    f = open(os.path.join(pickle_path, name))
+    ret = pickle.load(f)
+    f.close()
+    return ret
 
 # included files
 @route('/js/:f')
@@ -83,7 +88,9 @@ def send_style(f):
 @route('/stats/:prefix')
 def stats(prefix=default_prefix):
     check_prefix(prefix)
-    return open(os.path.join(html_path, "%s_stats.html" % prefix))
+    tmpl = loader.load('statistiche.tmpl')
+    out = tmpl.generate(**data("%s_stats.pickle" % prefix))
+    return out.render('xhtml')
 
 @route('/stats/:prefix/:key')
 def show_key(prefix, key):
@@ -91,7 +98,9 @@ def show_key(prefix, key):
     if key == 'full':
         # TODO: more explicative message
         return "Nothing here, really."
-    return open(os.path.join(html_path, "%s_%s.html" % (prefix, sanitize(key))))
+    tmpl = loader.load('key.tmpl')
+    out = tmpl.generate(**data("%s_%s.pickle" % (prefix, sanitize(key))))
+    return out.render('xhtml')
 
 @route('/stats/full/:prefix/:key')
 @route('/stats/full/:prefix/:key/:value')
@@ -99,11 +108,15 @@ def show_full(prefix, key, value=None):
     check_prefix(prefix)
     if not value:
         if key in ['nodes', 'ways', 'relations']:
-            return open(os.path.join(html_path, "%s_%s_full.html" % (prefix, key)))
+            tmpl = loader.load('table.tmpl')
+            out = tmpl.generate(**data("%s_%s_full.pickle" % (prefix, key)))
+            return out.render('xhtml')
         else:
             # TODO: show a <ul> of available tags
             return "You're trying to do what?"
-    return open(os.path.join(html_path, "%s_%s=%s_full.html" % (prefix, sanitize(key), sanitize(value))))
+    tmpl = loader.load('table.tmpl')
+    out = tmpl.generate(**data("%s_%s=%s_full.pickle" % (prefix, sanitize(key), sanitize(value))))
+    return out.render('xhtml')
 
 @route('/user/:prefix/:user')
 def show_user(prefix, user):
