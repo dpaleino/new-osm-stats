@@ -21,6 +21,8 @@ import logging
 pickle_path = 'pickle'
 html_path = 'html'
 json_path = 'json'
+po_path = 'po'
+locale_path = os.path.join(po_path, 'locales')
 profiles_path = os.path.join(json_path, 'profiles')
 templates_path = 'views'
 maxsplit = 100
@@ -29,6 +31,7 @@ graphs_path = 'graphs'
 graphs_cache = os.path.join(graphs_path, 'cached')
 
 default_prefix = 'italy'
+default_lang = 'it'
 
 host_ip_addr = ''
 

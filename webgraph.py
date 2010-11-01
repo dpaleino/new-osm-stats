@@ -37,16 +37,36 @@ import cPickle as pickle
 from helpers import *
 from config import *
 
-lang = gettext.translation('messages', 'po', languages=['eo', 'en'], fallback=True)
-lang.install()
-loader = TemplateLoader(templates_path, callback=lambda x: Translator(lang).setup(x))
+linguas = map(lambda x: x.strip(), open(os.path.join(po_path, 'LINGUAS')).readlines())
+langs = {}
+for l in linguas:
+    langs[l] = gettext.translation('messages', locale_path, languages=[l])
+langs[default_lang].install()
+loader = TemplateLoader(templates_path, callback=lambda x: Translator(langs[default_lang]).setup(x))
 
-@route('/')
-def index():
-    bottle.TEMPLATES.clear()
-    return loader.load('index.tmpl').generate().render('xhtml')
+def check_lang():
+    global langs, loader
+
+    chosen = request.get_cookie('lang')
+    if chosen:
+        if chosen not in linguas:
+            chosen = default_lang
+    else:
+        try:
+            oklangs = request.environ['HTTP_ACCEPT_LANGUAGE'].split(',')
+            oklangs = map(lambda x: x.split('-')[0].split(';')[0], oklangs)
+            for l in oklangs:
+                if l in linguas:
+                    chosen = l
+                    break
+        except KeyError:
+            chosen = default_lang
+
+    langs[chosen].install()
+    loader = TemplateLoader(templates_path, callback=lambda x: Translator(langs[chosen]).setup(x))
 
 def workinprogress(reason=''):
+    check_lang()
     tmpl = loader.load("workinprogress.tmpl")
     out = tmpl.generate(
         reason=reason
@@ -63,6 +83,20 @@ def data(name):
     ret = pickle.load(f)
     f.close()
     return ret
+
+@route('/lang/:locale')
+def set_lang(locale):
+    response.set_cookie('lang', locale, path='/', expires=+500)
+    try:
+        redirect(request.environ['HTTP_REFERER'])
+    except KeyError:
+        redirect('/')
+
+@route('/')
+def index():
+    bottle.TEMPLATES.clear()
+    check_lang()
+    return loader.load('index.tmpl').generate().render('xhtml')
 
 # included files
 @route('/js/:f')
@@ -88,6 +122,7 @@ def send_style(f):
 @route('/stats/:prefix')
 def stats(prefix=default_prefix):
     check_prefix(prefix)
+    check_lang()
     tmpl = loader.load('statistiche.tmpl')
     out = tmpl.generate(**data("%s_stats.pickle" % prefix))
     return out.render('xhtml')
@@ -95,6 +130,7 @@ def stats(prefix=default_prefix):
 @route('/stats/:prefix/:key')
 def show_key(prefix, key):
     check_prefix(prefix)
+    check_lang()
     if key == 'full':
         # TODO: more explicative message
         return "Nothing here, really."
@@ -106,6 +142,7 @@ def show_key(prefix, key):
 @route('/stats/full/:prefix/:key/:value')
 def show_full(prefix, key, value=None):
     check_prefix(prefix)
+    check_lang()
     if not value:
         if key in ['nodes', 'ways', 'relations']:
             tmpl = loader.load('table.tmpl')
@@ -121,6 +158,7 @@ def show_full(prefix, key, value=None):
 @route('/user/:prefix/:user')
 def show_user(prefix, user):
     check_prefix(prefix)
+    check_lang()
 
     bottle.TEMPLATES.clear()
 
@@ -158,6 +196,7 @@ def graphs(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
+    check_lang()
     bottle.TEMPLATES.clear()
     tmpl = loader.load("webgraph.tmpl")
     out = tmpl.generate(
@@ -170,6 +209,7 @@ def graphs(prefix=default_prefix):
 @route('/get/tags/:prefix')
 def get_tags(prefix=default_prefix):
     check_prefix(prefix)
+    check_lang()
     tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
     return {"r":sorted(tags)}
 
@@ -178,6 +218,7 @@ def get_tags_for(prefix, user):
     return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
+    check_lang()
     counts, xcoords, ycoords = parse_json(prefix)
     tags = set()
     for tag in ycoords:
@@ -191,6 +232,7 @@ def get_tags_for(prefix, user):
 @route('/get/users/:prefix')
 def get_users(prefix=default_prefix):
     check_prefix(prefix)
+    check_lang()
     tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
     return {"r":sorted(users)}
 
@@ -199,6 +241,7 @@ def get_users_for(prefix, tag):
     return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
+    check_lang()
     counts, xcoords, ycoords = parse_json(prefix)
     users = set()
     for date in ycoords[tag].values():
@@ -210,6 +253,7 @@ def graph_tag_user(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
+    check_lang()
     bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
     counts, xcoords, ycoords = parse_json(prefix)
     filename = graph_tag_users(prefix, request.GET["tag"], request.GET.getall("user"))[0]
@@ -220,6 +264,7 @@ def graph_tag(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
+    check_lang()
     bottle.response.set_content_type('image/svg+xml; charset=UTF-8')
     counts, xcoords, ycoords = parse_json(prefix)
     filename = graph_totals(prefix, request.GET.getall('tag'))
@@ -244,6 +289,7 @@ def go_to_bugs():
 ##
 @route('/credits')
 def credits():
+    check_lang()
     tmpl = loader.load("credits.tmpl")
     out = tmpl.generate()
     return out.render('xhtml')
