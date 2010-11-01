@@ -31,10 +31,10 @@ def main(prefix, date):
     timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
     positions = cjson.decode(pos.readline())
 
-    render_template(prefix, date, nodes, ways, rels, tags, positions)
+    make_pickles(prefix, date, nodes, ways, rels, tags, positions)
 
 
-def render_template(prefix, date, nodes, ways, rels, tags, positions):
+def make_pickles(prefix, date, nodes, ways, rels, tags, positions):
     log.info("Rendering HTML")
 
     log.info("Sorting users")

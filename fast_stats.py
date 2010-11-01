@@ -25,7 +25,7 @@ import os
 from helpers import *
 from config import *
 from tags import to_check
-from makehtml import render_template
+from makepickle import make_pickles
 
 ### code
 
@@ -187,7 +187,7 @@ def main(prefix, date, filename):
     json = open(os.path.join(json_path, '%s_%s.json' % (prefix, last)))
     timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
 
-    render_template(prefix, last, nodes, ways, rels, tags, positions)
+    make_pickles(prefix, last, nodes, ways, rels, tags, positions)
     log.info("Program ended.")
 
 if __name__ == '__main__':
