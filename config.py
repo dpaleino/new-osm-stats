@@ -18,7 +18,7 @@
 import os
 import logging
 
-html_path = 'html'
+pickle_path = 'pickle'
 json_path = 'json'
 profiles_path = os.path.join(json_path, 'profiles')
 templates_path = 'views'

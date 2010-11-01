@@ -19,6 +19,7 @@
 import cjson
 import os
 from genshi.template import MarkupTemplate as template
+import cPickle as pickle
 
 from config import *
 from helpers import *
@@ -45,13 +46,6 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
             sortedtags[key][val] = mysort(tags[key][val])
             splittags[key][val] = mysort(tags[key][val], split=maxsplit)
 
-    log.debug('Rendering index page (%s)' % date)
-    tmpl = template(open('views/index.tmpl'))
-    stream = tmpl.generate(date=date)
-    f = open(os.path.join(html_path, 'index.html'), 'w')
-    f.write(stream.render('xhtml'))
-    f.close()
-
     primpos = positions_changed(positions[0])
     tagpos = positions_changed(positions[1])
     for t in [(None, sortedtags), (maxsplit, splittags)]:
@@ -66,10 +60,9 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
                     pos=primpos[i[0]],
                     prefix=prefix,
                 )
-                tmpl = template(open("views/table.tmpl"))
-                stream = tmpl.generate(**data)
-                f = open(os.path.join(html_path, '%s_%s_full.html' % (prefix, i[0].lower())), "w")
-                f.write(stream.render("xhtml"))
+                # table.tmpl
+                f = open(os.path.join(pickle_path, '%s_%s_full.pickle' % (prefix, i[0].lower())), "w")
+                pickle.dump(data, f, protocol=2)
                 f.close()
         else:
             log.debug("Rendering primitives pages (%s)" % date)
@@ -84,10 +77,9 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
                 pos=primpos,
                 split=t[0],
             )
-            tmpl = template(open("views/statistiche.tmpl"))
-            stream = tmpl.generate(**data)
-            f = open(os.path.join(html_path, '%s_stats.html' % prefix), "w")
-            f.write(stream.render("xhtml"))
+            # statistiche.tmpl
+            f = open(os.path.join(pickle_path, '%s_stats.pickle' % prefix), "w")
+            pickle.dump(data, f, protocol=2)
             f.close()
 
 
@@ -105,10 +97,9 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
                         pos=tagpos[key][val],
                         prefix=prefix,
                     )
-                    tmpl = template(open('views/table.tmpl'))
-                    stream = tmpl.generate(**data)
-                    f = open(os.path.join(html_path, '%s_%s=%s_full.html' % (prefix, sanitize(key), sanitize(valname))), 'w')
-                    f.write(stream.render('xhtml'))
+                    # table.tmpl
+                    f = open(os.path.join(pickle_path, '%s_%s=%s_full.pickle' % (prefix, sanitize(key), sanitize(valname))), 'w')
+                    pickle.dump(data, f, protocol=2)
                     f.close()
             else:
                 log.debug("Rendering pages for %s=* (%s)" % (key, date))
@@ -120,10 +111,9 @@ def render_template(prefix, date, nodes, ways, rels, tags, positions):
                     pos=tagpos[key],
                     split=t[0],
                 )
-                tmpl = template(open('views/key.tmpl'))
-                stream = tmpl.generate(**data)
-                f = open(os.path.join(html_path, '%s_%s.html' % (prefix, sanitize(key))), 'w')
-                f.write(stream.render('xhtml'))
+                # key.tmpl
+                f = open(os.path.join(pickle_path, '%s_%s.pickle' % (prefix, sanitize(key))), 'w')
+                pickle.dump(data, f, protocol=2)
                 f.close()
 
 if __name__ == '__main__':
