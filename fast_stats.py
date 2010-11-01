@@ -174,7 +174,16 @@ def save_jsons(prefix, l, pos, profiles):
         f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
         f.close()
 
+def save_timestamp():
+    from datetime import datetime
+    from time import strftime
+    today = strftime("%Y-%m-%d %H:%M:%S", datetime.today().timetuple())
+    f = open(os.path.join(html_path, 'timestamp.html'), 'w')
+    f.write('<i>'+today+'</i>')
+    f.close()
+
 def main(prefix, date, filename):
+    save_timestamp()
     nodes, ways, rels, tags = parse(filename)
     positions, profiles = calculate_positions(prefix, date, nodes, ways, rels, tags)
     save_jsons(prefix, [date, nodes, ways, rels, tags], positions, profiles)

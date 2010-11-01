@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:i18n="http://genshi.edgewall.org/i18n"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
 >
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
@@ -138,6 +139,9 @@
 ${showkey(key, tags[key])}
 </py:for>
 </div>
-<p><small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
+<p>
+<small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small><br />
+<small i18n:msg="">Data last generated on <xi:include href='../html/timestamp.html' /></small>
+</p>
 </body>
 </html>
