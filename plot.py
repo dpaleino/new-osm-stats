@@ -57,7 +57,7 @@ class Graph():
         for x, y in sorted(zip(xcoords, ycoords), key=itemgetter(0)):
             f.write('%(x)s %(y)s\n' % locals())
             i += 1
-            if (i % every) == 0:
+            if int(every) == 0 or (i % every) == 0:
                 self.g("set label '%(y)s' at '%(x)s',%(y)s" % locals())
         f.close()
 
