@@ -33,6 +33,7 @@ from genshi.template import MarkupTemplate as template
 import cjson
 from glob import glob
 import cPickle as pickle
+import time
 
 from helpers import *
 from config import *
@@ -252,6 +253,11 @@ def get_users_for(prefix, tag):
         users.update(date.keys())
     return {"r":sorted(list(users))}
 
+@route('/get/graph/:filename')
+def get_graph_file(filename):
+    bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
+    return static_file(filename, graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
+
 @get('/graph-tag-user/:prefix')
 def graph_tag_user(prefix=default_prefix):
     return workinprogress('Temporary disabled due to performance issues')
@@ -269,10 +275,18 @@ def graph_tag(prefix=default_prefix):
 
     check_prefix(prefix)
     check_lang()
-    bottle.response.set_content_type('image/svg+xml; charset=UTF-8')
-    counts, xcoords, ycoords = parse_json(prefix)
-    filename = graph_totals(prefix, request.GET.getall('tag'))
-    return static_file(os.path.basename(filename), graphs_cache, mimetype='image/svg+xml; charset=UTF-8')
+
+    tags = request.GET.getall('tag')
+    filename = hashlib.md5(repr([prefix, tags])).hexdigest()
+    data = dict(
+        filename=filename + '.svg',
+        type='graph_tag',
+        prefix=prefix,
+        timestamp=time.time(),
+        data=tags,
+    )
+    pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
+    return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
 
 ##
 # Source

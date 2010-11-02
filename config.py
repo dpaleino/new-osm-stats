@@ -18,6 +18,8 @@
 import os
 import logging
 
+basedir = os.path.dirname(__file__)
+
 pickle_path = 'pickle'
 html_path = 'html'
 json_path = 'json'
@@ -29,6 +31,7 @@ maxsplit = 100
 
 graphs_path = 'graphs'
 graphs_cache = os.path.join(graphs_path, 'cached')
+graphs_cmddir = os.path.join(graphs_path, 'commands')
 
 default_prefix = 'italy'
 default_lang = 'it'
