@@ -26,7 +26,7 @@ msgstr "Statistiche OpenStreetMap"
 
 #: views/credits.tmpl:37 views/index.tmpl:65
 msgid "Credits"
-msgstr "Credits"
+msgstr "Contributi"
 
 #: views/credits.tmpl:45
 msgid "Main developer"
