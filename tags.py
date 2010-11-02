@@ -27,6 +27,7 @@ to_check = {
         "waste_basket"
     ],
     "barrier" : [ "*" ],
+    "boundary" : [ "*" ],
     "bridge" : [ "*" ],
     "building": [
         "*",
@@ -100,6 +101,7 @@ to_check = {
         "generator",
         "tower"
     ],
+    "railway": [ "*" ],
     "sac_scale": [ "*" ],
     "shop": [ "*" ],
     "surface" : [ "*" ],
