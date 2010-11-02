@@ -162,7 +162,7 @@ def show_user(prefix, user):
 
     bottle.TEMPLATES.clear()
 
-    from urllib2 import unquote, urlopen, quote
+    from urllib2 import unquote, urlopen, quote, HTTPError
     try:
         userfile = sanitize(unquote(user)).replace(' ', '_')
         f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, userfile)))
@@ -172,11 +172,15 @@ def show_user(prefix, user):
         abort(404, 'User profile not found')
     else:
         imgurl = 'http://www.openstreetmap.org/user/%s' % quote(user)
-        for line in urlopen(imgurl):
-            if 'user_image' in line:
-                # <img alt="Primopiano" class="user_image" src="/user/image/71261/primopiano.jpg?1271701916" style="float: right" />
-                imgurl = 'http://www.openstreetmap.org' + line.split('src="')[1].split('"')[0]
-                break
+        try:
+            stream = urlopen(imgurl)
+            for line in stream:
+                if 'user_image' in line:
+                    # <img alt="Primopiano" class="user_image" src="/user/image/71261/primopiano.jpg?1271701916" style="float: right" />
+                    imgurl = 'http://www.openstreetmap.org' + line.split('src="')[1].split('"')[0]
+                    break
+        except HTTPError:
+            imgurl = '#'
 
         tmpl = loader.load('user.tmpl')
         out = tmpl.generate(
