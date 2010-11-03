@@ -150,16 +150,31 @@ class GraphDaemon(object):
             'timestamp': [total_nodes, total_ways, total_rels],
         },
         'nodes': {
-            'user1': count,
-            'user2': count,
+            '20100912': {
+                'user1': count,
+                'user2': count,
+            },
+            'timestamp': {
+                ...
+            },
         },
         'ways': {
-            'user1': count,
-            'user2': count,
+            '20100912': {
+                'user1': count,
+                'user2': count,
+            },
+            'timestamp': {
+                ...
+            },
         },
-        'rels': {
-            'user1': count,
-            'user2': count,
+        'relations': {
+            '20100912': {
+                'user1': count,
+                'user2': count,
+            },
+            'timestamp': {
+                ...
+            },
         },
         'xcoords': ['20100912'],
         'ycoords': defaultdict(<type 'dict'>, {
@@ -181,7 +196,8 @@ class GraphDaemon(object):
         for pref in prefixes:
             log.debug('Loading data for %s' % pref)
             self.data[pref] = {}
-            self.data[pref]['counts'] = {}
+            for i in ['counts', 'nodes', 'ways', 'relations']:
+                self.data[pref][i] = {}
             self.data[pref]['xcoords'] = []
             self.data[pref]['ycoords'] = defaultdict(dict)
 
@@ -197,9 +213,9 @@ class GraphDaemon(object):
                 tags = load[4]
 
                 self.data[pref]['xcoords'].append(timestamp)
-                self.data[pref]['nodes'] = nodes
-                self.data[pref]['ways'] = ways
-                self.data[pref]['rels'] = rels
+                self.data[pref]['nodes'][timestamp] = nodes
+                self.data[pref]['ways'][timestamp] = ways
+                self.data[pref]['relations'][timestamp] = rels
 
                 l = [nodes, ways, rels]
                 self.data[pref]['counts'][timestamp] = []
