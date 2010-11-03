@@ -271,7 +271,7 @@ def graph_tag_user(prefix=default_prefix):
 
 @get('/graph-tag/:prefix')
 def graph_tag(prefix=default_prefix):
-    return workinprogress('Temporary disabled due to performance issues')
+#    return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
     check_lang()
@@ -285,6 +285,42 @@ def graph_tag(prefix=default_prefix):
         timestamp=time.time(),
         data=tags,
     )
+    pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
+    return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
+
+@get('/graph-nodes')
+@get('/graph-nodes/:prefix')
+@get('/graph-ways')
+@get('/graph-ways/:prefix')
+@get('/graph-relations')
+@get('/graph-relations/:prefix')
+def graph_primitive(prefix=default_prefix):
+    action = request.url.split('/')[3]
+
+    data = dict(
+        type='graph_primitive',
+        prefix=prefix,
+        timestamp=time.time(),
+    )
+
+    if 'nodes' in action:
+        filename = 'nodes'
+        data['data'] = 'nodes'
+    elif 'ways' in action:
+        filename = 'ways'
+        data['data'] = 'ways'
+    elif 'relations' in action:
+        filename = 'relations'
+        data['data'] = 'relations'
+
+    if request.GET.getall('user'):
+        data['type'] = 'graph_user_primitive'
+        what = data['data']
+        users = sorted(set(request.GET.getall('user')))
+        data['data'] = [what, users]
+        filename = hashlib.md5(repr([prefix, what, users])).hexdigest()
+
+    data['filename'] = filename + '.svg'
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
     return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
 
@@ -315,6 +351,6 @@ def credits():
 
 bottle.debug(True)
 #bottle.default_app().autojson = True
-#run(host=host_ip_addr, port=8080, reloader=True)
+run(host=host_ip_addr, port=8080, reloader=True)
 
 application = bottle.default_app()

@@ -140,6 +140,10 @@ class GraphDaemon(object):
             graph_totals(filename, self.data[data['prefix']], data['data'])
         elif data['type'] == 'graph_tag_users':
             graph_tag_users(filename, self.data[data['prefix']], data['data']['tags'], data['data']['users'])
+        elif data['type'] == 'graph_primitive':
+            graph_primitive(filename, self.data[data['prefix']], data['data'])
+        elif data['type'] == 'graph_user_primitive':
+            graph_user_primitive(filename, self.data[data['prefix']], data['data'][0], data['data'][1])
 
     def load_data(self):
         """
@@ -274,6 +278,36 @@ def graph_tag_users(filename, data, tags, users):
             graph.add_line(user, data['xcoords'], user_y)
     graph.plot()
 
+def graph_primitive(filename, data, what):
+    graph = Graph(filename, what.capitalize())
+
+    if what == 'nodes':
+        indx = 0
+    elif what == 'ways':
+        indx = 1
+    elif what == 'relations':
+        indx = 2
+
+    graph.add_line(what.capitalize(), data['xcoords'], [ data['counts'][x][indx] for x in sorted(data['counts'].keys()) ])
+    graph.plot()
+
+def graph_user_primitive(filename, data, what, users):
+    if type(users) != list:
+        users = [users]
+    users = sorted(filter(None, users))
+
+    graph = Graph(filename, 'Comparison for %s' % what)
+    for user in users:
+        ycoords = []
+        for x in sorted(data[what].keys()):
+            try:
+                ycoords.append(data[what][x][user])
+            except KeyError:
+                # the user didn't exist yet maybe?
+                ycoords.append(0)
+
+        graph.add_line(user, sorted(data[what].keys()), ycoords)
+    graph.plot()
 
 def exit_routine(self=None, exiting=False):
     global running
