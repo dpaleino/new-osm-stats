@@ -111,7 +111,10 @@ class GraphDaemon(object):
             running = True
             log.info(item)
             self.make_graph(pickle.load(open(item.pathname)))
-            os.unlink(item.pathname)
+            try:
+                os.unlink(item.pathname)
+            except IOError:
+                pass
             self.queue.task_done()
 #            running = False
             exit_routine()
