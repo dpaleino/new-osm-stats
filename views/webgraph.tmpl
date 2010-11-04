@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
 <title>OSM statistics graph generator</title>
 <script src="/js/jquery.min.js"></script>
+<script src="/js/filterlist.js"></script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
 <link rel="stylesheet" type="text/css" href="/style/osmstats_common.css" />
 <style>
@@ -103,6 +104,9 @@
       <option value="${user}">${user}</option>
     </py:for>
     </select>
+    <span id="filtertext" style="vertical-align:top;">&nbsp;</span>
+    <br />
+    <input name="regexp" onKeyUp="javascript:user_primitive_filter.set(this.form.regexp.value)" placeholder="Filter user list" type="search" />
     <br />
     <input type="Submit" value="Graph!" />
   </fieldset>
@@ -115,6 +119,15 @@
 </div>
 <script>
 <!--
+    user_primitive_filter = new filterlist(document.graph_primitive.users);
+    user_primitive_filter.hook = function() {
+        text = $('form#graph_primitive').find('#filtertext');
+        if (this.selectobj.length == this.optionscopy.length) {
+            text.text('');
+        } else {
+            text.text(this.selectobj.length + '/' + this.optionscopy.length);
+        }
+    };
 
     $(document).ready(function() {
         $('#graph_tag_user').submit(function(x) {
