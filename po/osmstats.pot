@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: osmstats 0.1\n"
 "Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
-"POT-Creation-Date: 2010-11-04 12:18+0100\n"
+"POT-Creation-Date: 2010-11-04 13:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,7 +161,7 @@ msgid "Tags:"
 msgstr ""
 
 #: views/webgraph.tmpl:96
-msgid "Graph primitive"
+msgid "Graph elements"
 msgstr ""
 
 #: views/webgraph.tmpl:97
