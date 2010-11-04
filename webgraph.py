@@ -309,14 +309,15 @@ def graph_primitive(prefix=default_prefix):
         timestamp=time.time(),
     )
 
+    filename = prefix + '_'
     if 'nodes' in action:
-        filename = 'nodes'
+        filename += 'nodes'
         data['data'] = 'nodes'
     elif 'ways' in action:
-        filename = 'ways'
+        filename += 'ways'
         data['data'] = 'ways'
     elif 'relations' in action:
-        filename = 'relations'
+        filename += 'relations'
         data['data'] = 'relations'
 
     if request.GET.getall('user'):
