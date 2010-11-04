@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: osmstats 0.1\n"
 "Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
-"POT-Creation-Date: 2010-11-01 22:10+0100\n"
-"PO-Revision-Date: 2010-11-01 21:18+0100\n"
+"POT-Creation-Date: 2010-11-04 12:18+0100\n"
+"PO-Revision-Date: 2010-11-04 12:28+0100\n"
 "Last-Translator: David Paleino <dapal@debian.org>\n"
 "Language-Team: Esperanto\n"
 "Language: eo\n"
@@ -18,13 +18,18 @@ msgstr ""
 "Generated-By: Babel 0.9.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: views/credits.tmpl:8 views/credits.tmpl:36 views/index.tmpl:8
-#: views/index.tmpl:58 views/user.tmpl:28 views/workinprogress.tmpl:8
+#: views/credits.tmpl:8
+#: views/credits.tmpl:36
+#: views/index.tmpl:8
+#: views/index.tmpl:58
+#: views/user.tmpl:28
+#: views/workinprogress.tmpl:8
 #: views/workinprogress.tmpl:36
 msgid "OpenStreetMap Statistics"
 msgstr "Statistikoj de OpenStreetMap"
 
-#: views/credits.tmpl:37 views/index.tmpl:65
+#: views/credits.tmpl:37
+#: views/index.tmpl:65
 msgid "Credits"
 msgstr "Agnoskoj"
 
@@ -32,11 +37,14 @@ msgstr "Agnoskoj"
 msgid "Main developer"
 msgstr "Ĉefa kodoskribulo"
 
-#: views/credits.tmpl:55 views/credits.tmpl:67 views/credits.tmpl:79
+#: views/credits.tmpl:55
+#: views/credits.tmpl:67
+#: views/credits.tmpl:79
 msgid "Beta-tester"
 msgstr "Beta-provaĵulo"
 
-#: views/credits.tmpl:56 views/credits.tmpl:68
+#: views/credits.tmpl:56
+#: views/credits.tmpl:68
 msgid "Almost-voluntary CPU-time donor"
 msgstr "Donaciulo preskaŭ-volonta de tempo CPU"
 
@@ -64,13 +72,32 @@ msgstr "Fontkodo"
 msgid "Report a bug"
 msgstr "Komuniku cimon"
 
+#: views/index.tmpl:70
+#: views/key.tmpl:123
+#: views/statistiche.tmpl:97
+#: views/table.tmpl:74
+#: views/user.tmpl:146
+msgid "Data last generated on"
+msgstr "Datumoj lasta naskata je"
+
+#: views/index.tmpl:71
+#: views/key.tmpl:124
+#: views/statistiche.tmpl:98
+#: views/table.tmpl:75
+#: views/user.tmpl:147
+msgid "This is OSMStats, version"
+msgstr "Tio ĉi estas OSMStats, versio"
+
 #: views/key.tmpl:8
 #, python-format
 msgid "OpenStreetMap Statistics %(date)s - Key:%(key)s"
 msgstr "Statistikoj de OpenStreetMap %(date)s - Key:%(key)s"
 
-#: views/key.tmpl:47 views/statistiche.tmpl:8 views/statistiche.tmpl:33
-#: views/table.tmpl:8 views/table.tmpl:16
+#: views/key.tmpl:47
+#: views/statistiche.tmpl:8
+#: views/statistiche.tmpl:33
+#: views/table.tmpl:8
+#: views/table.tmpl:16
 #, python-format
 msgid "OpenStreetMap Statistics - %(date)s"
 msgstr "Statistikoj de OpenStreetMap - %(date)s"
@@ -80,39 +107,50 @@ msgstr "Statistikoj de OpenStreetMap - %(date)s"
 msgid "Key:%(key)s"
 msgstr "Key:%(key)s"
 
-#: views/key.tmpl:51 views/key.tmpl:54 views/statistiche.tmpl:34
-#: views/table.tmpl:17 views/user.tmpl:31
+#: views/key.tmpl:51
+#: views/key.tmpl:54
+#: views/statistiche.tmpl:34
+#: views/table.tmpl:17
+#: views/user.tmpl:31
 msgid "Go back"
 msgstr "Iru reverso"
 
-#: views/key.tmpl:68 views/table.tmpl:31 views/user.tmpl:96
+#: views/key.tmpl:68
+#: views/table.tmpl:31
+#: views/user.tmpl:96
 #, python-format
 msgid "This category includes: %(categories)s"
 msgstr "Tiu ĉi kategorio enhavas: %(categories)s"
 
-#: views/key.tmpl:77 views/statistiche.tmpl:52 views/table.tmpl:41
-#: views/user.tmpl:58 views/user.tmpl:102
+#: views/key.tmpl:77
+#: views/statistiche.tmpl:52
+#: views/table.tmpl:41
+#: views/user.tmpl:58
+#: views/user.tmpl:102
 msgid "Position"
 msgstr "Pozicio"
 
-#: views/key.tmpl:79 views/statistiche.tmpl:54 views/table.tmpl:43
+#: views/key.tmpl:79
+#: views/statistiche.tmpl:54
+#: views/table.tmpl:43
 msgid "User"
 msgstr "Uzanto"
 
-#: views/key.tmpl:80 views/statistiche.tmpl:55 views/table.tmpl:44
-#: views/user.tmpl:60 views/user.tmpl:104
+#: views/key.tmpl:80
+#: views/statistiche.tmpl:55
+#: views/table.tmpl:44
+#: views/user.tmpl:60
+#: views/user.tmpl:104
 msgid "Total"
 msgstr "Numero"
 
-#: views/key.tmpl:122 views/statistiche.tmpl:96 views/table.tmpl:73
-#: views/user.tmpl:145 views/webgraph.tmpl:100
+#: views/key.tmpl:122
+#: views/statistiche.tmpl:96
+#: views/table.tmpl:73
+#: views/user.tmpl:145
+#: views/webgraph.tmpl:116
 msgid "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
 msgstr "Datumoj © [1:OpenStreetMap] kaj kontribuloj, [2:CC-BY-SA]."
-
-#: views/key.tmpl:123 views/statistiche.tmpl:97 views/table.tmpl:74
-#: views/user.tmpl:146
-msgid "Data last generated on"
-msgstr "Datumoj lasta naskata je"
 
 #: views/user.tmpl:8
 #, python-format
@@ -128,35 +166,51 @@ msgstr "Profilo de uzanto: %(user)s"
 msgid "OSM statistics graph generator"
 msgstr "Generatoro graficaĵoj de statistikoj de OSM"
 
-#: views/webgraph.tmpl:36
+#: views/webgraph.tmpl:35
 msgid "Dynamic graph generator"
 msgstr "Dinamika generatoro de graficaĵoj"
 
-#: views/webgraph.tmpl:41 views/webgraph.tmpl:70
-msgid "Tags:"
-msgstr "Etikedoj:"
+#: views/webgraph.tmpl:41
+msgid "Single tag, multiple users"
+msgstr "Unuobla etikedo, multobla uzantoj"
 
-#: views/webgraph.tmpl:43 views/webgraph.tmpl:72 views/webgraph.tmpl:84
+#: views/webgraph.tmpl:42
+msgid "Tag:"
+msgstr "Etikedo:"
+
+#: views/webgraph.tmpl:44
 msgid "--- Select tag ---"
 msgstr "--- Elektu etikedon ---"
 
-#: views/webgraph.tmpl:56 views/webgraph.tmpl:61
+#: views/webgraph.tmpl:61
+#: views/webgraph.tmpl:101
 msgid "Users:"
 msgstr "Uzantoj:"
 
-#: views/webgraph.tmpl:63
-msgid "--- Select user ---"
-msgstr "--- Elektu uzanton ---"
+#: views/webgraph.tmpl:71
+msgid "Graph tags"
+msgstr "Grafiki etikedojn"
+
+#: views/webgraph.tmpl:72
+msgid "Tags:"
+msgstr "Etikedoj:"
+
+#: views/webgraph.tmpl:96
+msgid "Graph primitive"
+msgstr "Grafiki primitiva objekto"
+
+#: views/webgraph.tmpl:97
+msgid "Nodes"
+msgstr "Nodoj"
+
+#: views/webgraph.tmpl:98
+msgid "Ways"
+msgstr "Vojoj"
+
+#: views/webgraph.tmpl:99
+msgid "Relations"
+msgstr "Rilatoj"
 
 #: views/workinprogress.tmpl:38
 msgid "Work in progress"
 msgstr "Estas laboranto"
-
-#~ msgid "No data available for %s"
-#~ msgstr "Neniaj datumoj disponeblaj por %s"
-
-#~ msgid "User profile not found"
-#~ msgstr "Neebla trovi profilon de uzanto"
-
-#~ msgid "Temporary disabled due to performance issues"
-#~ msgstr "Dumtempe labormaltaŭga ĉar problemojn de rendimento"

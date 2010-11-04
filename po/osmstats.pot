@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: osmstats 0.1\n"
 "Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
-"POT-Creation-Date: 2010-11-01 22:10+0100\n"
+"POT-Creation-Date: 2010-11-04 12:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,6 +63,16 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
+#: views/index.tmpl:70 views/key.tmpl:123 views/statistiche.tmpl:97
+#: views/table.tmpl:74 views/user.tmpl:146
+msgid "Data last generated on"
+msgstr ""
+
+#: views/index.tmpl:71 views/key.tmpl:124 views/statistiche.tmpl:98
+#: views/table.tmpl:75 views/user.tmpl:147
+msgid "This is OSMStats, version"
+msgstr ""
+
 #: views/key.tmpl:8
 #, python-format
 msgid "OpenStreetMap Statistics %(date)s - Key:%(key)s"
@@ -104,13 +114,8 @@ msgid "Total"
 msgstr ""
 
 #: views/key.tmpl:122 views/statistiche.tmpl:96 views/table.tmpl:73
-#: views/user.tmpl:145 views/webgraph.tmpl:100
+#: views/user.tmpl:145 views/webgraph.tmpl:116
 msgid "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
-msgstr ""
-
-#: views/key.tmpl:123 views/statistiche.tmpl:97 views/table.tmpl:74
-#: views/user.tmpl:146
-msgid "Data last generated on"
 msgstr ""
 
 #: views/user.tmpl:8
@@ -127,24 +132,48 @@ msgstr ""
 msgid "OSM statistics graph generator"
 msgstr ""
 
-#: views/webgraph.tmpl:36
+#: views/webgraph.tmpl:35
 msgid "Dynamic graph generator"
 msgstr ""
 
-#: views/webgraph.tmpl:41 views/webgraph.tmpl:70
-msgid "Tags:"
+#: views/webgraph.tmpl:41
+msgid "Single tag, multiple users"
 msgstr ""
 
-#: views/webgraph.tmpl:43 views/webgraph.tmpl:72 views/webgraph.tmpl:84
+#: views/webgraph.tmpl:42
+msgid "Tag:"
+msgstr ""
+
+#: views/webgraph.tmpl:44
 msgid "--- Select tag ---"
 msgstr ""
 
-#: views/webgraph.tmpl:56 views/webgraph.tmpl:61
+#: views/webgraph.tmpl:61 views/webgraph.tmpl:101
 msgid "Users:"
 msgstr ""
 
-#: views/webgraph.tmpl:63
-msgid "--- Select user ---"
+#: views/webgraph.tmpl:71
+msgid "Graph tags"
+msgstr ""
+
+#: views/webgraph.tmpl:72
+msgid "Tags:"
+msgstr ""
+
+#: views/webgraph.tmpl:96
+msgid "Graph primitive"
+msgstr ""
+
+#: views/webgraph.tmpl:97
+msgid "Nodes"
+msgstr ""
+
+#: views/webgraph.tmpl:98
+msgid "Ways"
+msgstr ""
+
+#: views/webgraph.tmpl:99
+msgid "Relations"
 msgstr ""
 
 #: views/workinprogress.tmpl:38

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: osmstats 0.1\n"
 "Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
-"POT-Creation-Date: 2010-11-01 22:10+0100\n"
-"PO-Revision-Date: 2010-11-01 21:04+0100\n"
+"POT-Creation-Date: 2010-11-04 12:18+0100\n"
+"PO-Revision-Date: 2010-11-04 12:28+0100\n"
 "Last-Translator: David Paleino <dapal@debian.org>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -18,13 +18,18 @@ msgstr ""
 "Generated-By: Babel 0.9.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: views/credits.tmpl:8 views/credits.tmpl:36 views/index.tmpl:8
-#: views/index.tmpl:58 views/user.tmpl:28 views/workinprogress.tmpl:8
+#: views/credits.tmpl:8
+#: views/credits.tmpl:36
+#: views/index.tmpl:8
+#: views/index.tmpl:58
+#: views/user.tmpl:28
+#: views/workinprogress.tmpl:8
 #: views/workinprogress.tmpl:36
 msgid "OpenStreetMap Statistics"
 msgstr "OpenStreetMap Statistics"
 
-#: views/credits.tmpl:37 views/index.tmpl:65
+#: views/credits.tmpl:37
+#: views/index.tmpl:65
 msgid "Credits"
 msgstr "Credits"
 
@@ -32,11 +37,14 @@ msgstr "Credits"
 msgid "Main developer"
 msgstr "Main developer"
 
-#: views/credits.tmpl:55 views/credits.tmpl:67 views/credits.tmpl:79
+#: views/credits.tmpl:55
+#: views/credits.tmpl:67
+#: views/credits.tmpl:79
 msgid "Beta-tester"
 msgstr "Beta-tester"
 
-#: views/credits.tmpl:56 views/credits.tmpl:68
+#: views/credits.tmpl:56
+#: views/credits.tmpl:68
 msgid "Almost-voluntary CPU-time donor"
 msgstr "Almost-voluntary CPU-time donor"
 
@@ -64,13 +72,32 @@ msgstr "Source code"
 msgid "Report a bug"
 msgstr "Report a bug"
 
+#: views/index.tmpl:70
+#: views/key.tmpl:123
+#: views/statistiche.tmpl:97
+#: views/table.tmpl:74
+#: views/user.tmpl:146
+msgid "Data last generated on"
+msgstr "Data last generated on"
+
+#: views/index.tmpl:71
+#: views/key.tmpl:124
+#: views/statistiche.tmpl:98
+#: views/table.tmpl:75
+#: views/user.tmpl:147
+msgid "This is OSMStats, version"
+msgstr "This is OSMStats, version"
+
 #: views/key.tmpl:8
 #, python-format
 msgid "OpenStreetMap Statistics %(date)s - Key:%(key)s"
 msgstr "OpenStreetMap Statistics %(date)s - Key:%(key)s"
 
-#: views/key.tmpl:47 views/statistiche.tmpl:8 views/statistiche.tmpl:33
-#: views/table.tmpl:8 views/table.tmpl:16
+#: views/key.tmpl:47
+#: views/statistiche.tmpl:8
+#: views/statistiche.tmpl:33
+#: views/table.tmpl:8
+#: views/table.tmpl:16
 #, python-format
 msgid "OpenStreetMap Statistics - %(date)s"
 msgstr "OpenStreetMap Statistics - %(date)s"
@@ -80,39 +107,50 @@ msgstr "OpenStreetMap Statistics - %(date)s"
 msgid "Key:%(key)s"
 msgstr "Key:%(key)s"
 
-#: views/key.tmpl:51 views/key.tmpl:54 views/statistiche.tmpl:34
-#: views/table.tmpl:17 views/user.tmpl:31
+#: views/key.tmpl:51
+#: views/key.tmpl:54
+#: views/statistiche.tmpl:34
+#: views/table.tmpl:17
+#: views/user.tmpl:31
 msgid "Go back"
 msgstr "Go back"
 
-#: views/key.tmpl:68 views/table.tmpl:31 views/user.tmpl:96
+#: views/key.tmpl:68
+#: views/table.tmpl:31
+#: views/user.tmpl:96
 #, python-format
 msgid "This category includes: %(categories)s"
 msgstr "This category includes: %(categories)s"
 
-#: views/key.tmpl:77 views/statistiche.tmpl:52 views/table.tmpl:41
-#: views/user.tmpl:58 views/user.tmpl:102
+#: views/key.tmpl:77
+#: views/statistiche.tmpl:52
+#: views/table.tmpl:41
+#: views/user.tmpl:58
+#: views/user.tmpl:102
 msgid "Position"
 msgstr "Position"
 
-#: views/key.tmpl:79 views/statistiche.tmpl:54 views/table.tmpl:43
+#: views/key.tmpl:79
+#: views/statistiche.tmpl:54
+#: views/table.tmpl:43
 msgid "User"
 msgstr "User"
 
-#: views/key.tmpl:80 views/statistiche.tmpl:55 views/table.tmpl:44
-#: views/user.tmpl:60 views/user.tmpl:104
+#: views/key.tmpl:80
+#: views/statistiche.tmpl:55
+#: views/table.tmpl:44
+#: views/user.tmpl:60
+#: views/user.tmpl:104
 msgid "Total"
 msgstr "Total"
 
-#: views/key.tmpl:122 views/statistiche.tmpl:96 views/table.tmpl:73
-#: views/user.tmpl:145 views/webgraph.tmpl:100
+#: views/key.tmpl:122
+#: views/statistiche.tmpl:96
+#: views/table.tmpl:73
+#: views/user.tmpl:145
+#: views/webgraph.tmpl:116
 msgid "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
 msgstr "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
-
-#: views/key.tmpl:123 views/statistiche.tmpl:97 views/table.tmpl:74
-#: views/user.tmpl:146
-msgid "Data last generated on"
-msgstr "Data last generated on"
 
 #: views/user.tmpl:8
 #, python-format
@@ -128,35 +166,51 @@ msgstr "User profile: %(user)s"
 msgid "OSM statistics graph generator"
 msgstr "OSM statistics graph generator"
 
-#: views/webgraph.tmpl:36
+#: views/webgraph.tmpl:35
 msgid "Dynamic graph generator"
 msgstr "Dynamic graph generator"
 
-#: views/webgraph.tmpl:41 views/webgraph.tmpl:70
-msgid "Tags:"
-msgstr "Tags:"
+#: views/webgraph.tmpl:41
+msgid "Single tag, multiple users"
+msgstr "Single tag, multiple users"
 
-#: views/webgraph.tmpl:43 views/webgraph.tmpl:72 views/webgraph.tmpl:84
+#: views/webgraph.tmpl:42
+msgid "Tag:"
+msgstr "Tag:"
+
+#: views/webgraph.tmpl:44
 msgid "--- Select tag ---"
 msgstr "--- Select tag ---"
 
-#: views/webgraph.tmpl:56 views/webgraph.tmpl:61
+#: views/webgraph.tmpl:61
+#: views/webgraph.tmpl:101
 msgid "Users:"
 msgstr "Users:"
 
-#: views/webgraph.tmpl:63
-msgid "--- Select user ---"
-msgstr "--- Select user ---"
+#: views/webgraph.tmpl:71
+msgid "Graph tags"
+msgstr "Graph tags"
+
+#: views/webgraph.tmpl:72
+msgid "Tags:"
+msgstr "Tags:"
+
+#: views/webgraph.tmpl:96
+msgid "Graph primitive"
+msgstr "Graph primitive"
+
+#: views/webgraph.tmpl:97
+msgid "Nodes"
+msgstr "Nodes"
+
+#: views/webgraph.tmpl:98
+msgid "Ways"
+msgstr "Ways"
+
+#: views/webgraph.tmpl:99
+msgid "Relations"
+msgstr "Relations"
 
 #: views/workinprogress.tmpl:38
 msgid "Work in progress"
 msgstr "Work in progress"
-
-#~ msgid "No data available for %s"
-#~ msgstr "No data available for %s"
-
-#~ msgid "User profile not found"
-#~ msgstr "User profile not found"
-
-#~ msgid "Temporary disabled due to performance issues"
-#~ msgstr "Temporary disabled due to performance issues"
