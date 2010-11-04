@@ -62,7 +62,7 @@ msgstr "Código fuente"
 
 #: views/index.tmpl:64
 msgid "Report a bug"
-msgstr "Informar de un bug"
+msgstr "Informar de un fallo"
 
 #: views/index.tmpl:70 views/key.tmpl:123 views/statistiche.tmpl:97
 #: views/table.tmpl:74 views/user.tmpl:146
