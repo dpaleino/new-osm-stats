@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: osmstats 0.1\n"
 "Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
 "POT-Creation-Date: 2010-11-04 12:18+0100\n"
-"PO-Revision-Date: 2010-11-04 12:28+0100\n"
+"PO-Revision-Date: 2010-11-04 13:08+0100\n"
 "Last-Translator: David Paleino <dapal@debian.org>\n"
 "Language-Team: Esperanto\n"
 "Language: eo\n"
@@ -197,7 +197,7 @@ msgstr "Etikedoj:"
 
 #: views/webgraph.tmpl:96
 msgid "Graph primitive"
-msgstr "Grafiki primitiva objekto"
+msgstr "Grafiki elemento"
 
 #: views/webgraph.tmpl:97
 msgid "Nodes"
@@ -209,8 +209,9 @@ msgstr "Vojoj"
 
 #: views/webgraph.tmpl:99
 msgid "Relations"
-msgstr "Rilatoj"
+msgstr "Aŭrilatoj"
 
 #: views/workinprogress.tmpl:38
 msgid "Work in progress"
 msgstr "Estas laboranto"
+
