@@ -207,6 +207,7 @@ def graphs(prefix=default_prefix):
     out = tmpl.generate(
         tags=get_tags(prefix)["r"],
         users=get_users(prefix)["r"],
+        prefix=prefix,
     )
     return out.render('xhtml')
 
@@ -216,7 +217,12 @@ def get_tags(prefix=default_prefix):
     check_prefix(prefix)
     check_lang()
     tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
-    return {"r":sorted(tags)}
+    t = defaultdict(list)
+    for i in tags:
+        key, val = i.split('=', 1)
+        t[key].append(val)
+    tags = dict(t)
+    return {"r":tags}
 
 @route('/get/tags/:prefix/:user')
 def get_tags_for(prefix, user):

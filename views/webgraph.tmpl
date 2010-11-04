@@ -31,70 +31,81 @@
 </head>
 <body>
 <xi:include href='l10n.tmpl' />
+<h1>Dynamic graph generator</h1>
 <div id="content">
 <div id="sidebar">
-  <h1>Dynamic graph generator</h1>
-  <form id="form" action="/graph-tag-user" method="get">
-    <table>
-      <tr>
-      <td>
-      <label for="tag">Tags:</label><br />
-      <select name="tag" id="tag1">
-        <option value="" selected="selected">--- Select tag ---</option>
-        <py:for each="tag in tags">
+  <form id="graph_tag_user" method="get" action="/graph-tag-user">
+  <input type='hidden' name='prefix' value='${prefix}' />
+  <fieldset>
+    <legend>Single tag, multiple users</legend>
+    <label for="tags">Tag:</label>
+    <select name="tag" id="tags" width='100%' required='required'>
+      <option value="" selected="selected">--- Select tag ---</option>
+      <py:for each="key in sorted(tags.keys())">
+      <optgroup label='${key}'>
+        <py:for each="val in sorted(tags[key])">
           <py:choose test="">
-            <py:when test="'|' in tag">
-              <option value="${tag}" class="tagtag">${tag.split('|')[0]}</option>
+            <py:when test="'|' in val">
+              <option value="${key}=${val}" class="tagtag">${val.split('|')[0]}</option>
             </py:when>
             <py:otherwise>
-              <option value="${tag}">${tag}</option>
+              <option value="${key}=${val}">${key}=${val}</option>
             </py:otherwise>
           </py:choose>
         </py:for>
-      </select>
-      <br />
-      <label for="user">Users:</label><br />
-      <select name="user" id="user1" multiple="multiple" size="5">
-      </select>
-      </td>
-      <td>
-      <label>Users:<br />
-      <select name="user" id="user2">
-        <option value="" selected="selected">--- Select user ---</option>
-        <py:for each="user in users">
-          <option value="${user}">${user}</option>
-        </py:for>
-      </select>
-      </label>
-      <br />
-      <label>Tags:<br />
-      <select name="searchtag" id="tag2">
-      <option value="" selected="selected">--- Select tag ---</option>
-      </select>
-      </label>
-      </td>
-      </tr>
-    </table>
+      </optgroup>
+      </py:for>
+    </select>
+    <br />
+    <label for="user" style="vertical-align:top;">Users:</label>
+    <select name="users" id="users" multiple="multiple" size="5" required='required'>
+    </select>
     <br />
     <input type="Submit" value="Graph!" />
+  </fieldset>
   </form>
-  <br />
-  <form id="form2" action="/graph-tag" method="get">
-    <select name="tag" id="tag3" multiple="multiple" size="5">
-      <option value="" selected="selected">--- Select tag ---</option>
-      <py:for each="tag in tags">
-        <py:choose test="">
-          <py:when test="'|' in tag">
-            <option value="${tag}" class="tagtag">${tag.split('|')[0]}</option>
-          </py:when>
-          <py:otherwise>
-            <option value="${tag}">${tag}</option>
-          </py:otherwise>
-        </py:choose>
+  <form id="graph_tag" method="get" action="/graph-tag">
+  <input type='hidden' name='prefix' value='${prefix}' />
+  <fieldset>
+    <legend>Graph tags</legend>
+    <label for="tag3" style="vertical-align:top;">Tags:</label>
+    <select name="tag" multiple="multiple" size="5" width="100" required='required'>
+      <py:for each="key in sorted(tags.keys())">
+      <optgroup label='${key}'>
+        <py:for each="val in sorted(tags[key])">
+          <py:choose test="">
+            <py:when test="'|' in val">
+              <option value="${key}=${val}" class="tagtag">${val.split('|')[0]}</option>
+            </py:when>
+            <py:otherwise>
+              <option value="${key}=${val}">${key}=${val}</option>
+            </py:otherwise>
+          </py:choose>
+        </py:for>
+      </optgroup>
       </py:for>
     </select>
     <br />
     <input type="Submit" value="Graph!" />
+  </fieldset>
+  </form>
+  <form name="graph_primitive" id="graph_primitive" method="get" action="#">
+  <input type='hidden' name='prefix' value='${prefix}' />
+  <fieldset>
+    <legend>Graph primitive</legend>
+    <input name="what" value="nodes" type="radio" required='required'>Nodes</input>
+    <input name="what" value="ways" type="radio" required='required'>Ways</input>
+    <input name="what" value="relations" type="radio" required='required'>Relations</input>
+    <br />
+    <label for="users" style="vertical-align:top;">Users:</label>
+    <select name="user" id="users" multiple="multiple" size="5">
+    <py:for each="user in sorted(users)">
+      <option value="${user}">${user}</option>
+    </py:for>
+    </select>
+    <br />
+    <input type="Submit" value="Graph!" />
+  </fieldset>
   </form>
   <br />
 <p><small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small></p>
@@ -104,56 +115,39 @@
 </div>
 <script>
 <!--
-    var query = "";
 
     $(document).ready(function() {
-        $('#form').submit(function(x) {
+        $('#graph_tag_user').submit(function(x) {
             x.preventDefault();
             //alert($(this).serialize());
             //$('div#graph').html('<img src="/graph?'+$(this).serialize()+'" /'+'>');
-            $('div#graph').html('<iframe src="/graph-tag-user?'+$(this).serialize()+'" width="640" height="480"></iframe>');
+            prefix = $(this).find('input[name=prefix]').val();
+            $('div#graph').html('<iframe src="/graph-tag-user/'+prefix+'?'+$(this).serialize()+'" width="640" height="480"></iframe>');
             $('div#graph').fadeIn('slow');
         });
 
-        $('#form2').submit(function(x) {
+        $('#graph_tag').submit(function(x) {
             x.preventDefault();
-            $('div#graph').html('<iframe src="/graph-tag?'+$(this).serialize()+'" width="640" height="480"></iframe>');
+            prefix = $(this).find('input[name=prefix]').val();
+            $('div#graph').html('<iframe src="/graph-tag/'+prefix+'?'+$(this).serialize()+'" width="640" height="480"></iframe>');
             $('div#graph').fadeIn('slow');
         });
 
-        $('select#user2').change(function() {
-            $('div#graph').fadeOut('slow');
-            var value = $(this).val();
-            $.getJSON('/get/tags/'+value, null, function(j) {
-                var opts = '<'+'option value="" selected="selected">';
-                opts += '-'+'-'+'- Select tag -'+'-'+'-';
-                opts += '</'+'option>';
-                var tags = j.r;
-
-                for (var i=0; i < tags.length; i++) {
-                    if (tags[i].indexOf('|') != -1) {
-                      opts += '<option value="'+tags[i]+'" class="tagtag">';
-                      opts += tags[i].split('|')[0]+'</option>';
-                    }
-                    else {
-                      opts += '<option value="'+tags[i]+'">'+tags[i]+'</option>';
-                    }
-                }
-
-                $('select[name=searchtag]').html(opts);
-            });
+        $('#graph_primitive').submit(function(x) {
+            x.preventDefault();
+            val = $(this).find('input:radio[name=what]:checked').val();
+            if (val != undefined) {
+                prefix = $(this).find('input[name=prefix]').val();
+                $('div#graph').html('<iframe src="/graph-'+val+'/'+prefix+'?'+$(this).serialize()+'" width="640" height="480"></iframe>');
+                $('div#graph').fadeIn('slow');
+            }
         });
 
-        $('select#tag2').change(function() {
-            var value = $(this).val();
-            $('select#tag1').val(value);
-            $('select#tag1').change();
-        });
-
-        $('select#tag1').change(function() {
+        $('select#tags').change(function() {
             $('div#graph').fadeOut('slow');
             var value = $(this).val();
-            $.getJSON('/get/users/'+value, null, function(j) {
+            prefix = $(this).find('input[name=prefix]').val();
+            $.getJSON('/get/users/'+prefix+'/'+value, null, function(j) {
                 var opts = '';
                 var names = j.r;
 
@@ -161,12 +155,11 @@
                     opts += '<option value="'+names[i]+'">'+names[i]+'</option>';
                 }
 
-                $('select#user1').html(opts);
+                $('select#users').html(opts);
             });
         });
     });
 //-->
 </script>
-
 </body>
 </html>
