@@ -139,7 +139,7 @@ class GraphDaemon(object):
         if data['type'] == 'graph_tag':
             graph_totals(filename, self.data[data['prefix']], data['data'])
         elif data['type'] == 'graph_tag_users':
-            graph_tag_users(filename, self.data[data['prefix']], data['data']['tags'], data['data']['users'])
+            graph_tag_users(filename, self.data[data['prefix']], data['data']['tag'], data['data']['users'])
         elif data['type'] == 'graph_primitive':
             graph_primitive(filename, self.data[data['prefix']], data['data'])
         elif data['type'] == 'graph_user_primitive':
@@ -273,20 +273,16 @@ def graph_totals(filename, data, tags):
         graph.add_line(tag, data['ycoords'][tag].keys(), yvalues)
     graph.plot()
 
-def graph_tag_users(filename, data, tags, users):
-    if type(tags) != list:
-        tags = [tags]
+def graph_tag_users(filename, data, tag, users):
     if type(users) != list:
         users = [users]
 
-    tags = sorted(filter(None, tags))
     users = sorted(filter(None, users))
 
     graph = Graph(filename, tag)
-    for tag in tags:
-        for user in users:
-            user_y = [ data['ycoords'][tag][x][user] for x in sorted(data['ycoords'][tag].keys()) ]
-            graph.add_line(user, data['xcoords'], user_y)
+    for user in users:
+        user_y = [ data['ycoords'][tag][x][user] for x in sorted(data['ycoords'][tag].keys()) ]
+        graph.add_line(user, data['xcoords'], user_y)
     graph.plot()
 
 def graph_primitive(filename, data, what):

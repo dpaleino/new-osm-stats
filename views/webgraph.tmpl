@@ -57,8 +57,8 @@
       </py:for>
     </select>
     <br />
-    <label for="user" style="vertical-align:top;">Users:</label>
-    <select name="users" id="users" multiple="multiple" size="5" required='required'>
+    <label for="users" style="vertical-align:top;">Users:</label>
+    <select name="user" id="users" multiple="multiple" size="5" required='required'>
     </select>
     <br />
     <input type="Submit" value="Graph!" />
@@ -146,7 +146,8 @@
         $('select#tags').change(function() {
             $('div#graph').fadeOut('slow');
             var value = $(this).val();
-            prefix = $(this).find('input[name=prefix]').val();
+            prefix = $(this).parent().parent().find('input[name=prefix]').val();
+            users = $(this).parent().find('select#users');
             $.getJSON('/get/users/'+prefix+'/'+value, null, function(j) {
                 var opts = '';
                 var names = j.r;
@@ -155,7 +156,7 @@
                     opts += '<option value="'+names[i]+'">'+names[i]+'</option>';
                 }
 
-                $('select#users').html(opts);
+                users.html(opts);
             });
         });
     });

@@ -249,15 +249,11 @@ def get_users(prefix=default_prefix):
 
 @route('/get/users/:prefix/:tag')
 def get_users_for(prefix, tag):
-    return workinprogress('Temporary disabled due to performance issues')
-
     check_prefix(prefix)
     check_lang()
-    counts, xcoords, ycoords = parse_json(prefix)
-    users = set()
-    for date in ycoords[tag].values():
-        users.update(date.keys())
-    return {"r":sorted(list(users))}
+
+    d = pickle.load(open(os.path.join(basedir, graphs_outdir, prefix + '_tagusers.pickle')))
+    return {"r": d[tag]}
 
 @route('/get/graph/:filename')
 def get_graph_file(filename):
@@ -266,14 +262,23 @@ def get_graph_file(filename):
 
 @get('/graph-tag-user/:prefix')
 def graph_tag_user(prefix=default_prefix):
-    return workinprogress('Temporary disabled due to performance issues')
-
     check_prefix(prefix)
     check_lang()
-    bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
-    counts, xcoords, ycoords = parse_json(prefix)
-    filename = graph_tag_users(prefix, request.GET["tag"], request.GET.getall("user"))[0]
-    return static_file(os.path.basename(filename), graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
+
+    tag = request.GET.get('tag')
+    users = sorted(request.GET.getall('user'))
+    filename = hashlib.md5(repr([prefix, tag, users])).hexdigest()
+    data = dict(
+        filename=filename + '.svg',
+        type='graph_tag_users',
+        prefix=prefix,
+        timestamp=time.time(),
+        data=dict(tag=tag,
+                users=users,
+            ),
+    )
+    pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
+    return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
 
 @get('/graph-tag/:prefix')
 def graph_tag(prefix=default_prefix):
