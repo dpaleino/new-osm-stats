@@ -18,6 +18,7 @@
 import os
 import logging
 
+version = "1.1~dev"
 basedir = os.path.dirname(__file__)
 
 pickle_path = 'pickle'

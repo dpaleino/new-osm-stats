@@ -174,16 +174,26 @@ def save_jsons(prefix, l, pos, profiles):
         f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
         f.close()
 
-def save_timestamp():
+def make_footer():
     from datetime import datetime
     from time import strftime
     today = strftime("%Y-%m-%d %H:%M:%S", datetime.today().timetuple())
+
     f = open(os.path.join(html_path, 'timestamp.html'), 'w')
     f.write('<i>'+today+'</i>')
     f.close()
 
+    if '~dev' in config.version:
+        versionlink = ''
+    else:
+        versionlink = config.version
+
+    f = open(os.path.join(html_path, 'version.html'), 'w')
+    f.write('<a href="http://bugs.hanskalabs.net/projects/osm-stats/repository/show?rev=%s">%s</a>' % (versionlink, config.version))
+    f.close()
+
 def main(prefix, date, filename):
-    save_timestamp()
+    make_footer()
     nodes, ways, rels, tags = parse(filename)
     positions, profiles = calculate_positions(prefix, date, nodes, ways, rels, tags)
     save_jsons(prefix, [date, nodes, ways, rels, tags], positions, profiles)
