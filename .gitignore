@@ -1,6 +1,5 @@
 *.osm*
 graphs/*
 graphs/cached/*
-html/
 json/
 *.pyc
