@@ -195,7 +195,7 @@ class GraphDaemon(object):
         })
         }
         """
-        log.info('Loading data')
+        log.info('Data reload started')
         self.data = dict()
 
         prefixes = glob(os.path.join(json_path, '*_*.json'))
@@ -241,7 +241,18 @@ class GraphDaemon(object):
                         self.data[pref]['ycoords']["%s=%s" % (key,val)][timestamp] = date
 
                 del l
-        log.info('Loading complete')
+
+            log.debug('Outputting data for %s', pref)
+            d = {}
+            for tag in self.data[pref]['ycoords']:
+                s = set()
+                for timestamp in self.data[pref]['ycoords'][tag]:
+                    s.update(self.data[pref]['ycoords'][tag][timestamp].keys())
+                d[tag] = sorted(s)
+            f = open(os.path.join(basedir, graphs_outdir, pref + '_tagusers.pickle'), 'w')
+            pickle.dump(d, f, protocol=2)
+            f.close()
+        log.info('Data reload complete')
 
     def add_to_queue(self, item):
         self.queue.put_nowait(item)
