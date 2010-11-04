@@ -93,7 +93,7 @@ msgstr "Chiave:%(key)s"
 #: views/key.tmpl:51 views/key.tmpl:54 views/statistiche.tmpl:34
 #: views/table.tmpl:17 views/user.tmpl:31
 msgid "Go back"
-msgstr "Va' indietro"
+msgstr "Indietro"
 
 #: views/key.tmpl:68 views/table.tmpl:31 views/user.tmpl:96
 #, python-format
