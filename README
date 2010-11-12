@@ -1,0 +1,7 @@
+To fetch submodules:
+
+$ git submodule init
+$ git submodule update
+
+(the first is needed only the first time, to write
+the appropriate entry in .git/config)
