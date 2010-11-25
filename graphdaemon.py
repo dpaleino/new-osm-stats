@@ -50,7 +50,7 @@ class PE(pyinotify.ProcessEvent):
 
 class GraphDaemon(object):
     def __init__(self):
-        #self.daemonize()
+        self.daemonize()
         self.queue = Queue()
         self.notifier = None
         self.data = None
