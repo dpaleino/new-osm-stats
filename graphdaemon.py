@@ -94,7 +94,7 @@ class GraphDaemon(object):
 
         wm = pyinotify.WatchManager()
         self.notifier = pyinotify.ThreadedNotifier(wm, PE(self))
-        wm.add_watch(graphs_cmddir, pyinotify.IN_CLOSE_WRITE, rec=True)
+        wm.add_watch(os.path.join(basedir, graphs_cmddir), pyinotify.IN_CLOSE_WRITE, rec=True)
         self.notifier.start()
 
         try:
@@ -198,7 +198,7 @@ class GraphDaemon(object):
         log.info('Data reload started')
         self.data = dict()
 
-        prefixes = glob(os.path.join(json_path, '*_*.json'))
+        prefixes = glob(os.path.join(basedir, json_path, '*_*.json'))
         prefixes = set(map(lambda x: os.path.basename(x).split('_')[0], prefixes))
         for pref in prefixes:
             log.debug('Loading data for %s' % pref)
@@ -208,7 +208,7 @@ class GraphDaemon(object):
             self.data[pref]['xcoords'] = []
             self.data[pref]['ycoords'] = defaultdict(dict)
 
-            for i in sorted(glob(os.path.join(json_path, pref + '_*.json'))):
+            for i in sorted(glob(os.path.join(basedir, json_path, pref + '_*.json'))):
                 if 'positions' in i or 'tags_users' in i:
                     continue
 
