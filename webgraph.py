@@ -363,6 +363,6 @@ def credits():
 
 bottle.debug(True)
 #bottle.default_app().autojson = True
-run(host=host_ip_addr, port=8080, reloader=True)
+#run(host=host_ip_addr, port=8080, reloader=True)
 
 application = bottle.default_app()
