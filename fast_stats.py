@@ -21,6 +21,7 @@ import xml.etree.cElementTree as etree
 from datetime import datetime as dt
 import cjson
 import os
+from glob import glob
 
 from helpers import *
 from config import *
@@ -169,6 +170,10 @@ def save_jsons(prefix, l, pos, profiles):
     users = set()
     for l in [x.keys() for x in profiles]:
         users.update(l)
+
+    # clean up old profiles
+    map(os.remove, glob(os.path.join(profiles_path, '%s_*.json' % prefix)))
+
     for user in users:
         f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, sanitize(user).replace(' ', '_'))), 'w')
         f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
