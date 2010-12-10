@@ -70,6 +70,12 @@ to_check = {
         )),
     ],
     "historic" : [ "*" ],
+    "landuse" : [
+        "*",
+        "forest",
+        "meadow",
+        "residential",
+    ],
     "leisure": [
         "park",
         "pitch",
