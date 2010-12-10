@@ -34,6 +34,7 @@ graphs_path = 'graphs'
 graphs_cache = os.path.join(graphs_path, 'cached')
 graphs_cmddir = os.path.join(graphs_path, 'commands')
 graphs_outdir = os.path.join(graphs_path, 'output')
+graphs_logdir = os.path.join(graphs_path, 'logs')
 
 default_prefix = 'italy'
 default_lang = 'it'
