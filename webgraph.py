@@ -221,8 +221,10 @@ def get_tags(prefix=default_prefix):
     for i in tags:
         key, val = i.split('=', 1)
         t[key].append(val)
-    tags = dict(t)
-    return {"r":tags}
+    if 'q' in request.GET:
+        return '\n'.join(sorted([x for x in tags if x.lower().startswith(request.GET['q'])]))
+    else:
+        return {"r": dict(t)}
 
 @route('/get/tags/:prefix/:user')
 def get_tags_for(prefix, user):
@@ -245,7 +247,10 @@ def get_users(prefix=default_prefix):
     check_prefix(prefix)
     check_lang()
     tags, users = cjson.decode(open(os.path.join(json_path, '%s_tags_users.json' % prefix)).readline())
-    return {"r":sorted(users)}
+    if 'q' in request.GET:
+        return '\n'.join(sorted([x for x in users if x.lower().startswith(request.GET['q'])]))
+    else:
+        return {"r":sorted(users)}
 
 @route('/get/users/:prefix/:tag')
 def get_users_for(prefix, tag):
@@ -253,7 +258,10 @@ def get_users_for(prefix, tag):
     check_lang()
 
     d = pickle.load(open(os.path.join(basedir, graphs_outdir, prefix + '_tagusers.pickle')))
-    return {"r": d[tag]}
+    if 'q' in request.GET:
+        return '\n'.join(sorted([x for x in d[tag] if x.lower().startswith(request.GET['q'])]))
+    else:
+        return {"r": d[tag]}
 
 @route('/get/graph/:filename')
 def get_graph_file(filename):
@@ -266,7 +274,7 @@ def graph_tag_user(prefix=default_prefix):
     check_lang()
 
     tag = request.GET.get('tag')
-    users = sorted(request.GET.getall('user'))
+    users = sorted(request.GET.getall('user[]'))
     filename = hashlib.md5(repr([prefix, tag, users])).hexdigest()
     data = dict(
         filename=filename + '.svg',
@@ -278,7 +286,7 @@ def graph_tag_user(prefix=default_prefix):
             ),
     )
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
-    return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
+    return '%s.svg' % filename
 
 @get('/graph-tag/:prefix')
 def graph_tag(prefix=default_prefix):
@@ -287,7 +295,7 @@ def graph_tag(prefix=default_prefix):
     check_prefix(prefix)
     check_lang()
 
-    tags = request.GET.getall('tag')
+    tags = request.GET.getall('tag[]')
     filename = hashlib.md5(repr([prefix, tags])).hexdigest()
     data = dict(
         filename=filename + '.svg',
@@ -297,7 +305,7 @@ def graph_tag(prefix=default_prefix):
         data=tags,
     )
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
-    return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
+    return '%s.svg' % filename
 
 @get('/graph-nodes')
 @get('/graph-nodes/:prefix')
@@ -325,16 +333,16 @@ def graph_primitive(prefix=default_prefix):
         filename += 'relations'
         data['data'] = 'relations'
 
-    if request.GET.getall('user'):
+    if request.GET.getall('user[]'):
         data['type'] = 'graph_user_primitive'
         what = data['data']
-        users = sorted(set(request.GET.getall('user')))
+        users = sorted(set(request.GET.getall('user[]')))
         data['data'] = [what, users]
         filename = hashlib.md5(repr([prefix, what, users])).hexdigest()
 
     data['filename'] = filename + '.svg'
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
-    return '<a href="/get/graph/%s.svg">Go to %s.svg</a>' % (filename, filename)
+    return '%s.svg' % filename
 
 ##
 # Source

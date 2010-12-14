@@ -6,10 +6,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
 <title>OSM statistics graph generator</title>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/filterlist.js"></script>
+<script src='/js/jquery.min.js'></script>
+<script src='/js/jquery.ui.core.js'></script>
+<script src='/js/jquery.ui.widget.js'></script>
+<script src='/js/jquery.ui.accordion.js'></script>
+<script src='/js/jquery.bgiframe.min.js'></script>
+<script src='/js/jquery.ajaxQueue.js'></script>
+<script src='/js/thickbox-compressed.js'></script>
+<script src='/js/jquery.autocomplete.pack.js'></script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
 <link rel="stylesheet" type="text/css" href="/style/osmstats_common.css" />
+<link rel="stylesheet" type="text/css" href="/style/jquery.autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="/style/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="/style/jquery.ui.theme.css" />
+<link rel="stylesheet" type="text/css" href="/style/jquery.ui.core.css" />
+<link rel="stylesheet" type="text/css" href="/style/jquery.ui.accordion.css" />
 <style>
     div#sidebar {
         width: 30%;
@@ -34,13 +45,15 @@
 <xi:include href='l10n.tmpl' />
 <h1>Dynamic graph generator</h1>
 <div id="content">
+  <form id="vars">
+    <input type='hidden' name='prefix' value='${prefix}' />
+  </form>
 <div id="sidebar">
-  <form id="graph_tag_user" method="get" action="/graph-tag-user">
-  <input type='hidden' name='prefix' value='${prefix}' />
-  <fieldset>
-    <legend>Single tag, multiple users</legend>
+ <div id="accordion">
+  <h3><a href='#'>Single tag, multiple users</a></h3>
+  <form name="graph_tag_user" id="graph_tag_user" method="get" action="/graph-tag-user">
     <label for="tags">Tag:</label>
-    <select name="tag" id="tags" width='100%' required='required'>
+    <select name="tag" id="tags" required='required'>
       <option value="" selected="selected">--- Select tag ---</option>
       <py:for each="key in sorted(tags.keys())">
       <optgroup label='${key}'>
@@ -58,17 +71,17 @@
       </py:for>
     </select>
     <br />
-    <label for="users" style="vertical-align:top;">Users:</label>
-    <select name="user" id="users" multiple="multiple" size="5" required='required'>
-    </select>
+    <input id="user" placeholder="Type the user name" type="search" />
+    <a href="#" onclick="javascript:addOption('graph_tag_user', 'user', 'chosen_users');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <br />
+    <label for="chosen_users">Chosen users:</label><br />
+    <select id="chosen_users" multiple="multiple" size="5" required='required' style="width:150"></select>
+    <a href="#" onclick="javascript:removeOption('chosen_users');"><img src='/img/minus.jpg' style="vertical-align: top;" /></a>
     <br />
     <input type="Submit" value="Graph!" />
-  </fieldset>
   </form>
-  <form id="graph_tag" method="get" action="/graph-tag">
-  <input type='hidden' name='prefix' value='${prefix}' />
-  <fieldset>
-    <legend>Graph tags</legend>
+  <h3><a href='#'>Graph tags</a></h3>
+  <form name="graph_tag" id="graph_tag" method="get" action="/graph-tag">
     <label for="tag3" style="vertical-align:top;">Tags:</label>
     <select name="tag" multiple="multiple" size="5" width="100" required='required'>
       <py:for each="key in sorted(tags.keys())">
@@ -87,34 +100,37 @@
       </py:for>
     </select>
     <br />
+    <input id="tag" placeholder="Type the tag" type="search" />
+    <a href="#" onclick="javascript:addOption('graph_tag', 'tag', 'chosen_tags');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <br />
+    <label for="chosen_tags">Chosen tags:</label><br />
+    <select name="chosen_tags" id="chosen_tags" multiple="multiple" size="5" required='required' style="width:150"></select>
+    <a href="#" onclick="javascript:removeOption('chosen_tags');"><img src='/img/minus.jpg' style="vertical-align: top;" /></a>
+    <br />
     <input type="Submit" value="Graph!" />
-  </fieldset>
   </form>
+  <h3><a href='#'>Graph elements</a></h3>
   <form name="graph_primitive" id="graph_primitive" method="get" action="#">
-  <input type='hidden' name='prefix' value='${prefix}' />
-  <fieldset>
-    <legend>Graph elements</legend>
-    <input name="what" value="nodes" type="radio" required='required'>Nodes</input>
-    <input name="what" value="ways" type="radio" required='required'>Ways</input>
-    <input name="what" value="relations" type="radio" required='required'>Relations</input>
-    <br />
-    <label for="users" style="vertical-align:top;">Users:</label>
-    <select name="user" id="users" multiple="multiple" size="5">
-    <py:for each="user in sorted(users)">
-      <option value="${user}">${user}</option>
-    </py:for>
+    <label for="tags">Element:</label>
+    <select name="element" id="elements" width='100%' required='required'>
+      <option value="nodes">Nodes</option>
+      <option value="ways">Ways</option>
+      <option value="relations">Relations</option>
     </select>
-    <span id="filtertext" style="vertical-align:top;">&nbsp;</span>
     <br />
-    <input name="regexp" onKeyUp="javascript:user_primitive_filter.set(this.form.regexp.value)" placeholder="Filter user list" type="search" />
+    <input id="user" placeholder="Type the user name" type="search" />
+    <a href="#" onclick="javascript:addOption('graph_primitive', 'user', 'chosen_primitive_users');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <br />
+    <label for="chosen_primitive_users">Chosen users:</label><br />
+    <select name="chosen_primitive_users" id="chosen_primitive_users" multiple="multiple" size="5" required='required' style="width:150"></select>
+    <a href="#" onclick="javascript:removeOption('chosen_primitive_users');"><img src='/img/minus.jpg' style="vertical-align: top;" /></a>
     <br />
     <input type="Submit" value="Graph!" />
-  </fieldset>
   </form>
-  <br />
-<p>
-<small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small>
-</p>
+ </div>
+ <p>
+ <small i18n:msg="">Data &copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> and contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.</small>
+ </p>
 <xi:include href='../html/footer.html' />
 </div>
   <div id="graph">
@@ -122,60 +138,139 @@
 </div>
 <script>
 <!--
-    user_primitive_filter = new filterlist(document.graph_primitive.users);
-    user_primitive_filter.hook = function() {
-        text = $('form#graph_primitive').find('#filtertext');
-        if (this.selectobj.length == this.optionscopy.length) {
-            text.text('');
-        } else {
-            text.text(this.selectobj.length + '/' + this.optionscopy.length);
-        }
-    };
+    var prefix = $('form#vars').find('input[name=prefix]').val();
 
     $(document).ready(function() {
-        $('#graph_tag_user').submit(function(x) {
-            x.preventDefault();
-            //alert($(this).serialize());
-            //$('div#graph').html('<img src="/graph?'+$(this).serialize()+'" /'+'>');
-            prefix = $(this).find('input[name=prefix]').val();
-            $('div#graph').html('<iframe src="/graph-tag-user/'+prefix+'?'+$(this).serialize()+'" width="640" height="480"></iframe>');
-            $('div#graph').fadeIn('slow');
-        });
-
-        $('#graph_tag').submit(function(x) {
-            x.preventDefault();
-            prefix = $(this).find('input[name=prefix]').val();
-            $('div#graph').html('<iframe src="/graph-tag/'+prefix+'?'+$(this).serialize()+'" width="640" height="480"></iframe>');
-            $('div#graph').fadeIn('slow');
-        });
-
-        $('#graph_primitive').submit(function(x) {
-            x.preventDefault();
-            val = $(this).find('input:radio[name=what]:checked').val();
-            if (val != undefined) {
-                prefix = $(this).find('input[name=prefix]').val();
-                $('div#graph').html('<iframe src="/graph-'+val+'/'+prefix+'?'+$(this).serialize()+'" width="640" height="480"></iframe>');
-                $('div#graph').fadeIn('slow');
-            }
-        });
-
         $('select#tags').change(function() {
-            $('div#graph').fadeOut('slow');
             var value = $(this).val();
-            prefix = $(this).parent().parent().find('input[name=prefix]').val();
-            users = $(this).parent().find('select#users');
-            $.getJSON('/get/users/'+prefix+'/'+value, null, function(j) {
-                var opts = '';
-                var names = j.r;
-
-                for (var i=0; i < names.length; i++) {
-                    opts += '<option value="'+names[i]+'">'+names[i]+'</option>';
-                }
-
-                users.html(opts);
+            var field = $(this).parent().find('input#user');
+            field.autocomplete('/get/users/'+prefix+'/'+value, {
+                multiple: true,
             });
         });
+
+        taginput = $('form#graph_tag').find('input#tag');
+        taginput.autocomplete('/get/tags/'+prefix);
+
+        eleminput = $('form#graph_primitive').find('input#user');
+        eleminput.autocomplete('/get/users/'+prefix);
+
+        $('form#graph_tag_user').find('input#user').keypress(function(e) {
+            var code = null;
+            code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                // i.e. "Enter"
+                addOption('graph_tag_user', 'user', 'chosen_users');
+                $(this).val('');
+                return false;
+            }
+            return true;
+        });
+
+        $('form#graph_tag').find('input#ŧag').keypress(function(e) {
+            var code = null;
+            code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                // i.e. "Enter"
+                addOption('graph_tag', 'tag', 'chosen_tags');
+                $(this).val('');
+                return false;
+            }
+            return true;
+        });
+
+        $('form#graph_primitive').find('input#user').keypress(function(e) {
+            var code = null;
+            code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                // i.e. "Enter"
+                addOption('graph_primitive', 'user', 'chosen_primitive_users');
+                $(this).val('');
+                return false;
+            }
+            return true;
+        });
+
+        $('form#graph_tag_user').submit(function(e) {
+            e.preventDefault();
+
+            var users = [];
+            $('select#chosen_users').children().each(function(i, e) {
+                users[i] = e.value;
+            });
+
+            $.get('/graph-tag-user/'+prefix, {
+                    tag: $(this).find('select[name="tag"]').val(),
+                    user: users,
+                },
+                function (output) {
+                    $('div#graph').html('<img src="/get/graph/'+output+'" />');
+                    $('div#graph').fadeIn('slow');
+                }
+            );
+        });
+
+        $('form#graph_tag').submit(function(e) {
+            e.preventDefault();
+
+            var tags = [];
+            $('select#chosen_tags').children().each(function(i, e) {
+                tags[i] = e.value;
+            });
+
+            $.get('/graph-tag/'+prefix, {
+                    tag: tags,
+                },
+                function (output) {
+                    $('div#graph').html('<img src="/get/graph/'+output+'" />');
+                    $('div#graph').fadeIn('slow');
+                }
+            );
+        });
+
+        $('form#graph_primitive').submit(function(e) {
+            e.preventDefault();
+
+            var users = [];
+            $('select#chosen_primitive_users').children().each(function(i, e) {
+                users[i] = e.value;
+            });
+
+            $.get('/graph-'+$(this).find('select#elements').val()+'/'+prefix, {
+                    user: users,
+                },
+                function (output) {
+                    $('div#graph').html('<img src="/get/graph/'+output+'" />');
+                    $('div#graph').fadeIn('slow');
+                }
+            );
+        });
+
+        $('#accordion').accordion();
     });
+
+    function addOption(formname, queryname, targetname) {
+        var form = $('form#'+formname);
+        var query = form.find('input#'+queryname).val();
+        var target = form.find('select#'+targetname);
+
+        query = query.split(',');
+        for (i = 0; i < query.length; i++) {
+            val = $.trim(query[i]);
+            if (val != '')
+                target.append('<option name="'+val+'" value="'+val+'">'+val+'</option>');
+        }
+    }
+
+    function removeOption(targetname) {
+        var target = $('select#'+targetname);
+        var checked = target.val();
+        for (i = 0; i < checked.length; i++) {
+            val = $.trim(checked[i]);
+            if (val != '')
+                target.find('option[name="'+val+'"]').remove();
+        }
+    }
 //-->
 </script>
 </body>
