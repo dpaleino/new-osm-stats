@@ -286,6 +286,7 @@ def graph_tag_user(prefix=default_prefix):
             ),
     )
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
+    time.sleep(1)
     return '%s.svg' % filename
 
 @get('/graph-tag/:prefix')
@@ -305,6 +306,7 @@ def graph_tag(prefix=default_prefix):
         data=tags,
     )
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
+    time.sleep(1)
     return '%s.svg' % filename
 
 @get('/graph-nodes')
@@ -342,6 +344,7 @@ def graph_primitive(prefix=default_prefix):
 
     data['filename'] = filename + '.svg'
     pickle.dump(data, open(os.path.join(basedir, graphs_cmddir, filename), 'w'), protocol=2)
+    time.sleep(1)
     return '%s.svg' % filename
 
 ##
