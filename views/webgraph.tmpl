@@ -83,7 +83,7 @@
   <h3><a href='#'>Graph tags</a></h3>
   <form name="graph_tag" id="graph_tag" method="get" action="/graph-tag">
     <label for="tag3" style="vertical-align:top;">Tags:</label>
-    <select name="tag" multiple="multiple" size="5" width="100" required='required'>
+    <select id="taglist" multiple="multiple" size="5" width="100">
       <py:for each="key in sorted(tags.keys())">
       <optgroup label='${key}'>
         <py:for each="val in sorted(tags[key])">
@@ -101,7 +101,7 @@
     </select>
     <br />
     <input id="tag" placeholder="Type the tag" type="search" />
-    <a href="#" onclick="javascript:addOption('graph_tag', 'tag', 'chosen_tags');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <a href="#" onclick="javascript:addOption('graph_tag', 'tag', 'chosen_tags');addSelect('graph_tag', 'taglist', 'chosen_tags');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
     <br />
     <label for="chosen_tags">Chosen tags:</label><br />
     <select name="chosen_tags" id="chosen_tags" multiple="multiple" size="5" required='required' style="width:150"></select>
@@ -262,6 +262,19 @@
         }
 
         input.val('');
+    }
+
+    function addSelect(formname, selectname, targetname) {
+        var form = $('form#'+formname);
+        var input = form.find('select#'+selectname);
+        var target = form.find('select#'+targetname);
+
+        query = input.val();
+        for (i = 0; i < query.length; i++) {
+            val = $.trim(query[i]);
+            if (val != '')
+                target.append('<option name="'+val+'" value="'+val+'">'+val+'</option>');
+        }
     }
 
     function removeOption(targetname) {
