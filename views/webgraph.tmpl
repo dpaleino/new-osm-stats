@@ -251,15 +251,17 @@
 
     function addOption(formname, queryname, targetname) {
         var form = $('form#'+formname);
-        var query = form.find('input#'+queryname).val();
+        var input = form.find('input#'+queryname);
         var target = form.find('select#'+targetname);
 
-        query = query.split(',');
+        query = input.val().split(',');
         for (i = 0; i < query.length; i++) {
             val = $.trim(query[i]);
             if (val != '')
                 target.append('<option name="'+val+'" value="'+val+'">'+val+'</option>');
         }
+
+        input.val('');
     }
 
     function removeOption(targetname) {
