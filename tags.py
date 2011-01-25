@@ -89,6 +89,7 @@ to_check = {
     ],
     "note": [ "*" ],
     "office": [ "*" ],
+    "opening_hours": [ "*" ],
     "parking:lane:*": [
         "*",
         "no_parking",
