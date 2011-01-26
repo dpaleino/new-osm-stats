@@ -306,7 +306,7 @@
     }
 
     function showImage(url) {
-        $.get(url);
+        $.get('/get/graph/'+url);
         html  = '<img src="/get/graph/'+url+'" class="svg" />';
         html += '<object type="image/svg+xml" data="/get/graph/'+url+'"></object>';
         $('div#graph').html(html);
