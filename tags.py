@@ -99,6 +99,7 @@ to_check = {
         "*",
         "city",
         "hamlet",
+        "isolated_dwelling",
         "locality",
         "suburb",
         "town",
