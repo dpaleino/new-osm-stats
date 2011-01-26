@@ -265,6 +265,8 @@ def get_users_for(prefix, tag):
 
 @route('/get/graph/:filename')
 def get_graph_file(filename):
+    if not os.path.exists(os.path.join(graphs_cache, filename)):
+        abort(404)
     bottle.response.set_content_type("image/svg+xml; charset=UTF-8")
     return static_file(filename, graphs_cache, mimetype="image/svg+xml; charset=UTF-8")
 

@@ -140,6 +140,13 @@
 <!--
     var prefix = $('form#vars').find('input[name=prefix]').val();
 
+    $(document).ajaxError(function(e, xhr, settings, exception) {
+        html  = "Your graph is not ready yet. Please try again in a few moments.<br />";
+        html += "<a href='#' onClick='showImage(\""+settings.url+"\");'>Retry</a>";
+
+        $('div#graph').html(html);
+    });
+
     $(document).ready(function() {
         $('select#tags').change(function() {
             var value = $(this).val();
@@ -204,8 +211,8 @@
                     user: users,
                 },
                 function (output) {
-                    $('div#graph').html('<img src="/get/graph/'+output+'" />');
-                    $('div#graph').fadeIn('slow');
+                    $.get('/get/graph/'+output);
+                    showImage(output);
                 }
             );
         });
@@ -222,8 +229,8 @@
                     tag: tags,
                 },
                 function (output) {
-                    $('div#graph').html('<img src="/get/graph/'+output+'" />');
-                    $('div#graph').fadeIn('slow');
+                    $.get('/get/graph/'+output);
+                    showImage(output);
                 }
             );
         });
@@ -240,8 +247,8 @@
                     user: users,
                 },
                 function (output) {
-                    $('div#graph').html('<img src="/get/graph/'+output+'" />');
-                    $('div#graph').fadeIn('slow');
+                    $.get('/get/graph/'+output);
+                    showImage(output);
                 }
             );
         });
@@ -285,6 +292,12 @@
             if (val != '')
                 target.find('option[name="'+val+'"]').remove();
         }
+    }
+
+    function showImage(url) {
+        $.get(url);
+        $('div#graph').html('<img src="/get/graph/'+url+'" />');
+        $('div#graph').fadeIn('slow');
     }
 //-->
 </script>
