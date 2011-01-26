@@ -145,10 +145,15 @@
 <script>
 <!--
     var prefix = $('form#vars').find('input[name=prefix]').val();
+    String.prototype.startsWith = function(str) {return (this.match("^"+str)==str)}
 
     $(document).ajaxError(function(e, xhr, settings, exception) {
         html  = "Your graph is not ready yet. Please try again in a few moments.<br />";
-        html += "<a href='#' onClick='showImage(\""+settings.url+"\");'>Retry</a>";
+        if (settings.url.startsWith('/get/graph/')) {
+            html += "<a href='#' onClick='showImage(\""+settings.url+"\");'>Retry</a>";
+        } else {
+            html += "<a href='#' onClick='showImage(\"/get/graph/"+settings.url+"\");'>Retry</a>";
+        }
 
         $('div#graph').html(html);
     });
