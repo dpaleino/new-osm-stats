@@ -270,7 +270,7 @@ def graph_totals(filename, data, tags):
             for user in data['ycoords'][tag][key]:
                 val += data['ycoords'][tag][key][user]
             yvalues.append(val)
-        graph.add_line(tag, data['ycoords'][tag].keys(), yvalues)
+        graph.add_line(tag, sorted(data['ycoords'][tag].keys()), yvalues)
     graph.plot()
 
 def graph_tag_users(filename, data, tag, users):
@@ -282,7 +282,7 @@ def graph_tag_users(filename, data, tag, users):
     graph = Graph(filename, tag)
     for user in users:
         user_y = [ data['ycoords'][tag][x][user] for x in sorted(data['ycoords'][tag].keys()) ]
-        graph.add_line(user, data['xcoords'], user_y)
+        graph.add_line(user, sorted(data['ycoords'][tag].keys()), user_y)
     graph.plot()
 
 def graph_primitive(filename, data, what):
@@ -295,7 +295,7 @@ def graph_primitive(filename, data, what):
     elif what == 'relations':
         indx = 2
 
-    graph.add_line(what.capitalize(), data['xcoords'], [ data['counts'][x][indx] for x in sorted(data['counts'].keys()) ])
+    graph.add_line(what.capitalize(), sorted(data['counts'].keys()), [ data['counts'][x][indx] for x in sorted(data['counts'].keys()) ])
     graph.plot()
 
 def graph_user_primitive(filename, data, what, users):
