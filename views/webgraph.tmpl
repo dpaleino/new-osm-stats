@@ -14,7 +14,6 @@
 <script src='/js/jquery.ajaxQueue.js'></script>
 <script src='/js/thickbox-compressed.js'></script>
 <script src='/js/jquery.autocomplete.pack.js'></script>
-<script src='/js/css_browser_selector.js'></script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
 <link rel="stylesheet" type="text/css" href="/style/osmstats_common.css" />
 <link rel="stylesheet" type="text/css" href="/style/jquery.autocomplete.css" />
@@ -39,12 +38,6 @@
     select {
         max-width: 10em;
     }
-
-    object.svgobject { display: none }
-    .ie object.svgobject { display: inline }
-    .ie img.svg { display: none }
-    .gecko object.svgobject { display: inline }
-    .gecko img.svg { display: none }
 </style>
 </head>
 <body>
@@ -78,11 +71,11 @@
     </select>
     <br />
     <input id="user" placeholder="Type the user name" type="search" />
-    <a href="#" onclick="javascript:addOption('graph_tag_user', 'user', 'chosen_users');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <a href="#" onclick="javascript:addOption('graph_tag_user', 'user', 'chosen_users');"><img src='/img/plus.jpg' style="vertical-align: middle;" border="0" /></a>
     <br />
     <label for="chosen_users">Chosen users:</label><br />
     <select id="chosen_users" multiple="multiple" size="5" required='required' style="width:150"></select>
-    <a href="#" onclick="javascript:removeOption('chosen_users');"><img src='/img/minus.jpg' style="vertical-align: top;" /></a>
+    <a href="#" onclick="javascript:removeOption('chosen_users');"><img src='/img/minus.jpg' style="vertical-align: top;" border="0" /></a>
     <br />
     <input type="Submit" value="Graph!" />
   </form>
@@ -107,11 +100,11 @@
     </select>
     <br />
     <input id="tag" placeholder="Type the tag" type="search" />
-    <a href="#" onclick="javascript:addOption('graph_tag', 'tag', 'chosen_tags');addSelect('graph_tag', 'taglist', 'chosen_tags');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <a href="#" onclick="javascript:addOption('graph_tag', 'tag', 'chosen_tags');addSelect('graph_tag', 'taglist', 'chosen_tags');"><img src='/img/plus.jpg' style="vertical-align: middle;" border="0" /></a>
     <br />
     <label for="chosen_tags">Chosen tags:</label><br />
     <select name="chosen_tags" id="chosen_tags" multiple="multiple" size="5" required='required' style="width:150"></select>
-    <a href="#" onclick="javascript:removeOption('chosen_tags');"><img src='/img/minus.jpg' style="vertical-align: top;" /></a>
+    <a href="#" onclick="javascript:removeOption('chosen_tags');"><img src='/img/minus.jpg' style="vertical-align: top;" border="0" /></a>
     <br />
     <input type="Submit" value="Graph!" />
   </form>
@@ -125,11 +118,11 @@
     </select>
     <br />
     <input id="user" placeholder="Type the user name" type="search" />
-    <a href="#" onclick="javascript:addOption('graph_primitive', 'user', 'chosen_primitive_users');"><img src='/img/plus.jpg' style="vertical-align: middle;" /></a>
+    <a href="#" onclick="javascript:addOption('graph_primitive', 'user', 'chosen_primitive_users');"><img src='/img/plus.jpg' style="vertical-align: middle;" border="0" /></a>
     <br />
     <label for="chosen_primitive_users">Chosen users:</label><br />
     <select name="chosen_primitive_users" id="chosen_primitive_users" multiple="multiple" size="5" required='required' style="width:150"></select>
-    <a href="#" onclick="javascript:removeOption('chosen_primitive_users');"><img src='/img/minus.jpg' style="vertical-align: top;" /></a>
+    <a href="#" onclick="javascript:removeOption('chosen_primitive_users');"><img src='/img/minus.jpg' style="vertical-align: top;" border="0" /></a>
     <br />
     <input type="Submit" value="Graph!" />
   </form>
@@ -139,7 +132,7 @@
  </p>
 <xi:include href='../html/footer.html' />
 </div>
-  <div id="graph">
+  <div id="graph" align="center">
   </div>
 </div>
 <script>
@@ -307,8 +300,14 @@
 
     function showImage(url) {
         $.get('/get/graph/'+url);
-        html  = '<img src="/get/graph/'+url+'" class="svg" />';
-        html += '<object type="image/svg+xml" data="/get/graph/'+url+'"></object>';
+        if ($.browser.webkit) {
+            html  = '<img src="/get/graph/'+url+'" class="svg" />';
+        }
+        else {
+            html = '<object type="image/svg+xml" data="/get/graph/'+url+'"></object>';
+        }
+
+        html += '<br /><a href="/get/graph/'+url+'">http://osmstats.hanskalabs.net/get/graph/'+url+'</a>';
         $('div#graph').html(html);
         $('div#graph').fadeIn('slow');
     }
