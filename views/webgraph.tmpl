@@ -14,6 +14,7 @@
 <script src='/js/jquery.ajaxQueue.js'></script>
 <script src='/js/thickbox-compressed.js'></script>
 <script src='/js/jquery.autocomplete.pack.js'></script>
+<script src='/js/css_browser_selector.js'></script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
 <link rel="stylesheet" type="text/css" href="/style/osmstats_common.css" />
 <link rel="stylesheet" type="text/css" href="/style/jquery.autocomplete.css" />
@@ -39,6 +40,11 @@
         max-width: 10em;
     }
 
+    object.svgobject { display: none }
+    .ie object.svgobject { display: inline }
+    .ie img.svg { display: none }
+    .gecko object.svgobject { display: inline }
+    .gecko img.svg { display: none }
 </style>
 </head>
 <body>
@@ -296,7 +302,9 @@
 
     function showImage(url) {
         $.get(url);
-        $('div#graph').html('<img src="/get/graph/'+url+'" />');
+        html  = '<img src="/get/graph/'+url+'" class="svg" />';
+        html += '<object type="image/svg+xml" data="/get/graph/'+url+'"></object>';
+        $('div#graph').html(html);
         $('div#graph').fadeIn('slow');
     }
 //-->
