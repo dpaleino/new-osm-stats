@@ -198,7 +198,7 @@ def show_user(prefix, user):
 @route('/graphs')
 @route('/graphs/:prefix')
 def graphs(prefix=default_prefix):
-    return workinprogress('Temporary disabled due to performance issues')
+#    return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
     check_lang()
@@ -228,7 +228,7 @@ def get_tags(prefix=default_prefix):
 
 @route('/get/tags/:prefix/:user')
 def get_tags_for(prefix, user):
-    return workinprogress('Temporary disabled due to performance issues')
+#    return workinprogress('Temporary disabled due to performance issues')
 
     check_prefix(prefix)
     check_lang()
