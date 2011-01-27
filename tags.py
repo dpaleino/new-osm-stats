@@ -110,6 +110,16 @@ to_check = {
         "tower"
     ],
     "railway": [ "*" ],
+    "route" : [
+        "bicycle",
+        "bus",
+        "hiking",
+        "mtb",
+        "railway",
+        "road",
+        "train",
+        "tram",
+    ],
     "sac_scale": [ "*" ],
     "shop": [ "*" ],
     "surface" : [ "*" ],
