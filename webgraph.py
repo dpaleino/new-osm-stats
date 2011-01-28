@@ -374,6 +374,15 @@ def credits():
     return out.render('xhtml')
 
 
+##
+# robots.txt
+##
+@route('/robots.txt')
+def robots():
+    return """User-Agent: *
+Disallow: /cgi-bin/
+Disallow: /images/"""
+
 bottle.debug(True)
 #bottle.default_app().autojson = True
 #run(host=host_ip_addr, port=8080, reloader=True)
