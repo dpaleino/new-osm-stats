@@ -379,6 +379,7 @@ def credits():
 ##
 @route('/robots.txt')
 def robots():
+    bottle.response.set_content_type("text/plain; charset=UTF-8")
     return """User-Agent: *
 Disallow: /cgi-bin/
 Disallow: /images/"""
