@@ -34,6 +34,9 @@ from collections import defaultdict
 from plot import *
 from config import *
 
+import db
+from sqlalchemy import *
+
 running = True
 log = None
 
@@ -43,9 +46,6 @@ class PE(pyinotify.ProcessEvent):
         self.main = main
 
     def process_IN_CLOSE_WRITE(self, event):
-        if event.name == 'RELOAD':
-            self.main.load_data()
-            return
         self.main.add_to_queue(event)
 
 class GraphDaemon(object):
@@ -53,8 +53,6 @@ class GraphDaemon(object):
         self.daemonize()
         self.queue = Queue()
         self.notifier = None
-        self.data = None
-        self.load_data()
 
         # lock
         fd = os.open('/tmp/graph.lock', os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
@@ -137,183 +135,95 @@ class GraphDaemon(object):
 
         filename = os.path.join(basedir, graphs_cache, data['filename'])
         if data['type'] == 'graph_tag':
-            graph_totals(filename, self.data[data['prefix']], data['data'])
+            fn = graph_totals
         elif data['type'] == 'graph_tag_users':
-            graph_tag_users(filename, self.data[data['prefix']], data['data']['tag'], data['data']['users'])
+            fn = graph_tag_users
         elif data['type'] == 'graph_primitive':
-            graph_primitive(filename, self.data[data['prefix']], data['data'])
+            fn = graph_primitive
         elif data['type'] == 'graph_user_primitive':
-            graph_user_primitive(filename, self.data[data['prefix']], data['data'][0], data['data'][1])
-
-    def load_data(self):
-        """
-        self.data[prefix] contains data parsed for that particular prefix.
-        
-        Its structure is as follows:
-        
-        {
-        'counts': {
-            '20100912': [total_nodes, total_ways, total_rels],
-            'timestamp': [total_nodes, total_ways, total_rels],
-        },
-        'nodes': {
-            '20100912': {
-                'user1': count,
-                'user2': count,
-            },
-            'timestamp': {
-                ...
-            },
-        },
-        'ways': {
-            '20100912': {
-                'user1': count,
-                'user2': count,
-            },
-            'timestamp': {
-                ...
-            },
-        },
-        'relations': {
-            '20100912': {
-                'user1': count,
-                'user2': count,
-            },
-            'timestamp': {
-                ...
-            },
-        },
-        'xcoords': ['20100912'],
-        'ycoords': defaultdict(<type 'dict'>, {
-            'key=val': {
-                '20100912': defaultdict(<type 'int'>, {
-                    'user1': count,
-                    'user2': count,
-                 })
-            },
-            'key2=val2': { ... },
-        })
-        }
-        """
-        log.info('Data reload started')
-        self.data = dict()
-
-        prefixes = glob(os.path.join(basedir, json_path, '*_*.json'))
-        prefixes = set(map(lambda x: os.path.basename(x).split('_')[0], prefixes))
-        for pref in prefixes:
-            log.debug('Loading data for %s' % pref)
-            self.data[pref] = {}
-            for i in ['counts', 'nodes', 'ways', 'relations']:
-                self.data[pref][i] = {}
-            self.data[pref]['xcoords'] = []
-            self.data[pref]['ycoords'] = defaultdict(dict)
-
-            for i in sorted(glob(os.path.join(basedir, json_path, pref + '_*.json'))):
-                if 'positions' in i or 'tags_users' in i:
-                    continue
-
-                load = cjson.decode(open(i).readline())
-                timestamp = load[0]
-                nodes = load[1]
-                ways = load[2]
-                rels = load[3]
-                tags = load[4]
-
-                self.data[pref]['xcoords'].append(timestamp)
-                self.data[pref]['nodes'][timestamp] = nodes
-                self.data[pref]['ways'][timestamp] = ways
-                self.data[pref]['relations'][timestamp] = rels
-
-                l = [nodes, ways, rels]
-                self.data[pref]['counts'][timestamp] = []
-                for d in l:
-                    tmpcount = 0
-                    for c in d:
-                        tmpcount += int(d[c])
-
-                    self.data[pref]['counts'][timestamp].append(tmpcount)
-
-                for key in tags:
-                    for val in tags[key]:
-                        date = defaultdict(int)
-                        for user in tags[key][val]:
-                            date[user] = tags[key][val][user]
-                        self.data[pref]['ycoords']["%s=%s" % (key,val)][timestamp] = date
-
-                del l
-
-            log.debug('Outputting data for %s', pref)
-            d = {}
-            for tag in self.data[pref]['ycoords']:
-                s = set()
-                for timestamp in self.data[pref]['ycoords'][tag]:
-                    s.update(self.data[pref]['ycoords'][tag][timestamp].keys())
-                d[tag] = sorted(s)
-            f = open(os.path.join(basedir, graphs_outdir, pref + '_tagusers.pickle'), 'w')
-            pickle.dump(d, f, protocol=2)
-            f.close()
-        log.info('Data reload complete')
+            fn = graph_user_primitive
+        fn(filename, data)
 
     def add_to_queue(self, item):
         self.queue.put_nowait(item)
 
-def graph_totals(filename, data, tags):
+def graph_totals(filename, data):
+    tags = data['data']
+    db.load_db(data['prefix'])
+
     if type(tags) != list:
         tags = [tags]
     tags = sorted(filter(None, tags))
 
     graph = Graph(filename, 'Tag graph')
     for tag in tags:
-        yvalues = []
-        for key in data['ycoords'][tag]:
-            val = 0
-            for user in data['ycoords'][tag][key]:
-                val += data['ycoords'][tag][key][user]
-            yvalues.append(val)
-        graph.add_line(tag, sorted(data['ycoords'][tag].keys()), yvalues)
+        ycoords = []
+
+        key, value = tag.split('=')
+        table = Table(key, db.meta, autoload=True)
+        dates = list(db.run(select([table.c.date]).distinct().where(table.c.value == value)))
+        xcoords = zip(*dates)[0]
+
+        # FIXME: there's sqlalchemy.func.sum()
+        for d in xcoords:
+            counts = list(db.run(select([table.c.count]).where(and_(table.c.date == d, table.c.value == value))))
+            val = sum(zip(*counts)[0])
+            ycoords.append(val)
+
+        graph.add_line(tag, xcoords, ycoords)
     graph.plot()
 
-def graph_tag_users(filename, data, tag, users):
+def graph_tag_users(filename, data):
+    users = data['data']['users']
+    tag = data['data']['tag']
+    key, value = tag.split('=')
+    db.load_db(data['prefix'])
+
     if type(users) != list:
         users = [users]
 
     users = sorted(filter(None, users))
+
+    table = Table(key, db.meta, autoload=True)
 
     graph = Graph(filename, tag)
     for user in users:
-        user_y = [ data['ycoords'][tag][x][user] for x in sorted(data['ycoords'][tag].keys()) ]
-        graph.add_line(user, sorted(data['ycoords'][tag].keys()), user_y)
+        results = list(db.run(select(columns=[table.c.date, table.c.count]).where(and_(table.c.username == user, table.c.value == value))))
+        xcoords, ycoords = zip(*results)
+        graph.add_line(user, xcoords, ycoords)
     graph.plot()
 
-def graph_primitive(filename, data, what):
+def graph_primitive(filename, data):
+    what = data['data']
+
+    db.load_db(data['prefix'])
+    table = Table(what, db.meta, autoload=True)
+
     graph = Graph(filename, what.capitalize())
-
-    if what == 'nodes':
-        indx = 0
-    elif what == 'ways':
-        indx = 1
-    elif what == 'relations':
-        indx = 2
-
-    graph.add_line(what.capitalize(), sorted(data['counts'].keys()), [ data['counts'][x][indx] for x in sorted(data['counts'].keys()) ])
+    ycoords = []
+    dates = list(db.run(select([table.c.date]).distinct()))
+    xcoords = zip(*dates)[0]
+    for d in xcoords:
+        counts = list(db.run(select([table.c.count]).where(table.c.date == d)))
+        ycoords.append(sum(zip(*counts)[0]))
+    graph.add_line(what.capitalize(), xcoords, ycoords)
     graph.plot()
 
-def graph_user_primitive(filename, data, what, users):
+def graph_user_primitive(filename, data):
+    what, users = data['data']
+    db.load_db(data['prefix'])
+
     if type(users) != list:
         users = [users]
     users = sorted(filter(None, users))
 
+    table = Table(what, db.meta, autoload=True)
+
     graph = Graph(filename, 'Comparison for %s' % what)
     for user in users:
-        ycoords = []
-        for x in sorted(data[what].keys()):
-            try:
-                ycoords.append(data[what][x][user])
-            except KeyError:
-                # the user didn't exist yet maybe?
-                ycoords.append(0)
-
-        graph.add_line(user, sorted(data[what].keys()), ycoords)
+        results = list(db.run(select(columns=[table.c.date, table.c.count]).where(table.c.username == user)))
+        xcoords, ycoords = zip(*results)
+        graph.add_line(user, xcoords, ycoords)
     graph.plot()
 
 def exit_routine(self=None, exiting=False):

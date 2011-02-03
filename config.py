@@ -24,6 +24,7 @@ basedir = os.path.dirname(__file__)
 pickle_path = 'pickle'
 html_path = 'html'
 json_path = 'json'
+db_path = 'db'
 po_path = 'po'
 locale_path = os.path.join(po_path, 'locales')
 profiles_path = os.path.join(json_path, 'profiles')

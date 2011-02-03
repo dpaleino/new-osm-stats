@@ -48,8 +48,6 @@ class Graph():
         tmpfile = tempfile.mkstemp()[1]
         self.tmp.append((user, tmpfile))
 
-        xcoords = map(lambda x: x.split('T')[0], xcoords)
-
         f = open(tmpfile, 'w')
         couples = zip(xcoords, ycoords)
         i = 0 # number of parsings
