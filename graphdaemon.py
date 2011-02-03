@@ -161,15 +161,8 @@ def graph_totals(filename, data):
 
         key, value = tag.split('=')
         table = Table(key, db.meta, autoload=True)
-        dates = list(db.run(select([table.c.date]).distinct().where(table.c.value == value)))
-        xcoords = zip(*dates)[0]
-
-        # FIXME: there's sqlalchemy.func.sum()
-        for d in xcoords:
-            counts = list(db.run(select([table.c.count]).where(and_(table.c.date == d, table.c.value == value))))
-            val = sum(zip(*counts)[0])
-            ycoords.append(val)
-
+        results = list(db.run(select([table.c.date, func.sum(table.c.count)]).where(table.c.value == value).group_by(table.c.date)))
+        xcoords, ycoords = zip(*results)
         graph.add_line(tag, xcoords, ycoords)
     graph.plot()
 
@@ -200,12 +193,8 @@ def graph_primitive(filename, data):
     table = Table(what, db.meta, autoload=True)
 
     graph = Graph(filename, what.capitalize())
-    ycoords = []
-    dates = list(db.run(select([table.c.date]).distinct()))
-    xcoords = zip(*dates)[0]
-    for d in xcoords:
-        counts = list(db.run(select([table.c.count]).where(table.c.date == d)))
-        ycoords.append(sum(zip(*counts)[0]))
+    results = list(db.run(select([table.c.date, func.sum(table.c.count)]).group_by(table.c.date)))
+    xcoords, ycoords = zip(*results)
     graph.add_line(what.capitalize(), xcoords, ycoords)
     graph.plot()
 
