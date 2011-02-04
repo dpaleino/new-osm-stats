@@ -265,8 +265,8 @@ def graph_totals(filename, data, tags):
     graph = Graph(filename, 'Tag graph')
     for tag in tags:
         yvalues = []
+        val = 0
         for key in data['ycoords'][tag]:
-            val = 0
             for user in data['ycoords'][tag][key]:
                 val += data['ycoords'][tag][key][user]
             yvalues.append(val)
