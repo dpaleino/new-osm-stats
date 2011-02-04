@@ -28,6 +28,9 @@ from config import *
 from tags import to_check
 from makepickle import make_pickles
 
+import db
+from sqlalchemy import *
+
 ### code
 
 def parse(filename):
@@ -142,42 +145,49 @@ def calculate_positions(prefix, date, nodes, ways, rels, tags):
 
     return ([primitives_positions, tags_positions], [primitives_profiles, tags_profiles])
 
-def save_jsons(prefix, l, pos, profiles):
-    log.info("Saving to JSON")
-    f = open(os.path.join(json_path, "%s_%s.json" % (prefix, l[0])), 'w')
-    f.write(cjson.encode(l))
-    f.close()
+def save_sqlite(prefix, date, nodes, ways, rels, tags, pos):
+    import sys
+#    sys.exit(1)
+    log.info("Saving to Sqlite")
 
-    f = open(os.path.join(json_path, '%s_positions.json' % prefix), 'w')
-    f.write(cjson.encode(pos))
-    f.close()
+    db.load_db(prefix)
+    try:
+        db.init(prefix)
+    except:
+        pass
 
-    # save tags and users lists
-    log.info('Saving tags and users lists')
-    tags = []
-    users = set()
-    for key in l[4]:
-        for val in l[4][key].keys():
-            tags.append('%s=%s' % (key, val))
-            users.update(l[4][key][val].keys())
+    # Nodes
+    for i in nodes:
+        table = Table('nodes', db.meta, autoload=True)
+        db.run(table.delete().where(table.c.date == date))
+        db.run(table.insert(dict(date=int(date), username=i, count=nodes[i], position=pos[0][date]['Nodes'].index(i) + 1)))
+    # Ways
+    for i in ways:
+        table = Table('ways', db.meta, autoload=True)
+        db.run(table.delete().where(table.c.date == date))
+        db.run(table.insert(dict(date=int(date), username=i, count=ways[i], position=pos[0][date]['Ways'].index(i) + 1)))
+    # Relations
+    for i in rels:
+        table = Table('relations', db.meta, autoload=True)
+        db.run(table.delete().where(table.c.date == date))
+        db.run(table.insert(dict(date=int(date), username=i, count=rels[i], position=pos[0][date]['Relations'].index(i) + 1)))
 
-    users = list(users)
-    f = open(os.path.join(json_path, '%s_tags_users.json' % prefix), 'w')
-    f.write(cjson.encode([tags, users]))
-    f.close()
-
-    # save profile data
-    users = set()
-    for l in [x.keys() for x in profiles]:
-        users.update(l)
-
-    # clean up old profiles
-    map(os.remove, glob(os.path.join(profiles_path, '%s_*.json' % prefix)))
-
-    for user in users:
-        f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, sanitize(user).replace(' ', '_'))), 'w')
-        f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
-        f.close()
+    # Tags
+    for key in tags:
+        name = key.split('|')[0]
+        db.make_table(name)
+        table = Table(name, db.meta, autoload=True)
+        for value in tags[key]:
+            for user in tags[key][value]:
+                d = {
+                    'date' : int(date),
+                    'value' : value,
+                    'username' : user,
+                    'count' : int(tags[key][value][user]),
+                    'position' : pos[1][date][key][value].index(user) + 1,
+                }
+                db.run(table.delete().where(table.c.date == date))
+                db.run(table.insert(d))
 
 def make_footer():
     from datetime import datetime
@@ -201,17 +211,8 @@ def main(prefix, date, filename):
     make_footer()
     nodes, ways, rels, tags = parse(filename)
     positions, profiles = calculate_positions(prefix, date, nodes, ways, rels, tags)
-    save_jsons(prefix, [date, nodes, ways, rels, tags], positions, profiles)
-
-    # render the last date, we don't support rendering intermediate dates (yet,
-    # see commented code in helpers.py:positions_changed()
-    secondlast, last = get_last_dates(positions[0])
-
-    log.debug('Loading data for %s' % last)
-    json = open(os.path.join(json_path, '%s_%s.json' % (prefix, last)))
-    timestamp, nodes, ways, rels, tags = cjson.decode(json.readline())
-
-    make_pickles(prefix, last, nodes, ways, rels, tags, positions)
+    save_sqlite(prefix, date, nodes, ways, rels, tags, positions)
+    make_pickles(prefix, date, nodes, ways, rels, tags, positions)
     log.info("Program ended.")
 
 if __name__ == '__main__':
