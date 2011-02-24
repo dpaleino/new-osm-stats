@@ -2,6 +2,7 @@
 
 to_check = {
     "addr:housenumber": [ "*" ],
+    "aeroway": [ '*' ],
     "amenity": [
         "bank",
         "bar",
