@@ -108,6 +108,7 @@ to_check = {
     ],
     "power": [
         "generator",
+        "station",
         "tower"
     ],
     "railway": [ "*" ],
