@@ -165,7 +165,7 @@ msgstr "--- Seleccionar etiqueta ---"
 
 #: views/webgraph.tmpl:76 views/webgraph.tmpl:123
 msgid "Chosen users:"
-msgstr "Usuarious seleccionados:"
+msgstr "Usuarios seleccionados:"
 
 #: views/webgraph.tmpl:82
 msgid "Graph tags"
