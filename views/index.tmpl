@@ -11,7 +11,7 @@
     font-family: 'Fertigo';
     src: url('/fonts/fertigo.otf');
 }
-img {
+img.button {
     display: inline;
     margin: 50px;
     outline: none;
@@ -23,7 +23,7 @@ img {
     -moz-border-radius: 3px;
     border: 1px solid rgba(255,255,255, 0.2);
 }
-img:hover {
+img.button:hover {
     box-shadow: 0 0 4px rgba(0, 0, 255, 1);
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 255, 1);
     -moz-box-shadow: 0 0 4px rgba(0, 0, 255, 1);
@@ -58,11 +58,11 @@ div#what {
   <h1 class="fertigo">OpenStreetMap Statistics</h1>
   <br />
   <br />
-  <a href='/stats'><img title='Statistics' src='/img/user.png' /></a>
-  <a href='/graphs'><img title='Charts' src='/img/chart.png' /></a>
-  <a href='/source'><img title='Source code' src='/img/source.png' /></a>
-  <a href='/bugs'><img title='Report a bug' src='/img/bug.png' /></a>
-  <a href='/credits'><img title='Credits' src='/img/help.png' /></a>
+  <a href='/stats'><img title='Statistics' src='/img/user.png' class='button' /></a>
+  <a href='/graphs'><img title='Charts' src='/img/chart.png' class='button' /></a>
+  <a href='/source'><img title='Source code' src='/img/source.png' class='button' /></a>
+  <a href='/bugs'><img title='Report a bug' src='/img/bug.png' class='button' /></a>
+  <a href='/credits'><img title='Credits' src='/img/help.png' class='button' /></a>
   <br />
   <div id="what" class="fertigo"></div>
 </div>
