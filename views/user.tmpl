@@ -17,6 +17,10 @@
         $('.feature').hide('slow');
         $('.feature[name="'+name+'"]').fadeIn('slow');
     }
+
+    function expandall() {
+        $('.feature').fadeIn('slow');
+    }
 //-->
 </script>
 <link rel="stylesheet" type="text/css" href="/style/osmstats_style.css" />
@@ -28,7 +32,7 @@
 <h1>OpenStreetMap Statistics</h1>
 <h2 i18n:msg="user">User profile: ${user}</h2>
 <img src="${imgurl}" /><br /><br />
-<small><a href='javascript:history.go(-1);'>Go back</a></small>
+<small><a href='javascript:history.go(-1);'>Go back</a> &mdash; <a href='#' onclick='expandall();'>Expand all</a></small>
 <ul id="links" style="padding: 0px">
 <py:for each="name in ['Nodes', 'Ways', 'Relations']">
 <py:choose test="">
