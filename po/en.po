@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: osmstats 0.1\n"
 "Report-Msgid-Bugs-To: d.paleino@gmail.com\n"
-"POT-Creation-Date: 2010-11-04 13:36+0100\n"
+"POT-Creation-Date: 2011-04-02 11:35+0200\n"
 "PO-Revision-Date: 2010-11-04 12:28+0100\n"
 "Last-Translator: David Paleino <dapal@debian.org>\n"
 "Language-Team: English\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: views/credits.tmpl:8 views/credits.tmpl:36 views/index.tmpl:8
-#: views/index.tmpl:58 views/user.tmpl:28 views/workinprogress.tmpl:8
+#: views/index.tmpl:58 views/user.tmpl:32 views/workinprogress.tmpl:8
 #: views/workinprogress.tmpl:36
 msgid "OpenStreetMap Statistics"
 msgstr "OpenStreetMap Statistics"
@@ -65,14 +65,24 @@ msgid "Report a bug"
 msgstr "Report a bug"
 
 #: views/index.tmpl:70 views/key.tmpl:123 views/statistiche.tmpl:97
-#: views/table.tmpl:74 views/user.tmpl:146
+#: views/table.tmpl:74 views/user.tmpl:150
 msgid "Data last generated on"
 msgstr "Data last generated on"
 
 #: views/index.tmpl:71 views/key.tmpl:124 views/statistiche.tmpl:98
-#: views/table.tmpl:75 views/user.tmpl:147
+#: views/table.tmpl:75 views/user.tmpl:151
 msgid "This is OSMStats, version"
 msgstr "This is OSMStats, version"
+
+#: views/index.tmpl:72 views/key.tmpl:125 views/statistiche.tmpl:99
+#: views/table.tmpl:76 views/user.tmpl:152
+msgid "Hosting kindly provided by"
+msgstr ""
+
+#: views/index.tmpl:72 views/key.tmpl:125 views/statistiche.tmpl:99
+#: views/table.tmpl:76 views/user.tmpl:152
+msgid "GPLHost"
+msgstr ""
 
 #: views/key.tmpl:8
 #, python-format
@@ -91,17 +101,17 @@ msgid "Key:%(key)s"
 msgstr "Key:%(key)s"
 
 #: views/key.tmpl:51 views/key.tmpl:54 views/statistiche.tmpl:34
-#: views/table.tmpl:17 views/user.tmpl:31
+#: views/table.tmpl:17 views/user.tmpl:35
 msgid "Go back"
 msgstr "Go back"
 
-#: views/key.tmpl:68 views/table.tmpl:31 views/user.tmpl:96
+#: views/key.tmpl:68 views/table.tmpl:31 views/user.tmpl:100
 #, python-format
 msgid "This category includes: %(categories)s"
 msgstr "This category includes: %(categories)s"
 
 #: views/key.tmpl:77 views/statistiche.tmpl:52 views/table.tmpl:41
-#: views/user.tmpl:58 views/user.tmpl:102
+#: views/user.tmpl:62 views/user.tmpl:106
 msgid "Position"
 msgstr "Position"
 
@@ -110,12 +120,12 @@ msgid "User"
 msgstr "User"
 
 #: views/key.tmpl:80 views/statistiche.tmpl:55 views/table.tmpl:44
-#: views/user.tmpl:60 views/user.tmpl:104
+#: views/user.tmpl:64 views/user.tmpl:108
 msgid "Total"
 msgstr "Total"
 
 #: views/key.tmpl:122 views/statistiche.tmpl:96 views/table.tmpl:73
-#: views/user.tmpl:145 views/webgraph.tmpl:116
+#: views/user.tmpl:149 views/webgraph.tmpl:131
 msgid "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
 msgstr "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
 
@@ -124,56 +134,68 @@ msgstr "Data © [1:OpenStreetMap] and contributors, [2:CC-BY-SA]."
 msgid "OpenStreetMap Statistics - User %(user)s"
 msgstr "OpenStreetMap Statistics - User %(user)s"
 
-#: views/user.tmpl:29
+#: views/user.tmpl:33
 #, python-format
 msgid "User profile: %(user)s"
 msgstr "User profile: %(user)s"
+
+#: views/user.tmpl:35
+msgid "Expand all"
+msgstr ""
 
 #: views/webgraph.tmpl:8
 msgid "OSM statistics graph generator"
 msgstr "OSM statistics graph generator"
 
-#: views/webgraph.tmpl:35
+#: views/webgraph.tmpl:45
 msgid "Dynamic graph generator"
 msgstr "Dynamic graph generator"
 
-#: views/webgraph.tmpl:41
+#: views/webgraph.tmpl:52
 msgid "Single tag, multiple users"
 msgstr "Single tag, multiple users"
 
-#: views/webgraph.tmpl:42
+#: views/webgraph.tmpl:54
 msgid "Tag:"
 msgstr "Tag:"
 
-#: views/webgraph.tmpl:44
+#: views/webgraph.tmpl:56
 msgid "--- Select tag ---"
 msgstr "--- Select tag ---"
 
-#: views/webgraph.tmpl:61 views/webgraph.tmpl:101
-msgid "Users:"
-msgstr "Users:"
+#: views/webgraph.tmpl:76 views/webgraph.tmpl:123
+msgid "Chosen users:"
+msgstr ""
 
-#: views/webgraph.tmpl:71
+#: views/webgraph.tmpl:82
 msgid "Graph tags"
 msgstr "Graph tags"
 
-#: views/webgraph.tmpl:72
+#: views/webgraph.tmpl:84
 msgid "Tags:"
 msgstr "Tags:"
 
-#: views/webgraph.tmpl:96
+#: views/webgraph.tmpl:105
+msgid "Chosen tags:"
+msgstr ""
+
+#: views/webgraph.tmpl:111
 msgid "Graph elements"
 msgstr "Graph elements"
 
-#: views/webgraph.tmpl:97
+#: views/webgraph.tmpl:113
+msgid "Element:"
+msgstr ""
+
+#: views/webgraph.tmpl:115
 msgid "Nodes"
 msgstr "Nodes"
 
-#: views/webgraph.tmpl:98
+#: views/webgraph.tmpl:116
 msgid "Ways"
 msgstr "Ways"
 
-#: views/webgraph.tmpl:99
+#: views/webgraph.tmpl:117
 msgid "Relations"
 msgstr "Relations"
 
@@ -181,3 +203,5 @@ msgstr "Relations"
 msgid "Work in progress"
 msgstr "Work in progress"
 
+#~ msgid "Users:"
+#~ msgstr "Users:"
