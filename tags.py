@@ -37,6 +37,9 @@ to_check = {
     ],
     "ele" : [ "*" ],
     "est_width": [ "*" ],
+    'footway': [
+        'sidewalk',
+    ],
     "height" : [ "*" ],
     "hgv" : [ "*" ],
     "highway": [
