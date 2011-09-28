@@ -79,14 +79,14 @@ def parse_primitive_group(group):
 
     # Uncompressed primitives
     for node in group.nodes:
-        nodes[stringtable[last_user]] += 1
+        nodes[stringtable[node.info.user_sid]] += 1
         for tag in zip(node.keys, node.vals):
             key_val = map(stringtable.__getitem__, tag)
             handle_tags(stringtable[node.info.user_sid], key_val)
 #            print stringtable[node.info.user_sid],
 #            print 'node', '='.join(map(stringtable.__getitem__, tag))
     for way in group.ways:
-        ways[stringtable[last_user]] += 1
+        ways[stringtable[way.info.user_sid]] += 1
         for tag in zip(way.keys, way.vals):
             key_val = map(stringtable.__getitem__, tag)
             handle_tags(stringtable[way.info.user_sid], key_val)
@@ -94,7 +94,7 @@ def parse_primitive_group(group):
 #            print 'way', '='.join(map(stringtable.__getitem__, tag))
 #        sys.exit(1)
     for relation in group.relations:
-        rels[stringtable[last_user]] += 1
+        rels[stringtable[relation.info.user_sid]] += 1
         for tag in zip(relation.keys, relation.vals):
             key_val = map(stringtable.__getitem__, tag)
             handle_tags(stringtable[relation.info.user_sid], key_val)
@@ -127,7 +127,7 @@ def parse_pbf(file):
     global stringtable
     block_count = 0
 
-    header = filepbf.BlockHeader()
+    header = filepbf.BlobHeader()
     blob = filepbf.Blob()
     header_block = osmpbf.HeaderBlock()
     primitive_block = osmpbf.PrimitiveBlock()
