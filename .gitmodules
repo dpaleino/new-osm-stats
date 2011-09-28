@@ -1,3 +1,6 @@
 [submodule "json"]
 	path = json
 	url = git@github.com:dpaleino/osmstats-data.git
+[submodule "protobuf/osm-binary"]
+	path = protobuf/osm-binary
+	url = git://github.com/scrosby/OSM-binary.git
