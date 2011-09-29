@@ -23,7 +23,7 @@ import os
 from config import *
 from osmstats.backends.osmxml import parse
 from osmstats.helpers import *
-from osmstats.output.json import save_json
+from osmstats.output.json import save_jsons
 from osmstats.output.pickle import make_pickles
 from osmstats.output.html import make_footer
 from osmstats.positions import *
