@@ -28,6 +28,7 @@ from osmstats.backends.osmxml import parse
 from osmstats.helpers import *
 from osmstats.output.json import save_json
 from osmstats.output.pickle import make_pickles
+from osmstats.output.html import make_footer
 
 ### code
 
@@ -81,23 +82,6 @@ def calculate_positions(prefix, date, nodes, ways, rels, tags):
 
     return ([primitives_positions, tags_positions], [primitives_profiles, tags_profiles])
 
-def make_footer():
-    from datetime import datetime
-    from time import strftime
-    today = strftime("%Y-%m-%d %H:%M:%S", datetime.today().timetuple())
-
-    f = open(os.path.join(html_path, 'timestamp.html'), 'w')
-    f.write('<i>'+today+'</i>')
-    f.close()
-
-    if '~dev' in config.version:
-        versionlink = ''
-    else:
-        versionlink = config.version
-
-    f = open(os.path.join(html_path, 'version.html'), 'w')
-    f.write('<a href="http://bugs.hanskalabs.net/projects/osm-stats/repository/show?rev=%s">%s</a>' % (versionlink, config.version))
-    f.close()
 
 def main(prefix, date, filename):
     make_footer()
