@@ -26,6 +26,8 @@ from makepickle import make_pickles
 
 from osmstats.backends.osmxml import parse
 from osmstats.helpers import *
+from osmstats.output.json import save_json
+from osmstats.output.pickle import make_pickles
 
 ### code
 
@@ -78,43 +80,6 @@ def calculate_positions(prefix, date, nodes, ways, rels, tags):
 
 
     return ([primitives_positions, tags_positions], [primitives_profiles, tags_profiles])
-
-def save_jsons(prefix, l, pos, profiles):
-    log.info("Saving to JSON")
-    f = open(os.path.join(json_path, "%s_%s.json" % (prefix, l[0])), 'w')
-    f.write(cjson.encode(l))
-    f.close()
-
-    f = open(os.path.join(json_path, '%s_positions.json' % prefix), 'w')
-    f.write(cjson.encode(pos))
-    f.close()
-
-    # save tags and users lists
-    log.info('Saving tags and users lists')
-    tags = []
-    users = set()
-    for key in l[4]:
-        for val in l[4][key].keys():
-            tags.append('%s=%s' % (key, val))
-            users.update(l[4][key][val].keys())
-
-    users = list(users)
-    f = open(os.path.join(json_path, '%s_tags_users.json' % prefix), 'w')
-    f.write(cjson.encode([tags, users]))
-    f.close()
-
-    # save profile data
-    users = set()
-    for l in [x.keys() for x in profiles]:
-        users.update(l)
-
-    # clean up old profiles
-    map(os.remove, glob(os.path.join(profiles_path, '%s_*.json' % prefix)))
-
-    for user in users:
-        f = open(os.path.join(profiles_path, '%s_%s.json' % (prefix, sanitize(user).replace(' ', '_'))), 'w')
-        f.write(cjson.encode([profiles[0][user], profiles[1][user]]))
-        f.close()
 
 def make_footer():
     from datetime import datetime

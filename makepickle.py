@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2010, David Paleino <d.paleino@gmail.com>
+# Copyright © 2010-2011, David Paleino <d.paleino@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,10 @@
 
 import cjson
 import os
-from genshi.template import MarkupTemplate as template
-import cPickle as pickle
 
 from config import *
-from helpers import *
+from osmstats.output.pickle import make_pickles
+
 
 def main(prefix, date):
     json = open(os.path.join(json_path, '%s_%s.json' % (prefix, date)))
@@ -32,89 +31,6 @@ def main(prefix, date):
     positions = cjson.decode(pos.readline())
 
     make_pickles(prefix, date, nodes, ways, rels, tags, positions)
-
-
-def make_pickles(prefix, date, nodes, ways, rels, tags, positions):
-    log.info("Rendering HTML")
-
-    log.info("Sorting users")
-    sortedtags = defaultdict(dict)
-    splittags = defaultdict(dict)
-    for key in tags:
-        log.debug("Sorting users for key %s" % key)
-        for val in tags[key]:
-            sortedtags[key][val] = mysort(tags[key][val])
-            splittags[key][val] = mysort(tags[key][val], split=maxsplit)
-
-    primpos = positions_changed(positions[0])
-    tagpos = positions_changed(positions[1])
-    for t in [(None, sortedtags), (maxsplit, splittags)]:
-        if not t[0]:
-            # i.e. if t[0] is None, i.e. we're doing the full tags
-            for i in [('Nodes', nodes), ('Ways', ways), ('Relations', rels)]:
-                log.debug("Rendering full-page for %s (%s)" % (i[0].lower(), date))
-                data = dict(
-                    date=date,
-                    name=i[0],
-                    stats=mysort(i[1]),
-                    pos=primpos[i[0]],
-                    prefix=prefix,
-                )
-                # table.tmpl
-                f = open(os.path.join(pickle_path, '%s_%s_full.pickle' % (prefix, i[0].lower())), "w")
-                pickle.dump(data, f, protocol=2)
-                f.close()
-        else:
-            log.debug("Rendering primitives pages (%s)" % date)
-            # we're rendering splittags
-            data = dict(
-                date=date,
-                nodes=mysort(nodes, split=t[0]),
-                ways=mysort(ways, split=t[0]),
-                relations=mysort(rels, split=t[0]),
-                prefix=prefix,
-                tags=sorted(tags.keys()),
-                pos=primpos,
-                split=t[0],
-            )
-            # statistiche.tmpl
-            f = open(os.path.join(pickle_path, '%s_stats.pickle' % prefix), "w")
-            pickle.dump(data, f, protocol=2)
-            f.close()
-
-
-        for key in sorted(t[1].keys()):
-            if not t[0]:
-                for val in t[1][key]:
-                    valname = val
-                    if "|" in val:
-                        valname = val.split('|')[0]
-                    log.debug("Rendering full-page for %s=%s (%s)" % (key, valname, date))
-                    data = dict(
-                        date=date,
-                        name="%s=%s" % (key, val),
-                        stats=t[1][key][val],
-                        pos=tagpos[key][val],
-                        prefix=prefix,
-                    )
-                    # table.tmpl
-                    f = open(os.path.join(pickle_path, '%s_%s=%s_full.pickle' % (prefix, sanitize(key), sanitize(valname))), 'w')
-                    pickle.dump(data, f, protocol=2)
-                    f.close()
-            else:
-                log.debug("Rendering pages for %s=* (%s)" % (key, date))
-                data = dict(
-                    date=date,
-                    prefix=prefix,
-                    key=key,
-                    vals=t[1][key],
-                    pos=tagpos[key],
-                    split=t[0],
-                )
-                # key.tmpl
-                f = open(os.path.join(pickle_path, '%s_%s.pickle' % (prefix, sanitize(key))), 'w')
-                pickle.dump(data, f, protocol=2)
-                f.close()
 
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -129,6 +45,6 @@ if __name__ == '__main__':
 
     if not options.date:
         parser.error('a date is needed.')
-    
+
     main(options.prefix, options.date)
 
