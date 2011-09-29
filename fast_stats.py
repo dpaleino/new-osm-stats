@@ -28,69 +28,9 @@ from config import *
 from tags import to_check
 from makepickle import make_pickles
 
+from xml import parse
+
 ### code
-
-def parse(filename):
-    log.info("Parsing %s" % filename)
-    nodes = defaultdict(int)
-    ways = defaultdict(int)
-    rels = defaultdict(int)
-
-    tags = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
-
-    source = open(filename)
-    context = etree.iterparse(source, events=("start", "end"))
-    context = iter(context)
-
-    event, root = context.next()
-
-    for event, elem in context:
-        if event == "end":
-            root.clear()
-            continue
-
-        try:
-            if elem.tag == "node":
-                nodes[elem.attrib["user"]] += 1
-            if elem.tag == "way":
-                ways[elem.attrib["user"]] += 1
-            if elem.tag == "relation":
-                rels[elem.attrib["user"]] += 1
-        except KeyError as error:
-            if "user" in error.args:
-                # This is an object from one of the old "anonymous" users, skip it.
-                pass
-            else:
-                raise error
-
-        for child in elem.getchildren():
-            try:
-                if child.tag == "tag":
-                    key = child.attrib["k"]
-                    val = ";".join(sorted(child.attrib["v"].split(";"))) if ";" in child.attrib["v"] else child.attrib["v"]
-                    for test in key_wildcard(key):
-                        if test in to_check:
-                            # first, check for categories-count
-                            for v in to_check[test]:
-                                if type(v) == tuple:
-                                    if val in v[1] or (type(val) == tuple and check_tuple(val, v[1])):
-                                        new_v = '%s|%s' % (v[0], ';'.join(v[1]))
-                                        tags[test][new_v][elem.attrib['user']] += 1
-
-                            if val in to_check[test] or (type(val) == tuple and check_tuple(val, to_check)):
-                                tags[test][val][elem.attrib["user"]] += 1
-                            if "*" in to_check[test]:
-                                tags[test]["*"][elem.attrib["user"]] += 1
-                            break;
-
-            except KeyError as error:
-                if "user" in error.args:
-                    # This is an object from one of the old "anonymous" users, skip it.
-                    pass
-                else:
-                    raise error
-
-    return [nodes, ways, rels, tags]
 
 def calculate_positions(prefix, date, nodes, ways, rels, tags):
     log.info("Calculating positions")
