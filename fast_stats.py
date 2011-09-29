@@ -28,7 +28,7 @@ from config import *
 from tags import to_check
 from makepickle import make_pickles
 
-from xml import parse
+from osmstats.backends.osmxml import parse
 
 ### code
 

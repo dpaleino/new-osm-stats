@@ -81,19 +81,19 @@ def handle_tags(user, key_val):
     key, value = key_val
 
     for test in key_wildcard(key):
-    if test in to_check:
-        # first, check for categories-count
-        for v in to_check[test]:
-            if type(v) == tuple:
-                if val in v[1] or (type(val) == tuple and check_tuple(val, v[1])):
-                    new_v = '%s|%s' % (v[0], ';'.join(v[1]))
-                    tags[test][new_v][elem.attrib['user']] += 1
+        if test in to_check:
+            # first, check for categories-count
+            for v in to_check[test]:
+                if type(v) == tuple:
+                    if val in v[1] or (type(val) == tuple and check_tuple(val, v[1])):
+                        new_v = '%s|%s' % (v[0], ';'.join(v[1]))
+                        tags[test][new_v][elem.attrib['user']] += 1
 
-        if val in to_check[test] or (type(val) == tuple and check_tuple(val, to_check)):
-            tags[test][val][elem.attrib["user"]] += 1
-        if "*" in to_check[test]:
-            tags[test]["*"][elem.attrib["user"]] += 1
-        break
+            if val in to_check[test] or (type(val) == tuple and check_tuple(val, to_check)):
+                tags[test][val][elem.attrib["user"]] += 1
+            if "*" in to_check[test]:
+                tags[test]["*"][elem.attrib["user"]] += 1
+            break
 
 
 def parse(file):
