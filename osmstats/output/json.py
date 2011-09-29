@@ -18,6 +18,8 @@
 
 import cjson
 import os
+from glob import glob
+
 from config import *
 from osmstats.helpers import *
 
