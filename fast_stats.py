@@ -19,69 +19,16 @@
 from collections import defaultdict
 import cjson
 import os
-from glob import glob
 
 from config import *
-from makepickle import make_pickles
-
 from osmstats.backends.osmxml import parse
 from osmstats.helpers import *
 from osmstats.output.json import save_json
 from osmstats.output.pickle import make_pickles
 from osmstats.output.html import make_footer
+from osmstats.positions import *
 
 ### code
-
-def calculate_positions(prefix, date, nodes, ways, rels, tags):
-    log.info("Calculating positions")
-    try:
-        primitives_positions, tags_positions = cjson.decode(open('json/%s_positions.json' % prefix).readline())
-    except (IOError, cjson.DecodeError):
-        primitives_positions = dict()
-        tags_positions = dict()
-
-    primitives_positions[date] = defaultdict(list)
-    tags_positions[date] = defaultdict(lambda: defaultdict(list))
-    primitives_profiles = defaultdict(lambda: defaultdict(tuple))
-    tags_profiles = defaultdict(lambda: defaultdict(lambda: defaultdict(tuple)))
-
-    log.debug("Calculating positions for primitives (nodes, ways, relations)")
-    for p in [('Nodes', nodes), ('Ways', ways), ('Relations', rels)]:
-        for user in enumerate(mysort(p[1])):
-            primitives_positions[date][p[0]].append(user[1][0])
-            # profiles[<user>]['Nodi'] = (<position>, <number>)
-            primitives_profiles[user[1][0]][p[0]] = (user[0] + 1, user[1][1])
-
-    for tag in tags:
-        log.debug("Calculating positions for key %s" % tag)
-        for val in tags[tag]:
-            i = 0
-            for user in mysort(tags[tag][val]):
-                i += 1
-                tags_positions[date][tag][val].append(user[0])
-                # profiles[<user>][<key>][<val>] = (<position>, <number>)
-                tags_profiles[user[0]][tag][val] = (i, user[1])
-
-    # add positions changed to the profiles
-    tmp = positions_changed(primitives_positions)
-    for what in tmp:
-        # i is 'Ways', 'Nodi', 'Relazioni'
-        for user in tmp[what]:
-            pos, count = primitives_profiles[user][what]
-            # profiles[<user>]['Nodi'] = (<position>, <pos_changed>, <number>)
-            primitives_profiles[user][what] = (pos, tmp[what][user], count)
-
-    tmp = positions_changed(tags_positions)
-    for key in tmp:
-        for val in tmp[key]:
-            for user in tmp[key][val]:
-                pos, count = tags_profiles[user][key][val]
-                # profiles[<user>][key][val] = (<position>, <pos_changed>, <number>)
-                tags_profiles[user][key][val] = (pos, tmp[key][val][user], count)
-
-
-    return ([primitives_positions, tags_positions], [primitives_profiles, tags_profiles])
-
 
 def main(prefix, date, filename):
     make_footer()
