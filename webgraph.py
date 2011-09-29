@@ -35,7 +35,7 @@ from glob import glob
 import cPickle as pickle
 import time
 
-from helpers import *
+from osmstats.helpers import *
 from config import *
 
 linguas = map(lambda x: x.strip(), open(os.path.join(po_path, 'LINGUAS')).readlines())
