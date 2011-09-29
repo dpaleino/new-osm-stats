@@ -65,8 +65,6 @@ if __name__ == '__main__':
 
     if not args:
         parser.error('need an OSM dump to work on.')
-    else:
-        filename = args[0]
 
     if not options.date:
         parser.error('need a date in the format YYYYMMDD.')
@@ -81,5 +79,5 @@ if __name__ == '__main__':
         log.setLevel(logging.DEBUG)
         logh.setLevel(logging.DEBUG)
 
-    main(options.prefix, options.date, filename)
+    main(options.prefix, options.date, args[0])
 
