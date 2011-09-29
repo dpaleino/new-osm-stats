@@ -21,14 +21,11 @@
 ###############################################################################
 
 from collections import defaultdict
-from google.protobuf import message
 import osmstats.classes.fileformat_pb2 as filepbf
-import logging
 import osmstats.classes.osmformat_pb2 as osmpbf
 import struct
 import sys
 import zlib
-import time
 from itertools import izip_longest
 
 from osmstats.helpers import *

@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 from collections import defaultdict
-from datetime import datetime as dt
 import cjson
 import os
 from glob import glob
