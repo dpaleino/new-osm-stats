@@ -22,9 +22,9 @@
 
 from collections import defaultdict
 from google.protobuf import message
-import fileformat_pb2 as filepbf
+import osmstats.classes.fileformat_pb2 as filepbf
 import logging
-import osmformat_pb2 as osmpbf
+import osmstats.classes.osmformat_pb2 as osmpbf
 import struct
 import sys
 import zlib
