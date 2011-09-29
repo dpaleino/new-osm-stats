@@ -51,12 +51,10 @@ if __name__ == '__main__':
     from optparse import OptionParser
     import sys
 
-    parser = OptionParser(usage="Usage: %prog [options] dump.osm", version="%prog 0.1")
+    parser = OptionParser(usage="Usage: %prog [options] dump.osm", version="OSMStats "+version)
     parser.add_option("-d", "--date", dest="date", default=None,
-        help="set the date, should be in the format YYYYMMDD. If none given, \
-it will be inferred from the input filename, which should then be given in the \
-form of name.bz2.YYYYMMDD*.")
-    parser.add_option("-p", "--prefix", dest="prefix", default="italy",
+        help="set the date, should be in the format YYYYMMDD")
+    parser.add_option("-p", "--prefix", dest="prefix", default=None,
         help="set the prefix for output files")
     parser.add_option("-q", "--quiet", dest="verbose", action="store_const",
         const=-1, default=0, help="don't output anything to the console.")
@@ -71,11 +69,10 @@ form of name.bz2.YYYYMMDD*.")
         filename = args[0]
 
     if not options.date:
-        # infer the date from the filename
-        try:
-            options.date = str(int(filename.split('bz2.')[1][:8]))
-        except (IndexError, ValueError):
-            parser.error('wrong filename, expected name.bz2.YYYYMMDD* to infer date.')
+        parser.error('need a date in the format YYYYMMDD.')
+
+    if not options.prefix:
+        parser.error('need a prefix.')
 
     if options.verbose == -1:
         log.setLevel(logging.NOTSET)
