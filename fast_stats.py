@@ -17,18 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 from collections import defaultdict
-import xml.etree.cElementTree as etree
 from datetime import datetime as dt
 import cjson
 import os
 from glob import glob
 
-from helpers import *
 from config import *
-from tags import to_check
 from makepickle import make_pickles
 
 from osmstats.backends.osmxml import parse
+from osmstats.helpers import *
 
 ### code
 

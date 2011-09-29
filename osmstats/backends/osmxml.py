@@ -24,7 +24,7 @@ from collections import defaultdict
 import xml.etree.cElementTree as etree
 from datetime import datetime as dt
 
-from helpers import *
+from osmstats.helpers import *
 from config import *
 from tags import to_check
 

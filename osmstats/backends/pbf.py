@@ -31,7 +31,7 @@ import zlib
 import time
 from itertools import izip_longest
 
-from helpers import *
+from osmstats.helpers import *
 from config import *
 from tags import to_check
 
