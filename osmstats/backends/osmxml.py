@@ -85,14 +85,14 @@ def handle_tags(user, key_val):
             # first, check for categories-count
             for v in to_check[test]:
                 if type(v) == tuple:
-                    if val in v[1] or (type(val) == tuple and check_tuple(val, v[1])):
+                    if value in v[1] or (type(value) == tuple and check_tuple(value, v[1])):
                         new_v = '%s|%s' % (v[0], ';'.join(v[1]))
-                        tags[test][new_v][elem.attrib['user']] += 1
+                        tags[test][new_v][user] += 1
 
-            if val in to_check[test] or (type(val) == tuple and check_tuple(val, to_check)):
-                tags[test][val][elem.attrib["user"]] += 1
+            if value in to_check[test] or (type(value) == tuple and check_tuple(value, to_check)):
+                tags[test][value][user] += 1
             if "*" in to_check[test]:
-                tags[test]["*"][elem.attrib["user"]] += 1
+                tags[test]["*"][user] += 1
             break
 
 
