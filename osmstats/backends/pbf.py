@@ -122,6 +122,8 @@ def handle_tags(user, key_val):
 
 
 def parse_pbf(file):
+    log.info("Parsing %s" % file)
+
     global stringtable
     block_count = 0
 
