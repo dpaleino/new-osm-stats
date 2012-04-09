@@ -53,7 +53,7 @@ to_check = {
         'steps',
         "stop",
         "street_lamp",
-        "traffic_lights",
+        "traffic_signals",
         ('streets', (
             'road',
             'service',
